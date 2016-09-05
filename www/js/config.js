@@ -1,0 +1,115 @@
+'use strict';
+
+angular.module('phopl.config', [])
+.config(function($ionicConfigProvider, $stateProvider, $urlRouterProvider, $httpProvider) {
+	console.log('config called');
+	// CSRF token 설정을 위함 (꼭 들어가야 함!!)
+	$httpProvider.defaults.xsrfCookieName = 'csrftoken';
+	$httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
+	$httpProvider.defaults.timeout = 5000;
+
+	$ionicConfigProvider.tabs.position('bottom');
+
+	$stateProvider
+	.state('tab', {
+    url: '',
+    abstract: true,
+    templateUrl: 'common/tab.html'
+  })
+	.state('tab.list', {
+    url: '/list',
+    views: {
+      'list': {
+        templateUrl: 'list/albums.html',
+        controller: 'albumsCtrl',
+        controllerAs: 'albums'
+      }
+    }
+  })
+	.state('tab.share', {
+    url: '/share',
+    views: {
+      'share': {
+        templateUrl: 'share/share.html',
+        controller: 'shareCtrl',
+        controllerAs: 'share'
+      }
+    }
+  })
+  .state('tab.config', {
+    url: '/config',
+    views: {
+      'config': {
+        templateUrl: 'config/config.html',
+        controller: 'configCtrl',
+        controllerAs: 'config'
+      }
+    }
+  })
+  .state('tab.profile', {
+    url: '/config/profile',
+    views: {
+      'config': {
+        templateUrl: 'config/profile.html',
+        controller: 'profileCtrl',
+        controllerAs: 'profile'
+      }
+    }
+  })
+  .state('tab.policies', {
+    url: '/config/policies',
+    views: {
+      'config': {
+        templateUrl: 'config/policies.html',
+        // controller: 'profileCtrl',
+        // controllerAs: 'profile'
+      }
+    }
+  })
+  .state('tab.policy-basic', {
+    url: '/config/policies/basic',
+    views: {
+      'config': {
+        templateUrl: 'config/policies.basic.html',
+      }
+    }
+  })
+  .state('tab.policy-privacy', {
+    url: '/config/policies/privacy',
+    views: {
+      'config': {
+        templateUrl: 'config/policies.privacy.html',
+      }
+    }
+  })
+  .state('tab.policy-location', {
+    url: '/config/policies/location',
+    views: {
+      'config': {
+        templateUrl: 'config/policies.location.html',
+      }
+    }
+  })
+  .state('tab.notices', {
+    url: '/config/notices',
+    views: {
+      'config': {
+        templateUrl: 'config/notices.html',
+        controller: 'noticesCtrl',
+        controllerAs: 'notices'
+      }
+    }
+  })
+  .state('tab.contact', {
+    url: '/config/contact',
+    views: {
+      'config': {
+        templateUrl: 'config/contact.html',
+        controller: 'contactCtrl',
+        controllerAs: 'contact'
+      }
+    }
+  });
+
+	$urlRouterProvider.otherwise('/config');
+});

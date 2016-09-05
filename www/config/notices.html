@@ -1,0 +1,10 @@
+<ion-view view-title="공지사항">
+  <ion-content>
+    <div class="list">
+      <a class="item item-icon-right" href="#/config/notices/{{$index}}" ng-repeat="item in notices.items">
+        <small>{{item.date}}</small>&nbsp;{{item.title}}
+        <i class="icon ion-ios-arrow-right"></i>
+      </a>
+    </div>
+  </ion-content>
+</ion-view>

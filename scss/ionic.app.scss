@@ -18,11 +18,30 @@ $dark:                            #444 !default;
 // The path for our ionicons font files, relative to the built CSS in www/css
 $ionicons-font-path: "../lib/ionic/fonts" !default;
 
-$stable: #ff0064;
+$positive: #dc2466;
+$stable: #ffffff;
 
 // Include all of Ionic
 @import "www/lib/ionic/scss/ionic";
 
-.bar.bar-stable .title {
+.bar.bar-positive .title {
   color: #fff;
+}
+
+.profile-avatar {
+  text-align: center;
+  .modify-img {
+    position:absolute;
+    right: 50px;
+    bottom: 10px;
+    width: 30px;
+    height: 30px;
+    background-color: grey;
+    border-radius: 50%;
+  }
+}
+.profile-avatar > img:first-child {
+  max-width: 150px;
+  max-height: 150px;
+  border-radius: 50%;
 }
