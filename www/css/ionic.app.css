@@ -9828,11 +9828,10 @@ a.button {
     height: 30px;
     background-color: grey;
     border-radius: 50%; }
-
-.profile-avatar > img:first-child {
-  max-width: 150px;
-  max-height: 150px;
-  border-radius: 50%; }
+  .profile-avatar > img:first-child {
+    max-width: 150px;
+    max-height: 150px;
+    border-radius: 50%; }
 
 .popup-title {
   color: #ff0066;
@@ -9849,6 +9848,16 @@ a.button {
 .button-footer {
   display: block;
   width: 100%; }
+
+.button-facebook {
+  background-color: #26458b;
+  color: white;
+  font-weight: bold; }
+
+.button-kakao {
+  background-color: #f8dd09;
+  color: #2d1617;
+  font-weight: bold; }
 
 .fullscreen-container {
   text-align: center; }

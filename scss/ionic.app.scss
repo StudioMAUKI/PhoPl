@@ -20,6 +20,9 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 
 $positive: #ff0066;
 $stable: #ffffff;
+$facebook: #26458b;
+$kakao-background: #f8dd09;
+$kakao: #2d1617;
 
 // Include all of Ionic
 @import "www/lib/ionic/scss/ionic";
@@ -39,12 +42,18 @@ $stable: #ffffff;
     background-color: grey;
     border-radius: 50%;
   }
+
+  > img:first-child {
+    max-width: 150px;
+    max-height: 150px;
+    border-radius: 50%;
+  }
 }
-.profile-avatar > img:first-child {
-  max-width: 150px;
-  max-height: 150px;
-  border-radius: 50%;
-}
+// .profile-avatar > img:first-child {
+//   max-width: 150px;
+//   max-height: 150px;
+//   border-radius: 50%;
+// }
 
 .popup-title {
   color: $positive;
@@ -64,6 +73,16 @@ $stable: #ffffff;
 .button-footer {
   display:block;
   width:100%;
+}
+.button-facebook {
+  background-color: $facebook;
+  color: white;
+  font-weight: bold;
+}
+.button-kakao {
+  background-color: $kakao-background;
+  color: $kakao;
+  font-weight: bold;
 }
 
 .fullscreen-container {
