@@ -100,6 +100,16 @@ angular.module('phopl.config', [])
       }
     }
   })
+	.state('tab.notice', {
+    url: '/config/notices/:noticeId',
+    views: {
+      'config': {
+        templateUrl: 'config/notice.html',
+        controller: 'noticeCtrl',
+        controllerAs: 'notice'
+      }
+    }
+  })
   .state('tab.contact', {
     url: '/config/contact',
     views: {
@@ -109,7 +119,31 @@ angular.module('phopl.config', [])
         controllerAs: 'contact'
       }
     }
+  })
+  .state('login', {
+    url: '/login',
+		templateUrl: 'login/login.html',
+		controller: 'loginCtrl',
+		controllerAs: 'login'
+  })
+  .state('confirmLocation', {
+    url: '/confirm-location',
+		templateUrl: 'login/confirm.location.html',
+		controller: 'confirmLocationCtrl',
+		controllerAs: 'confirmLocation'
+  })
+  .state('register', {
+    url: '/register',
+		templateUrl: 'login/register.html',
+		controller: 'registerCtrl',
+		controllerAs: 'register'
+  })
+  .state('confirmProfile', {
+    url: '/profile',
+		templateUrl: 'login/confirm.profile.html',
+		controller: 'confirmProfileCtrl',
+		controllerAs: 'confirmProfile'
   });
 
-	$urlRouterProvider.otherwise('/config');
+	$urlRouterProvider.otherwise('/login');
 });

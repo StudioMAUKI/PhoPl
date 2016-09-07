@@ -1,0 +1,52 @@
+<ion-view title="회원 가입" hide-nav-bar="true">
+	<ion-content>
+    <div class="fullscreen-container">
+      <div class="row positive" style="margin-top:10%">
+        <div class="col">
+          <h2 class="logo">PHOPL<sup>Beta</sup></h2>
+          사진을 공유하는 새로운 방법!
+        </div>
+      </div>
+      <div class="row" style="margin-top:20%">
+        <div class="col-10"></div>
+        <div class="col">
+          <a class="button button-block button-small button-positive">
+            페이스북 계정으로 로그인하기
+          </a>
+        </div>
+        <div class="col-10"></div>
+      </div>
+      <div class="row">
+        <div class="col-10"></div>
+        <div class="col">
+          <a class="button button-block button-small button-positive" ng-click="register.proceedToProfile()">
+            카카오톡 계정으로 로그인하기
+          </a>
+        </div>
+        <div class="col-10"></div>
+      </div>
+      또는
+      <div class="row" style="margin-top:5%">
+        <div class="col-10"></div>
+        <div class="col">
+          <div class="list">
+            <div class="item item-input-inset item-no-border">
+              <label class="item-input-wrapper" style="background:#fff;">
+                <input type="text" placeholder="이메일 주소">
+              </label>
+              <button class="button button-small padding-left padding-right" style="border: 1px solid grey;">
+                가입
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="col-10"></div>
+      </div>
+    </div>
+	</ion-content>
+  <ion-footer-bar class="bar-stable">
+    <div  style="text-align:center;width:100%;">
+      <small>계속하면 <a href="#">서비스약관</a> 및 <a href="#">개인정보처리방침</a>에 동의한 것으로 간주됩니다.</small>
+    </div>
+  </ion-footer-bar>
+</ion-view>

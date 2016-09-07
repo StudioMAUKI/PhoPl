@@ -1,0 +1,30 @@
+<ion-view title="위치기반 서비스 약관 동의" hide-nav-bar="true">
+	<ion-content>
+    <div class="fullscreen-container">
+      <div class="row" style="margin-top:40%;font-size:50px;">
+        <div class="col">
+          <i class="icon ion-ios-location"></i>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <h4><strong>위치기반 서비스 약관 동의</strong></h4>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          사진 장소 추가 및 편리한 서비스 이용을 위해<br>
+          위치정보 동의가 필요합니다.
+        </div>
+      </div>
+      <div clss="row" style="margin-top:20%;">
+        <a ng-click="confirmLocation.showPolicy()"><u>위치기반 서비스 이용약관</u></a>
+      </div>
+    </div>
+	</ion-content>
+  <ion-footer-bar class="bar-stable">
+    <a class="button button-positive button-footer" ng-click="confirmLocation.preceedToRegister()">
+      동의하고 시작하기
+    </a>
+  </ion-footer-bar>
+</ion-view>

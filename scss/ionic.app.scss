@@ -18,7 +18,7 @@ $dark:                            #444 !default;
 // The path for our ionicons font files, relative to the built CSS in www/css
 $ionicons-font-path: "../lib/ionic/fonts" !default;
 
-$positive: #dc2466;
+$positive: #ff0066;
 $stable: #ffffff;
 
 // Include all of Ionic
@@ -44,4 +44,39 @@ $stable: #ffffff;
   max-width: 150px;
   max-height: 150px;
   border-radius: 50%;
+}
+
+.popup-title {
+  color: $positive;
+  font-size: 150%;
+  small {
+    font-size: 50%;
+  }
+  sup {
+    font-size: 50%;
+    top:-.9em;
+    font-style: italic;
+    font-family: fantasy;
+    color: grey;
+  }
+}
+
+.button-footer {
+  display:block;
+  width:100%;
+}
+
+.fullscreen-container {
+  text-align: center;
+
+  .logo {
+    color: $positive;
+    sup {
+      font-size: 50%;
+      top: -.9em;
+      font-style: italic;
+      font-family: fantasy;
+      color: grey;
+    }
+  }
 }
