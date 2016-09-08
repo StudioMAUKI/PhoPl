@@ -149,7 +149,7 @@ angular.module('phopl.services')
     }
 
     if (step <= 4) {
-      PKFileStorage.remove('email');
+      PKFileStorage.remove('accountID');
       PKFileStorage.remove('auth_vd_token');
     }
   }
@@ -157,7 +157,7 @@ angular.module('phopl.services')
   function registerVD() {
     var deferred = $q.defer();
     var auth_vd_token = PKFileStorage.get('auth_vd_token');
-    var email = PKFileStorage.get('email');
+    var email = PKFileStorage.get('accountID');
 
     if (auth_vd_token) {
       console.log('VD Registration already successed: ' + auth_vd_token);
@@ -196,9 +196,9 @@ angular.module('phopl.services')
     return deferred.promise;
   }
 
-  function hasEmail() {
-    var email = PKFileStorage.get('email');
-    return (email !== null);
+  function hasAccountID() {
+    var accountID = PKFileStorage.get('accountID');
+    return (accountID !== null);
   }
 
   function sendUserPost(sendObj){
@@ -776,7 +776,7 @@ angular.module('phopl.services')
     logoutUser: logoutUser,
     registerVD: registerVD,
     loginVD: loginVD,
-    hasEmail: hasEmail,
+    hasAccountID: hasAccountID,
     sendUserPost: sendUserPost,
     deleteUserPost: deleteUserPost,
     deleteContentInUserPost: deleteContentInUserPost,

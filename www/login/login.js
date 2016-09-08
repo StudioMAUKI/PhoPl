@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('phopl.ctrls')
-.controller('loginCtrl', ['$scope', '$ionicPopup', '$state', '$ionicPlatform', 'PKFileStorage', function($scope, $ionicPopup, $state, $ionicPlatform, PKFileStorage) {
+.controller('loginCtrl', ['$scope', '$ionicPopup', '$state', '$ionicPlatform', 'PKFileStorage', 'RemoteAPIService', function($scope, $ionicPopup, $state, $ionicPlatform, PKFileStorage, RemoteAPIService) {
   var login = this;
   login.loginned = false;
 
@@ -10,12 +10,50 @@ angular.module('phopl.ctrls')
   //////////////////////////////////////////////////////////////////////////////
   function doLogin() {
     if (PKFileStorage.get('accountID')) {
-      //  로그인 처리
-      setTimeout(function() {
-        console.info('로그인 처리 했다 치고..설정 화면으로 이동');
-        login.loginned = true;
-        $state.go('tab.config');
-      }, 1000);
+      // 유저 등록
+      RemoteAPIService.registerUser()
+      .then(function(token) {
+        // 유저 로그인
+        RemoteAPIService.loginUser(token)
+        .then(function() {
+          // VD 등록
+          RemoteAPIService.registerVD()
+          .then(function(token) {
+            // VD 로그인
+            RemoteAPIService.loginVD(token)
+            .then(function(token) {
+              console.log('login success.');
+              PKFileStorage.set('auth_vd_token', token)
+              login.loginned = true;
+              $state.go('tab.config');
+            }, function(err) {
+              console.error('loginVD failed.', err);
+              PKFileStorage.remove('accountID');
+              PKFileStorage.remove('auth_vd_token');
+              $state.go('register');
+            });
+          }, function(err) {
+            console.error('registerVD failed', err);
+            PKFileStorage.remove('accountID');
+            PKFileStorage.remove('auth_vd_token');
+            $state.go('register');
+          });
+        }, function(err) {
+          console.error('loginUser failed', err);
+  				PKFileStorage.remove('auth_user_token');
+          $state.go('register');
+        });
+      }, function(err) {
+        console.error('registerUser failed', err);
+  			PKFileStorage.remove('auth_user_token');
+  			$state.go('register');
+      });
+
+      // setTimeout(function() {
+      //   console.info('로그인 처리 했다 치고..설정 화면으로 이동');
+      //   login.loginned = true;
+      //   $state.go('tab.config');
+      // }, 1000);
     } else {
       //  회원 등록 페이지로 이동시킴
       //  위치 정보 이용에 동의했으면, 바로 로그인 화면으로 보내고, 그렇지 않으면
