@@ -1,5 +1,27 @@
-<ion-view view-title="Share" hide-nav-bar="true">
-  <ion-content>
-    share
+<ion-view view-title="사진공유">
+  <ion-content class="bold-container">
+    <!-- 노트 영역 -->
+		<div class="row">
+			<div class="col">
+				<label class="item item-input">
+			    <input type="text" placeholder="이 사진과 장소에 대해 이야기해 주세요." ng-model="share.note">
+			  </label>
+			</div>
+		</div>
+    <!-- 이미지 영역 -->
+    <div ng-repeat="image in share.attatchedImages track by $index" style="width:{{share.calculatedHeight+5}}px;height:{{share.calculatedHeight}}px;display:inline-block;overflow:hidden;padding-left:5px;">
+			<img style="height:{{share.calculatedHeight}}px;" ng-src="{{image}}" on-hold="share.deleteAttatchedImage($index)">
+		</div>
+    <!-- 장소명 입력 폼 -->
+		<div class="row">
+			<div class="col">
+				<div class="list">
+		      <a class="button button-stable button-full icon-left ion-ios-location" location-suggestion location="share.location" style="height:32px;text-align:left;">
+						<strong>{{share.location.name || share.placeholderTitle}}</strong>
+						<small>{{share.location.formatted_address || share.placeholderSubTitle}}</small>
+					</a>
+		    </div>
+			</div>
+		</div>
   </ion-content>
 </ion-view>

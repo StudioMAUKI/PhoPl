@@ -84,6 +84,11 @@ $kakao: #2d1617;
   color: $kakao;
   font-weight: bold;
 }
+.button.button-black.button-outline {
+    border-color: black;
+    background: 0 0;
+    color: black;
+}
 
 .fullscreen-container {
   text-align: center;
@@ -98,4 +103,7 @@ $kakao: #2d1617;
       color: grey;
     }
   }
+}
+.bold-container {
+  font-weight: bold;
 }

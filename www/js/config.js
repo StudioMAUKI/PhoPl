@@ -25,8 +25,18 @@ angular.module('phopl.config', [])
       }
     }
   })
+	.state('tab.choose', {
+    url: '/choose',
+    views: {
+      'share': {
+        templateUrl: 'share/choose.html',
+        controller: 'chooseCtrl',
+        controllerAs: 'choose'
+      }
+    }
+  })
 	.state('tab.share', {
-    url: '/share',
+    url: '/share?mode',
     views: {
       'share': {
         templateUrl: 'share/share.html',
