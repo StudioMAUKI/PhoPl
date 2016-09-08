@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('phopl.ctrls')
-.controller('confirmLocationCtrl', ['$scope', '$state', function($scope, $state) {
+.controller('confirmLocationCtrl', ['$scope', '$state', 'PKFileStorage', function($scope, $state, PKFileStorage) {
   var confirmLocation = this;
 
   //////////////////////////////////////////////////////////////////////////////
@@ -20,6 +20,7 @@ angular.module('phopl.ctrls')
   }
   confirmLocation.preceedToRegister = function() {
     console.info('회원 가입으로 진행');
+    PKFileStorage.set('hasAgreedWithLocationPolicy', true);
     $state.go('register');
   }
 }]);

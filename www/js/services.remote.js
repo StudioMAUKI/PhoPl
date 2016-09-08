@@ -16,10 +16,10 @@ angular.module('phopl.services')
     }
   };
 }])
-.factory('RESTServer', ['StorageService', function(StorageService) {
+.factory('RESTServer', ['PKLocalStorage', function(PKLocalStorage) {
   return {
     getURL: function() {
-      var devmode = StorageService.get('devmode') === "true" ? true : false;
+      var devmode = PKLocalStorage.get('devmode') === "true" ? true : false;
 
       if (ionic.Platform.isIOS() || ionic.Platform.isAndroid()) {
         if (devmode) {
@@ -38,7 +38,7 @@ angular.module('phopl.services')
     }
   }
 }])
-.factory('remoteStorageService', ['$http', 'RESTServer', function($http, RESTServer) {
+.factory('remotePKLocalStorage', ['$http', 'RESTServer', function($http, RESTServer) {
   var getServerURL = RESTServer.getURL;
 
   function downloadData(key) {
@@ -61,7 +61,7 @@ angular.module('phopl.services')
     uploadData: uploadData
   };
 }])
-.factory('RemoteAPIService', ['$http', '$cordovaFileTransfer', '$q', 'RESTServer', 'StorageService', 'PostHelper', 'PKAuthStorageService', function($http, $cordovaFileTransfer, $q, RESTServer, StorageService, PostHelper, PKAuthStorageService){
+.factory('RemoteAPIService', ['$http', '$cordovaFileTransfer', '$q', 'RESTServer', 'PKLocalStorage', 'PostHelper', 'PKFileStorage', function($http, $cordovaFileTransfer, $q, RESTServer, PKLocalStorage, PostHelper, PKFileStorage){
   var getServerURL = RESTServer.getURL;
   var cachedUPAssigned = [];
   var cachedUPWaiting = [];
@@ -95,15 +95,15 @@ angular.module('phopl.services')
     var deferred = $q.defer();
     var auth_user_token = '';
 
-    PKAuthStorageService.init()
+    PKFileStorage.init()
     .then(function() {
-      auth_user_token = PKAuthStorageService.get('auth_user_token');
+      auth_user_token = PKFileStorage.get('auth_user_token');
       if (auth_user_token) {
         console.log('User Registration already successed: ' + auth_user_token);
         deferred.resolve(auth_user_token);
       } else {
         // 이경우에는 auth_vd_token도 새로 발급받아야 하므로, 혹시 남아있을 auth_vd_token 찌꺼기를 지워줘야 한다.
-        PKAuthStorageService.remove('auth_vd_token');
+        PKFileStorage.remove('auth_vd_token');
 
         $http({
           method: 'POST',
@@ -111,8 +111,8 @@ angular.module('phopl.services')
         })
         .then(function(result) {
           console.log('User Registration successed: ' + result.data.auth_user_token);
-          // StorageService.set('auth_user_token', result.data.auth_user_token);
-          PKAuthStorageService.set('auth_user_token', result.data.auth_user_token);
+          // PKLocalStorage.set('auth_user_token', result.data.auth_user_token);
+          PKFileStorage.set('auth_user_token', result.data.auth_user_token);
           deferred.resolve(result.data.auth_user_token);
         }, function(err) {
           deferred.reject(err);
@@ -145,19 +145,19 @@ angular.module('phopl.services')
     console.log('Login Step: ' + step);
     step = step || 0;
     if (step <= 2){
-      PKAuthStorageService.remove('auth_user_token');
+      PKFileStorage.remove('auth_user_token');
     }
 
     if (step <= 4) {
-      PKAuthStorageService.remove('email');
-      PKAuthStorageService.remove('auth_vd_token');
+      PKFileStorage.remove('email');
+      PKFileStorage.remove('auth_vd_token');
     }
   }
 
   function registerVD() {
     var deferred = $q.defer();
-    var auth_vd_token = PKAuthStorageService.get('auth_vd_token');
-    var email = PKAuthStorageService.get('email');
+    var auth_vd_token = PKFileStorage.get('auth_vd_token');
+    var email = PKFileStorage.get('email');
 
     if (auth_vd_token) {
       console.log('VD Registration already successed: ' + auth_vd_token);
@@ -166,11 +166,11 @@ angular.module('phopl.services')
       $http({
         method: 'POST',
         url: getServerURL() + '/vds/register/',
-        data: JSON.stringify({ email: email, country:StorageService.get('country'), language:StorageService.get('lang'), timezone:'' })
+        data: JSON.stringify({ email: email, country:PKLocalStorage.get('country'), language:PKLocalStorage.get('lang'), timezone:'' })
       })
       .then(function(result) {
         console.log('VD Registration successed: ' + result.data.auth_vd_token);
-        PKAuthStorageService.set('auth_vd_token', result.data.auth_vd_token);
+        PKFileStorage.set('auth_vd_token', result.data.auth_vd_token);
         deferred.resolve(result.data.auth_vd_token);
       }, function(err) {
         deferred.reject(err);
@@ -188,7 +188,7 @@ angular.module('phopl.services')
     })
     .then(function(result) {
       console.log('VD Login successed: ' + result.data.auth_vd_token);
-      PKAuthStorageService.set('auth_vd_token', result.data.auth_vd_token);
+      PKFileStorage.set('auth_vd_token', result.data.auth_vd_token);
       deferred.resolve(result.data.auth_vd_token);
     }, function(err) {
       deferred.reject(err);
@@ -197,7 +197,7 @@ angular.module('phopl.services')
   }
 
   function hasEmail() {
-    var email = PKAuthStorageService.get('email');
+    var email = PKFileStorage.get('email');
     return (email !== null);
   }
 
@@ -796,7 +796,7 @@ angular.module('phopl.services')
     getShortenURL: getShortenURL
   }
 }])
-.factory('PostHelper', ['RESTServer', 'StorageService', 'MapService', function(RESTServer, StorageService, MapService) {
+.factory('PostHelper', ['RESTServer', 'PKLocalStorage', 'MapService', function(RESTServer, PKLocalStorage, MapService) {
   function getTags(post) {
     if (!post.userPost || !post.userPost.notes || post.userPost.notes.length === 0) {
       return [];
@@ -1042,7 +1042,7 @@ angular.module('phopl.services')
   //  ng-repeat안에서 함수가 호출되는 것을 최대한 방지하기 위해, 로딩된 포스트의 썸네일 URL, 전화번호, 주소, 태그 등을
   //  계산해서 속성으로 담아둔다.
   function decoratePost(post) {
-    var curPos = StorageService.get('curPos');
+    var curPos = PKLocalStorage.get('curPos');
     post.name = getPlaceName(post);
     post.thumbnailURL = getThumbnailURLByFirstImage(post);
     post.datetime = getTimeString(post.modified);

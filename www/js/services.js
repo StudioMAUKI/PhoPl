@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('phopl.services', [])
-.factory('MapService', ['$q', 'StorageService', function($q, StorageService) {
+angular.module('phopl.services')
+.factory('MapService', ['$q', 'PKLocalStorage', function($q, PKLocalStorage) {
   var pos = { latitude: 0.0, longitude: 0.0 };
   var warchID = null;
 
@@ -12,7 +12,7 @@ angular.module('phopl.services', [])
         navigator.geolocation.getCurrentPosition(function(position) {
           pos.latitude = position.coords.latitude;
           pos.longitude = position.coords.longitude;
-          StorageService.set('curPos', pos);
+          PKLocalStorage.set('curPos', pos);
           console.info('Original position is (' + pos.latitude + ', ' + pos.longitude + ').');
 
           resolve(pos);
@@ -47,7 +47,7 @@ angular.module('phopl.services', [])
       navigator.geolocation.watchPosition(function(position) {
         pos.latitude = position.coords.latitude;
         pos.longitude = position.coords.longitude;
-        StorageService.set('curPos', pos);
+        PKLocalStorage.set('curPos', pos);
         console.info('Changed position is (' + pos.latitude + ', ' + pos.longitude + ').');
 
         success(pos);
@@ -88,9 +88,9 @@ angular.module('phopl.services', [])
           if (result[0]) {
             console.info('Current Address is ' + result[0].jibunAddress.name + '.');
             if (saveAddr) {
-              StorageService.set('addr1', result[0].roadAddress.name);
-        			StorageService.set('addr2', result[0].jibunAddress.name);
-        			StorageService.set('addr3', result[0].region);
+              PKLocalStorage.set('addr1', result[0].roadAddress.name);
+        			PKLocalStorage.set('addr2', result[0].jibunAddress.name);
+        			PKLocalStorage.set('addr3', result[0].region);
             }
             deferred.resolve(result[0]);
           } else {
@@ -114,7 +114,7 @@ angular.module('phopl.services', [])
     clearWatch: clearWatch
   };
 }])
-.factory('CacheService', [function() {
+.factory('PKSessionStorage', [function() {
   var data = {};
 
   return {
@@ -140,7 +140,7 @@ angular.module('phopl.services', [])
     }
   }
 }])
-.factory('StorageService', [function() {
+.factory('PKLocalStorage', [function() {
   function get(key) {
     try {
       return JSON.parse(window.localStorage.getItem(key));
@@ -154,7 +154,8 @@ angular.module('phopl.services', [])
   }
 
   function remove(key) {
-    window.localStorage.removeItem(key);  }
+    window.localStorage.removeItem(key);
+  }
 
   return {
     get: get,
@@ -162,7 +163,7 @@ angular.module('phopl.services', [])
     remove: remove
   };
 }])
-.factory('PKAuthStorageService', ['$cordovaFile', '$q', 'StorageService', function($cordovaFile, $q, StorageService) {
+.factory('PKFileStorage', ['$cordovaFile', '$q', 'PKLocalStorage', function($cordovaFile, $q, PKLocalStorage) {
   var dicSaved = {};
   var inited = false;
   var storageFileName = 'storage.txt';
@@ -171,7 +172,7 @@ angular.module('phopl.services', [])
     var deferred = $q.defer();
 
     if (inited) {
-      console.log('PKAuthStorageService is already inited.');
+      console.log('PKFileStorage is already inited.');
       deferred.resolve();
     } else {
       if (ionic.Platform.isIOS() || ionic.Platform.isAndroid()) {
@@ -251,7 +252,7 @@ angular.module('phopl.services', [])
 
   function get(key) {
     if (ionic.Platform.isIOS() || ionic.Platform.isAndroid()) {
-      console.log('PKAuthStorageService.get(' + key + ') :' + dicSaved[key]);
+      console.log('PKFileStorage.get(' + key + ') :' + dicSaved[key]);
       // $cordovaFile.readAsText(cordova.file.dataDirectory, storageFileName)
       // .then(function (data) {
       //   console.dir(data);
@@ -266,17 +267,17 @@ angular.module('phopl.services', [])
         return null;
       }
     } else {
-      return StorageService.get(key);
+      return PKLocalStorage.get(key);
     }
   }
 
   function set(key, value) {
     if (ionic.Platform.isIOS() || ionic.Platform.isAndroid()) {
-      console.log('PKAsyncStorageService.setItem(' + key + ', ' + value + ')');
+      console.log('PKAsyncPKLocalStorage.setItem(' + key + ', ' + value + ')');
       dicSaved[key] = JSON.stringify(value);
       saveToFile();
     } else {
-      StorageService.set(key, value);
+      PKLocalStorage.set(key, value);
     }
   }
 
@@ -297,21 +298,33 @@ angular.module('phopl.services', [])
       dicSaved[key] = null;
       saveToFile();
     } else {
-      StorageService.remove(key);
+      PKLocalStorage.remove(key);
     }
   }
 
   function reset() {
+    var deferred = $q.defer();
+
     inited = false;
     if (ionic.Platform.isIOS() || ionic.Platform.isAndroid()) {
       $cordovaFile.removeFile(cordova.file.dataDirectory, storageFileName)
-      .then(function (success) {
+      .then(function () {
         console.log('Removing storage file was successed.');
-      }, function (error) {
-        console.error('Removing storage file was failed.');
-        console.dir(error);
+        deferred.resolve();
+      }, function (err) {
+        console.error('Removing storage file was failed.', err);
+        deferred.reject(err);
       });
+    } else {
+      PKLocalStorage.remove('auth_user_token');
+      PKLocalStorage.remove('auth_vd_token');
+      PKLocalStorage.remove('email');
+      PKLocalStorage.remove('nickname');
+      PKLocalStorage.remove('data');
+      deferred.resolve();
     }
+
+    return deferred.promise;
   }
 
   return {

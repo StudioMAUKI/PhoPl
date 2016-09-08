@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('phopl.ctrls')
-.controller('registerCtrl', ['$scope', '$state', function($scope, $state) {
+.controller('registerCtrl', ['$scope', '$state', 'PKFileStorage', function($scope, $state, PKFileStorage) {
   var register = this;
 
   //////////////////////////////////////////////////////////////////////////////
@@ -17,6 +17,11 @@ angular.module('phopl.ctrls')
   //////////////////////////////////////////////////////////////////////////////
   register.proceedToProfile = function() {
     console.info('프로필 확정 뷰로 이동해야 함.');
-    $state.go('confirmProfile');
+    PKFileStorage.set('accountID', 'test');
+    if (PKFileStorage.get('hasConfirmedProfileInfo')) {
+      $state.go('tab.config');
+    } else {
+      $state.go('confirmProfile');
+    }
   }
 }]);

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('phopl.ctrls')
-.controller('confirmProfileCtrl', ['$scope', '$state', function($scope, $state) {
+.controller('confirmProfileCtrl', ['$scope', '$state', 'PKFileStorage', function($scope, $state, PKFileStorage) {
   var confirmProfile = this;
 
   //////////////////////////////////////////////////////////////////////////////
@@ -17,6 +17,7 @@ angular.module('phopl.ctrls')
   //////////////////////////////////////////////////////////////////////////////
   confirmProfile.preceedToShare = function() {
     console.info('완료했고, 공유 화면으로 이동해야 함');
+    PKFileStorage.set('hasConfirmedProfileInfo', true);
     $state.go('tab.config');
   }
 }]);
