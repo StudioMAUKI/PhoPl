@@ -40,7 +40,7 @@ angular.module('phopl.directives')
       $scope.search = {};
       $scope.search.suggestions = [];
       $scope.search.query = "";
-      $ionicModal.fromTemplateUrl('views/home/modal-location.html', {
+      $ionicModal.fromTemplateUrl('share/modal.location.html', {
         scope: $scope,
         focusFirstInput: true
       }).then(function(modal) {

@@ -9880,3 +9880,9 @@ a.button {
 
 .bold-container {
   font-weight: bold; }
+
+.fake-input {
+  border: 1px solid #ddd;
+  color: #aaa;
+  font-weight: normal;
+  margin: -1px; }

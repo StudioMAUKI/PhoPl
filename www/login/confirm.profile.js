@@ -46,13 +46,16 @@ angular.module('phopl.ctrls')
 
   function fillProfileField(accountID) {
     if (accountID.indexOf('@facebook') !== -1) {
-
+      //  요부분부터 내일 다시 검토해야 함
+      var fbProfile = PKFileStorage.get('fb_profile');
+      confirmProfile.nickname = fbProfile.name;
+      confirmProfile.email = fbProfile.email;
     } else if (accountID.indexOf('@kakaotalk') !== -1) {
-
+      var kakaoProfile = PKFileStorage.get('kakao_profile');
     } else {
-      confirmProfile.nickname = '';
+      confirmProfile.nickname = '닉네임을 지정해 주세요';
       confirmProfile.email = accountID;
-      confirmProfile.profileImg = 'http://mud-kage.kakao.co.kr/14/dn/btqeu4Bor7R/MKHxzKGezGzCbqwPjMAtf0/o.jpg';
+      confirmProfile.profileImg = 'img/blank-profile.png';
     }
   }
 
@@ -74,9 +77,13 @@ angular.module('phopl.ctrls')
   //////////////////////////////////////////////////////////////////////////////
   //  public methods
   //////////////////////////////////////////////////////////////////////////////
-  confirmProfile.preceedToShare = function() {
+  confirmProfile.submit = function() {
     console.info('완료했고, 공유 화면으로 이동해야 함');
     PKFileStorage.set('hasConfirmedProfileInfo', true);
     $state.go('tab.config');
+  }
+
+  confirmProfile.changeProfileImg = function() {
+    console.info('confirmProfile.changeProfileImg');
   }
 }]);

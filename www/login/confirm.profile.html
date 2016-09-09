@@ -3,19 +3,23 @@
     <div class="row">
       <div class="col profile-avatar">
         <!-- <img src="http://mud-kage.kakao.co.kr/14/dn/btqeu4Bor7R/MKHxzKGezGzCbqwPjMAtf0/o.jpg"> -->
-        <img ng-src="{{confirmProfile.profileImg}}">
+        <img ng-src="{{confirmProfile.profileImg}}" ng-click="confirmProfile.changeProfileImg()">
         <!-- <span class="modify-img">
           <i class="icon ion-ios-camera-outline"></i>
         </span> -->
       </div>
     </div>
     <div class="list">
-      <div class="item">
+      <label class="item item-input">
+        <span class="input-label">닉네임</span>
+        <input type="text" placeholder="{{confirmProfile.nickname}}">
+      </label>
+      <!-- <div class="item">
         닉네임
         <span class="item-note">
           {{confirmProfile.nickname}}
         </span>
-      </div>
+      </div> -->
       <div class="item">
         이메일
         <span class="item-note">
@@ -25,7 +29,7 @@
     </div>
   </ion-content>
   <ion-footer-bar class="bar-stable">
-    <a class="button button-positive button-footer" ng-click="confirmProfile.preceedToShare()">
+    <a class="button button-positive button-footer" ng-click="confirmProfile.submit()">
       완료
     </a>
   </ion-footer-bar>

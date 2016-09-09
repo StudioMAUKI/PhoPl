@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('phopl.ctrls')
-.controller('shareCtrl', ['$scope', 'DOMHelper', function($scope, DOMHelper) {
+.controller('shareCtrl', ['$scope', '$ionicModal', 'DOMHelper', function($scope, $ionicModal, DOMHelper) {
   var share = this;
   share.attatchedImages = [
     'http://image.chosun.com/sitedata/image/201312/13/2013121302159_0.jpg',
@@ -36,4 +36,18 @@ angular.module('phopl.ctrls')
   //////////////////////////////////////////////////////////////////////////////
   //  Public Methods
   //////////////////////////////////////////////////////////////////////////////
+  share.promptNoteModal = function() {
+    $ionicModal.fromTemplateUrl('share/modal.note.html', {
+      scope: $scope,
+      focusFirstInput: true
+    }).then(function(modal) {
+      share.modal = modal;
+      share.modal.show();
+    });
+  }
+
+  share.close = function() {
+    share.modal.hide();
+    share.modal.remove();
+  }
 }]);

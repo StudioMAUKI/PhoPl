@@ -62,6 +62,7 @@ angular.module('phopl.ctrls')
         } else {
           PKFileStorage.set('nickname', result.nickname);
           PKFileStorage.set('profileImg', data.profileImg);
+          PKFileStorage.set('email', result.email);
           $state.go('tab.config');
         }
       } else if (result === null) {
@@ -99,8 +100,7 @@ angular.module('phopl.ctrls')
       .then(function() {
         var auth_user_token = PKFileStorage.get('auth_user_token');
         if (auth_user_token === null || auth_user_token === undefined || auth_user_token === '') {
-          console.error('ERROR! auth_user_token must be exist!!');
-          $state.go('login');
+          console.warn('Warning! auth_user_token does not exist.');
         }
       }, function(err) {
         console.error(err);

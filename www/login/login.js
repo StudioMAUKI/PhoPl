@@ -52,6 +52,7 @@ angular.module('phopl.ctrls')
                   } else {
                     PKFileStorage.set('nickname', result.nickname);
                     PKFileStorage.set('profileImg', data.profileImg);
+                    PKFileStorage.set('email', result.email);
                     $state.go('tab.config');
                   }
                 } else if (result === null) {

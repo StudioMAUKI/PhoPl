@@ -2,10 +2,13 @@
   <ion-content class="bold-container">
     <!-- 노트 영역 -->
 		<div class="row">
-			<div class="col">
-				<label class="item item-input">
+			<div class="col padding">
+				<!-- <label class="item item-input">
 			    <input type="text" placeholder="이 사진과 장소에 대해 이야기해 주세요." ng-model="share.note">
-			  </label>
+			  </label> -->
+        <div class="padding fake-input" ng-click="share.promptNoteModal()">
+          이 사진과 장소에 대해 이야기해 주세요.
+        </div>
 			</div>
 		</div>
     <!-- 이미지 영역 -->
