@@ -148,7 +148,7 @@ angular.module('phopl.config', [])
 		controllerAs: 'register'
   })
   .state('confirmProfile', {
-    url: '/profile/:auth_type',
+    url: '/profile',
 		templateUrl: 'login/confirm.profile.html',
 		controller: 'confirmProfileCtrl',
 		controllerAs: 'confirmProfile'

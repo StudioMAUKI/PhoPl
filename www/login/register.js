@@ -52,13 +52,13 @@ angular.module('phopl.ctrls')
     return deferred.promise;
   }
 
-  function goToNextStep(auth_type) {
+  function goToNextStep() {
     RemoteAPIService.checkVerified()
     .then(function(result) {
       if (result) {
         var data =JSON.parse(result.data);
         if (!result.nickname || !data.profileImg) {
-          $state.go('confirmProfile', {auth_type: auth_type});
+          $state.go('confirmProfile');
         } else {
           PKFileStorage.set('nickname', result.nickname);
           PKFileStorage.set('profileImg', data.profileImg);
@@ -70,10 +70,8 @@ angular.module('phopl.ctrls')
           template: '입력하신 이메일 주소로 확인 메일이 발송되었습니다. 메일에 포함된 링크를 클릭 하신 후 계속 진행해 주세요.'
         })
         .then(function() {
-          goToNextStep('auth_type_email'); //  !!!
+          goToNextStep(); //  !!!
         });
-      } else {
-        alertAndExit('알 수 없는');
       }
     }, function(err) {
       alertAndExit('서버와 통신 중');
@@ -140,7 +138,7 @@ angular.module('phopl.ctrls')
 			console.info('이제 vd register, login으로 진행해도 됨');
       login(register.email)
       .then(function() {
-        goToNextStep('auth_type_email');
+        goToNextStep();
       }, function(err) {
         alertAndExit();
       });
@@ -164,10 +162,11 @@ angular.module('phopl.ctrls')
       )
       .then(function (result) {
         console.log('FB me result', result);
+        PKFileStorage.set('fb_profile', result.data);
         var accountID = result.data.id + '@facebook';
         login(accountID)
         .then(function() {
-          goToNextStep('auth_type_facebook');
+          goToNextStep();
         }, function(err) {
           alertAndExit();
         });
@@ -180,6 +179,30 @@ angular.module('phopl.ctrls')
   }
 
   register.loginWithKakao = function() {
-
+    oauthKakao.signin('cb7479018234a9feda2d82f6bbdd1682')
+    .then(function(result) {
+      console.log('loginKakao result', result);
+      $http.get('https://kapi.kakao.com/v1/user/me',
+      {
+        headers: {
+          Authorization: result.token_type + ' ' + result.access_token
+        }
+      })
+      .then(function(result) {
+        console.log('Kakao me result', result);
+        PKFileStorage.set('kakao_profile', result.data);
+        var accountID = result.data.id + '@kakaotalk';
+        login(accountID)
+        .then(function() {
+          goToNextStep();
+        }, function(err) {
+          alertAndExit();
+        });
+      }, function(err) {
+        console.error('register.loginWithKakao: Kakao me error', err);
+      });
+    }, function(err) {
+      console.error('register.loginWithKakao: loginKakao error', err);
+    });
   }
 }]);

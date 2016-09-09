@@ -42,7 +42,30 @@ angular.module('phopl.ctrls')
               console.log('login success.');
               PKFileStorage.set('auth_vd_token', token);
               login.loginned = true;
-              $state.go('tab.config');
+
+              RemoteAPIService.checkVerified()
+              .then(function(result) {
+                if (result) {
+                  var data =JSON.parse(result.data);
+                  if (!result.nickname || !data.profileImg) {
+                    $state.go('confirmProfile');
+                  } else {
+                    PKFileStorage.set('nickname', result.nickname);
+                    PKFileStorage.set('profileImg', data.profileImg);
+                    $state.go('tab.config');
+                  }
+                } else if (result === null) {
+                  $ionicPopup.alert({
+                    title: '잠시만요!',
+                    template: '입력하신 이메일 주소로 확인 메일이 발송되었습니다. 메일에 포함된 링크를 클릭 하신 후 계속 진행해 주세요.'
+                  })
+                  .then(function() {
+                    doLogin(); //  !!!
+                  });
+                }
+              }, function(err) {
+                alertAndExit('서버와 통신 중');
+              });
             }, function(err) {
               console.error('loginVD failed.', err);
               PKFileStorage.remove('accountID');
@@ -67,6 +90,16 @@ angular.module('phopl.ctrls')
       console.error('registerUser failed', err);
 			PKFileStorage.remove('auth_user_token');
 			$state.go('register');
+    });
+  }
+
+  function alertAndExit(msg) {
+    $ionicPopup.alert({
+      title: '죄송합니다!',
+      template: msg + ' 오류가 발생했습니다. 앱을 완전히 종료하시고, 다시 시작해 주세요.'
+    })
+    .then(function() {
+      ionic.Platform.exitApp();
     });
   }
 
