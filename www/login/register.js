@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('phopl.ctrls')
-.controller('registerCtrl', ['$scope', '$state', '$ionicPlatform', '$ionicPopup', '$q', 'PKFileStorage', 'RemoteAPIService', function($scope, $state, $ionicPlatform, $ionicPopup, $q, PKFileStorage, RemoteAPIService) {
+.controller('registerCtrl', ['$scope', '$state', '$ionicPlatform', '$ionicPopup', '$q', '$cordovaOauth', '$http', 'PKFileStorage', 'RemoteAPIService', 'oauthKakao', function($scope, $state, $ionicPlatform, $ionicPopup, $q, $cordovaOauth, $http, PKFileStorage, RemoteAPIService, oauthKakao) {
   var register = this;
   register.email = '';
 
@@ -12,68 +12,90 @@ angular.module('phopl.ctrls')
     var deferred = $q.defer();
     PKFileStorage.set('accountID', accountID);
 
-    // VD 등록
-    RemoteAPIService.registerVD(accountID)
+    RemoteAPIService.registerUser(true)
     .then(function(token) {
-      // VD 로그인
-      RemoteAPIService.loginVD(token)
-      .then(function(token) {
-        console.log('login success.');
-        PKFileStorage.set('auth_vd_token', token);
-        deferred.resolve();
+      // 유저 로그인
+      RemoteAPIService.loginUser(token)
+      .then(function() {
+        // VD 등록
+        RemoteAPIService.registerVD(accountID, true)
+        .then(function(token) {
+          // VD 로그인
+          RemoteAPIService.loginVD(token)
+          .then(function(token) {
+            console.log('login success.');
+            PKFileStorage.set('auth_vd_token', token);
+            deferred.resolve();
+          }, function(err) {
+            console.error('loginVD failed.', err);
+            PKFileStorage.remove('accountID');
+            PKFileStorage.remove('auth_vd_token');
+            deferred.reject(err);
+          });
+        }, function(err) {
+          console.error('registerVD failed', err);
+          PKFileStorage.remove('accountID');
+          PKFileStorage.remove('auth_vd_token');
+          deferred.reject(err);
+        });
       }, function(err) {
-        console.error('loginVD failed.', err);
-        PKFileStorage.remove('accountID');
-        PKFileStorage.remove('auth_vd_token');
+        console.error('loginUser failed', err);
+				PKFileStorage.remove('auth_user_token');
         deferred.reject(err);
       });
     }, function(err) {
-      console.error('registerVD failed', err);
-      PKFileStorage.remove('accountID');
-      PKFileStorage.remove('auth_vd_token');
+      console.error('registerUser failed', err);
+      PKFileStorage.remove('auth_user_token');
       deferred.reject(err);
     });
 
     return deferred.promise;
   }
 
-  function goToNextStep() {
+  function goToNextStep(auth_type) {
     RemoteAPIService.checkVerified()
     .then(function(result) {
-      if (result === 'OK') {
-        $state.go('confirmProfile');
-      } else if (result === 'EMPTY') {
+      if (result) {
+        var data =JSON.parse(result.data);
+        if (!result.nickname || !data.profileImg) {
+          $state.go('confirmProfile', {auth_type: auth_type});
+        } else {
+          PKFileStorage.set('nickname', result.nickname);
+          PKFileStorage.set('profileImg', data.profileImg);
+          $state.go('tab.config');
+        }
+      } else if (result === null) {
         $ionicPopup.alert({
           title: '잠시만요!',
           template: '입력하신 이메일 주소로 확인 메일이 발송되었습니다. 메일에 포함된 링크를 클릭 하신 후 계속 진행해 주세요.'
         })
         .then(function() {
-          goToNextStep();
+          goToNextStep('auth_type_email'); //  !!!
         });
       } else {
-        $ionicPopup.alert({
-          title: '죄송합니다!',
-          template: '알 수없는 오류가 발생했습니다. 앱을 완전히 종료하시고, 잠시후 다시 시작해 주세요.'
-        })
-        .then(function() {
-          ionic.Platform.exitApp();
-        });
+        alertAndExit('알 수 없는');
       }
     }, function(err) {
-      $ionicPopup.alert({
-        title: '죄송합니다!',
-        template: '서버와 통신 중 오류가 발생했습니다. 앱을 완전히 종료하시고, 잠시후 다시 시작해 주세요.'
-      })
-      .then(function() {
-        ionic.Platform.exitApp();
-      });
+      alertAndExit('서버와 통신 중');
+    });
+  }
+
+  function alertAndExit(msg) {
+    $ionicPopup.alert({
+      title: '죄송합니다!',
+      template: msg + ' 오류가 발생했습니다. 앱을 완전히 종료하시고, 다시 시작해 주세요.'
+    })
+    .then(function() {
+      ionic.Platform.exitApp();
     });
   }
 
   //////////////////////////////////////////////////////////////////////////////
   //  event handler
   //////////////////////////////////////////////////////////////////////////////
-  $scope.$on('$ionicView.loaded', function() {
+  $scope.$on('$ionicView.afterEnter', function() {
+    register.email = '';
+
     $ionicPlatform.ready(function() {
       PKFileStorage.init()
       .then(function() {
@@ -118,16 +140,46 @@ angular.module('phopl.ctrls')
 			console.info('이제 vd register, login으로 진행해도 됨');
       login(register.email)
       .then(function() {
-        goToNextStep();
+        goToNextStep('auth_type_email');
       }, function(err) {
-        $ionicPopup.alert({
-          title: '죄송합니다!',
-          template: '인증 처리 중 오류가 발생했습니다. 앱을 완전히 종료하고 다시 시작해 주세요.'
-        })
-        .then(function() {
-          ionic.Platform.exitApp();
-        });
+        alertAndExit();
       });
 		}
+  }
+
+  register.loginWithFacebook = function() {
+    var appID = '1036395799812464';
+    $cordovaOauth.facebook(appID, ['public_profile', 'email'])
+    .then(function(result) {
+      console.log('FB result', result);
+      $http.get(
+        'https://graph.facebook.com/v2.7/me',
+        {
+          params: {
+            access_token: result.access_token,
+            fields: 'id, name, first_name, last_name, age_range, link, gender, locale, picture, timezone, updated_time, verified, email',
+            format: 'json'
+          }
+        }
+      )
+      .then(function (result) {
+        console.log('FB me result', result);
+        var accountID = result.data.id + '@facebook';
+        login(accountID)
+        .then(function() {
+          goToNextStep('auth_type_facebook');
+        }, function(err) {
+          alertAndExit();
+        });
+      }, function(err) {
+        console.error('register.loginWithFacebook: FB me error', err);
+      });
+    }, function(err) {
+      console.error('register.loginWithFacebook: FB oAuth error', err);
+    });
+  }
+
+  register.loginWithKakao = function() {
+
   }
 }]);

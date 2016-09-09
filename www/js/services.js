@@ -182,14 +182,17 @@ angular.module('phopl.services')
           $cordovaFile.readAsText(cordova.file.dataDirectory, storageFileName)
           .then(function (data) {
             console.log('data in storage.txt', data);
+
             try {
               if (data === null || data === '') {
                 console.warn('The data in storage is empty.');
                 inited = true;
+                PKLocalStorage.set('data_in_storage', '');
                 deferred.resolve();
               } else {
                 dicSaved = JSON.parse(data);
                 inited = true;
+                PKLocalStorage.set('data_in_storage', dicSaved);
                 deferred.resolve();
               }
             } catch (e) {
@@ -203,6 +206,7 @@ angular.module('phopl.services')
                   console.log('New StorageFile have been created.');
                   inited = true;
                   dicSaved = {};
+                  PKLocalStorage.set('data_in_storage', '');
                   deferred.resolve();
                 }, function (err) {
                   console.error('Cannot create the storage file.');
@@ -218,7 +222,7 @@ angular.module('phopl.services')
             }
 
           }, function (error) {
-            cosole.error('Reading from the StorageFile was failed.');
+            console.error('Reading from the StorageFile was failed.');
             console.dir(error);
 
             inited = false;
@@ -233,6 +237,7 @@ angular.module('phopl.services')
             console.log('New StorageFile have been created.');
             inited = true;
             dicSaved = {};
+            PKLocalStorage.set('data_in_storage', '');
             deferred.resolve();
           }, function (error) {
             console.error('Cannot create the storage file.');
@@ -273,9 +278,10 @@ angular.module('phopl.services')
 
   function set(key, value) {
     if (ionic.Platform.isIOS() || ionic.Platform.isAndroid()) {
-      console.log('PKAsyncPKLocalStorage.setItem(' + key + ', ' + value + ')');
+      console.log('PKFileStorage.setItem(' + key + ', ' + value + ')');
       dicSaved[key] = JSON.stringify(value);
       saveToFile();
+      PKLocalStorage.set(key, value);
     } else {
       PKLocalStorage.set(key, value);
     }
@@ -297,6 +303,7 @@ angular.module('phopl.services')
     if (ionic.Platform.isIOS() || ionic.Platform.isAndroid()) {
       dicSaved[key] = null;
       saveToFile();
+      PKLocalStorage.remove(key);
     } else {
       PKLocalStorage.remove(key);
     }
@@ -310,6 +317,11 @@ angular.module('phopl.services')
       $cordovaFile.removeFile(cordova.file.dataDirectory, storageFileName)
       .then(function () {
         console.log('Removing storage file was successed.');
+        PKLocalStorage.remove('auth_user_token');
+        PKLocalStorage.remove('auth_vd_token');
+        PKLocalStorage.remove('email');
+        PKLocalStorage.remove('nickname');
+        PKLocalStorage.remove('data');
         deferred.resolve();
       }, function (err) {
         console.error('Removing storage file was failed.', err);

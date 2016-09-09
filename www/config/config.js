@@ -11,6 +11,7 @@ angular.module('phopl.ctrls')
   config.logout = function() {
     console.info('logout');
     PKFileStorage.remove('accountID');
+    PKFileStorage.remove('auth_vd_token');
     $state.go('register');
   }
 

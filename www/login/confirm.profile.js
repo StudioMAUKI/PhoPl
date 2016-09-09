@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('phopl.ctrls')
-.controller('confirmProfileCtrl', ['$scope', '$state', 'PKFileStorage', function($scope, $state, PKFileStorage) {
+.controller('confirmProfileCtrl', ['$scope', '$state', '$stateParams', 'PKFileStorage', function($scope, $state, $stateParams, PKFileStorage) {
   var confirmProfile = this;
 
   //////////////////////////////////////////////////////////////////////////////
@@ -11,6 +11,9 @@ angular.module('phopl.ctrls')
   //////////////////////////////////////////////////////////////////////////////
   //  event handler
   //////////////////////////////////////////////////////////////////////////////
+  $scope.$on('$ionicView.afterEnter', function() {
+    console.debug('stateParams in confirmProfile', $stateParams.auth_type);
+  });
 
   //////////////////////////////////////////////////////////////////////////////
   //  public methods

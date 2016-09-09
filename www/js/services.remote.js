@@ -91,14 +91,14 @@ angular.module('phopl.services')
   cacheMngr.iplaces = createCacheItem();
   // console.dir(cacheMngr);
 
-  function registerUser() {
+  function registerUser(force) {
     var deferred = $q.defer();
     var auth_user_token = '';
 
     PKFileStorage.init()
     .then(function() {
       auth_user_token = PKFileStorage.get('auth_user_token');
-      if (auth_user_token) {
+      if (auth_user_token && !force) {
         console.log('User Registration already successed: ' + auth_user_token);
         deferred.resolve(auth_user_token);
       } else {
@@ -111,7 +111,6 @@ angular.module('phopl.services')
         })
         .then(function(result) {
           console.log('User Registration successed: ' + result.data.auth_user_token);
-          // PKLocalStorage.set('auth_user_token', result.data.auth_user_token);
           PKFileStorage.set('auth_user_token', result.data.auth_user_token);
           deferred.resolve(result.data.auth_user_token);
         }, function(err) {
@@ -154,12 +153,13 @@ angular.module('phopl.services')
     }
   }
 
-  function registerVD(accountID) {
+  function registerVD(accountID, force) {
     var deferred = $q.defer();
     var auth_vd_token = PKFileStorage.get('auth_vd_token');
     var email = accountID || PKFileStorage.get('accountID');
+    console.info('registerVD email :' + email);
 
-    if (auth_vd_token) {
+    if (auth_vd_token && !force) {
       console.log('VD Registration already successed: ' + auth_vd_token);
       deferred.resolve(auth_vd_token);
     } else {
@@ -214,11 +214,11 @@ angular.module('phopl.services')
     })
     .then(function(result) {
       console.log('RemoteAPIService.checkVerified', result);
-      deferred.resolve('OK');
+      deferred.resolve(result.data);
     }, function(err) {
       console.error('RemoteAPIService.checkVerified', err);
       if (err.status === 404) {
-        deferred.resolve('EMPTY')
+        deferred.resolve(null);
       } else {
         deferred.reject(err);
       }
@@ -1344,4 +1344,66 @@ angular.module('phopl.services')
   return {
     search: search
   };
+}])
+.factory('oauthKakao', ['$q', '$http', '$cordovaOauthUtility', function($q, $http, $cordovaOauthUtility) {
+  return {
+    signin : function(clientId, appScope, options) {
+      var deferred = $q.defer();
+      if(window.cordova) {
+        if($cordovaOauthUtility.isInAppBrowserInstalled()) {
+          var redirect_uri = 'http://localhost/callback';
+          if(options !== undefined) {
+            if(options.hasOwnProperty('redirect_uri')) {
+              redirect_uri = options.redirect_uri;
+            }
+          }
+          var browserRef = window.cordova.InAppBrowser.open('https://kauth.kakao.com/oauth/authorize?client_id=' + clientId + '&redirect_uri=' + redirect_uri + '&response_type=code', '_blank', 'location=no,clearsessioncache=yes,clearcache=yes');
+          browserRef.addEventListener('loadstart', function(event) {
+            if((event.url).indexOf(redirect_uri) === 0) {
+              console.log('oauthKakao loadstart', event);
+              browserRef.removeEventListener('exit',function(event){});
+              //browserRef.close();
+              var responseParameters = (event.url).split('?')[1].split('&');
+              var parameterMap = [];
+              for(var i = 0; i < responseParameters.length; i++) {
+                parameterMap[responseParameters[i].split('=')[0]] = responseParameters[i].split('=')[1];
+              }
+              if(parameterMap.code !== undefined && parameterMap.code !== null) {
+                $http({
+                  method: 'POST',
+                  url: 'https://kauth.kakao.com/oauth/token',
+                  params: {
+                    grant_type: 'authorization_code',
+                    client_id: clientId,
+                    redirect_uri: redirect_uri,
+                    code: parameterMap.code
+                  }
+                })
+                .then(function(response) {
+                  console.log('oauthKakao token response', response);
+                  deferred.resolve({ access_token: response.data.access_token, token_type: response.data.token_type, expires_in: response.data.expires_in, refresh_token: response.data.refresh_token });
+                }, function(err) {
+                  console.error('oauthKakao token error', err);
+                  deferred.reject('Problem in getting token.');
+                })
+                .finally(function() {
+                  browserRef.close();
+                });
+              } else {
+                deferred.reject('Problem authenticating');
+              }
+            }
+          });
+          browserRef.addEventListener('exit', function(event) {
+            deferred.reject('The sign in flow was canceled');
+          });
+        } else {
+          deferred.reject('Could not find InAppBrowser plugin');
+        }
+      } else {
+        deferred.reject('Cannot authenticate via a web browser');
+      }
+      return deferred.promise;
+    }
+  }
 }]);
