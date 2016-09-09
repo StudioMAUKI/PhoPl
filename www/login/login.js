@@ -4,10 +4,17 @@ angular.module('phopl.ctrls')
 .controller('loginCtrl', ['$scope', '$ionicPopup', '$state', '$ionicPlatform', 'PKFileStorage', 'RemoteAPIService', function($scope, $ionicPopup, $state, $ionicPlatform, PKFileStorage, RemoteAPIService) {
   var login = this;
   login.loginned = false;
+  login.height = calculateHeight();
 
   //////////////////////////////////////////////////////////////////////////////
   //  private methods
   //////////////////////////////////////////////////////////////////////////////
+  function calculateHeight() {
+    var height = document.getElementsByClassName('scroll-content')[0].clientHeight;
+    console.info('Height of content: ' + height);
+    return height;
+  }
+
   function doLogin() {
     if (PKFileStorage.get('accountID')) {
       // 유저 등록

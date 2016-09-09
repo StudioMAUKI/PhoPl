@@ -9875,5 +9875,8 @@ a.button {
       font-family: fantasy;
       color: grey; }
 
+.fullscreen-container.positive {
+  background-color: #ff0066; }
+
 .bold-container {
   font-weight: bold; }
