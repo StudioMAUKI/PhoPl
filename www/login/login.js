@@ -15,14 +15,24 @@ angular.module('phopl.ctrls')
     return height;
   }
 
+  function goToNextStep() {
+    //  회원 등록 페이지로 이동시킴
+    //  위치 정보 이용에 동의했으면, 바로 로그인 화면으로 보내고, 그렇지 않으면
+    //  위치 정보 이용 동의를 먼저 받는다.
+    if (PKFileStorage.get('hasAgreedWithLocationPolicy')) {
+      $state.go('register');
+    } else {
+      $state.go('confirmLocation');
+    }
+  }
+
   function doLogin() {
-    if (PKFileStorage.get('accountID')) {
-      // 유저 등록
-      RemoteAPIService.registerUser()
-      .then(function(token) {
-        // 유저 로그인
-        RemoteAPIService.loginUser(token)
-        .then(function() {
+    RemoteAPIService.registerUser()
+    .then(function(token) {
+      // 유저 로그인
+      RemoteAPIService.loginUser(token)
+      .then(function() {
+        if (PKFileStorage.get('accountID')) {
           // VD 등록
           RemoteAPIService.registerVD()
           .then(function(token) {
@@ -30,53 +40,40 @@ angular.module('phopl.ctrls')
             RemoteAPIService.loginVD(token)
             .then(function(token) {
               console.log('login success.');
-              PKFileStorage.set('auth_vd_token', token)
+              PKFileStorage.set('auth_vd_token', token);
               login.loginned = true;
               $state.go('tab.config');
             }, function(err) {
               console.error('loginVD failed.', err);
               PKFileStorage.remove('accountID');
               PKFileStorage.remove('auth_vd_token');
-              $state.go('register');
+              goToNextStep();
             });
           }, function(err) {
             console.error('registerVD failed', err);
             PKFileStorage.remove('accountID');
             PKFileStorage.remove('auth_vd_token');
-            $state.go('register');
+            goToNextStep();
           });
-        }, function(err) {
-          console.error('loginUser failed', err);
-  				PKFileStorage.remove('auth_user_token');
-          $state.go('register');
-        });
+        } else {
+          goToNextStep();
+        }
       }, function(err) {
-        console.error('registerUser failed', err);
-  			PKFileStorage.remove('auth_user_token');
-  			$state.go('register');
-      });
-
-      // setTimeout(function() {
-      //   console.info('로그인 처리 했다 치고..설정 화면으로 이동');
-      //   login.loginned = true;
-      //   $state.go('tab.config');
-      // }, 1000);
-    } else {
-      //  회원 등록 페이지로 이동시킴
-      //  위치 정보 이용에 동의했으면, 바로 로그인 화면으로 보내고, 그렇지 않으면
-      //  위치 정보 이용 동의를 먼저 받는다.
-      if (PKFileStorage.get('hasAgreedWithLocationPolicy')) {
+        console.error('loginUser failed', err);
+				PKFileStorage.remove('auth_user_token');
         $state.go('register');
-      } else {
-        $state.go('confirmLocation');
-      }
-    }
+      });
+    }, function(err) {
+      console.error('registerUser failed', err);
+			PKFileStorage.remove('auth_user_token');
+			$state.go('register');
+    });
   }
 
   //////////////////////////////////////////////////////////////////////////////
   //  event handler
   //////////////////////////////////////////////////////////////////////////////
-  $scope.$on('$ionicView.loaded', function() {
+  $scope.$on('$ionicView.afterEnter', function() {
     $ionicPlatform.ready(function() {
       PKFileStorage.init()
       .then(function() {

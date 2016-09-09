@@ -154,27 +154,31 @@ angular.module('phopl.services')
     }
   }
 
-  function registerVD() {
+  function registerVD(accountID) {
     var deferred = $q.defer();
     var auth_vd_token = PKFileStorage.get('auth_vd_token');
-    var email = PKFileStorage.get('accountID');
+    var email = accountID || PKFileStorage.get('accountID');
 
     if (auth_vd_token) {
       console.log('VD Registration already successed: ' + auth_vd_token);
       deferred.resolve(auth_vd_token);
     } else {
-      $http({
-        method: 'POST',
-        url: getServerURL() + '/vds/register/',
-        data: JSON.stringify({ email: email, country:PKLocalStorage.get('country'), language:PKLocalStorage.get('lang'), timezone:'' })
-      })
-      .then(function(result) {
-        console.log('VD Registration successed: ' + result.data.auth_vd_token);
-        PKFileStorage.set('auth_vd_token', result.data.auth_vd_token);
-        deferred.resolve(result.data.auth_vd_token);
-      }, function(err) {
-        deferred.reject(err);
-      });
+      if (email === null || email === '') {
+        deferred.reject('accountID info is Empty');
+      } else {
+        $http({
+          method: 'POST',
+          url: getServerURL() + '/vds/register/',
+          data: JSON.stringify({ email: email, country:PKLocalStorage.get('country'), language:PKLocalStorage.get('lang'), timezone:'' })
+        })
+        .then(function(result) {
+          console.log('VD Registration successed: ' + result.data.auth_vd_token);
+          PKFileStorage.set('auth_vd_token', result.data.auth_vd_token);
+          deferred.resolve(result.data.auth_vd_token);
+        }, function(err) {
+          deferred.reject(err);
+        });
+      }
     }
     return deferred.promise;
   }
@@ -199,6 +203,28 @@ angular.module('phopl.services')
   function hasAccountID() {
     var accountID = PKFileStorage.get('accountID');
     return (accountID !== null);
+  }
+
+  function checkVerified() {
+    var deferred = $q.defer();
+
+    $http({
+      method: 'GET',
+      url: getServerURL() + '/rus/myself/'
+    })
+    .then(function(result) {
+      console.log('RemoteAPIService.checkVerified', result);
+      deferred.resolve('OK');
+    }, function(err) {
+      console.error('RemoteAPIService.checkVerified', err);
+      if (err.status === 404) {
+        deferred.resolve('EMPTY')
+      } else {
+        deferred.reject(err);
+      }
+    });
+
+    return deferred.promise;
   }
 
   function sendUserPost(sendObj){
@@ -777,6 +803,7 @@ angular.module('phopl.services')
     registerVD: registerVD,
     loginVD: loginVD,
     hasAccountID: hasAccountID,
+    checkVerified: checkVerified,
     sendUserPost: sendUserPost,
     deleteUserPost: deleteUserPost,
     deleteContentInUserPost: deleteContentInUserPost,

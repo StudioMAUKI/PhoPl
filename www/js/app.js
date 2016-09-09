@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 angular.module('phopl', ['ionic', 'ngCordova', 'phopl.config', 'phopl.ctrls', 'phopl.directives', 'phopl.services'])
-.run(function($ionicPlatform) {
+.run(['$ionicPlatform', 'PKLocalStorage', function($ionicPlatform, PKLocalStorage) {
   $ionicPlatform.ready(function() {
     if(window.cordova && window.cordova.plugins.Keyboard) {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -19,8 +19,35 @@ angular.module('phopl', ['ionic', 'ngCordova', 'phopl.config', 'phopl.ctrls', 'p
     if(window.StatusBar) {
       StatusBar.styleDefault();
     }
+
+    // 언어, 국가 정보 얻어오기. 이코드는 디바이스에서만 작동됨
+    if (ionic.Platform.isIOS() || ionic.Platform.isAndroid()) {
+      navigator.globalization.getPreferredLanguage(function(result) {
+          var arr = result.value.split('-');
+          PKLocalStorage.set('lang', arr[0]);
+          PKLocalStorage.set('country', arr[1]);
+        },
+        function(error) {
+          console.error(error);
+      });
+    } else {
+      PKLocalStorage.set('lang', 'ko');
+      PKLocalStorage.set('country', 'KR');
+    }
+
+    if (ionic.Platform.isIOS()) {
+      document.body.classList.remove('platform-android');
+      document.body.classList.add('platform-ios');
+    } else if (ionic.Platform.isAndroid()) {
+      document.body.classList.remove('platform-ios');
+      document.body.classList.add('platform-android');
+    } else {
+      document.body.classList.remove('platform-ios');
+      document.body.classList.remove('platform-android');
+      document.body.classList.add('platform-ionic');
+    }
   });
-});
+}]);
 
 angular.module('phopl.ctrls', []);
 angular.module('phopl.directives', []);
