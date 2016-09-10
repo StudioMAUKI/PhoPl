@@ -227,6 +227,25 @@ angular.module('phopl.services')
     return deferred.promise;
   }
 
+  function updateUserInfo(info) {
+    var deferred = $q.defer();
+
+    $http({
+      method: 'PATCH',
+      url: getServerURL() + '/rus/myself/',
+      data: JSON.stringify(info)
+    })
+    .then(function(result) {
+      console.log('updateUserInfo', result);
+      deferred.resolve();
+    }, function(err) {
+      console.error('updateUserInfo', err);
+      deferred.reject(err);
+    });
+
+    return deferred.promise;
+  }
+
   function sendUserPost(sendObj){
     var deferred = $q.defer();
     $http({
@@ -804,6 +823,7 @@ angular.module('phopl.services')
     loginVD: loginVD,
     hasAccountID: hasAccountID,
     checkVerified: checkVerified,
+    updateUserInfo: updateUserInfo,
     sendUserPost: sendUserPost,
     deleteUserPost: deleteUserPost,
     deleteContentInUserPost: deleteContentInUserPost,

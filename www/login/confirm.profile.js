@@ -53,7 +53,7 @@ angular.module('phopl.ctrls')
     } else if (accountID.indexOf('@kakaotalk') !== -1) {
       var kakaoProfile = PKFileStorage.get('kakao_profile');
     } else {
-      confirmProfile.nickname = '닉네임을 지정해 주세요';
+      confirmProfile.nickname = '';
       confirmProfile.email = accountID;
       confirmProfile.profileImg = 'img/blank-profile.png';
     }
@@ -78,9 +78,25 @@ angular.module('phopl.ctrls')
   //  public methods
   //////////////////////////////////////////////////////////////////////////////
   confirmProfile.submit = function() {
-    console.info('완료했고, 공유 화면으로 이동해야 함');
-    PKFileStorage.set('hasConfirmedProfileInfo', true);
-    $state.go('tab.config');
+    // console.info('완료했고, 공유 화면으로 이동해야 함');
+    // PKFileStorage.set('hasConfirmedProfileInfo', true);
+    // $state.go('tab.config');
+    RemoteAPIService.updateUserInfo({
+      email: confirmProfile.email,
+      nickname: confirmProfile.nickname,
+      data: JSON.stringify({
+        profileImg: confirmProfile.profileImg
+      })
+    })
+    .then(function() {
+
+    }, function(err) {
+      if (err.status === 400) {
+        //  닉네임이 유일하지 않은 경우임
+      } else {
+        //  기타 에러 처리
+      }
+    });
   }
 
   confirmProfile.changeProfileImg = function() {
