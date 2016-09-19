@@ -348,8 +348,9 @@ angular.module('phopl.services')
   };
 }])
 .factory('PhotoService', ['$cordovaCamera', '$cordovaImagePicker', '$q', function($cordovaCamera, $cordovaImagePicker, $q) {
-  function getPhotoFromCamera() {
+  function getPhotoFromCamera(size) {
     var deferred = $q.defer();
+    size = size || {width:null, height:null};
 
 		if (ionic.Platform.isIOS() || ionic.Platform.isAndroid()) {
 			var options = {
@@ -358,8 +359,8 @@ angular.module('phopl.services')
 	      sourceType: Camera.PictureSourceType.CAMERA,
 	      allowEdit: false,
 	      encodingType: Camera.EncodingType.JPEG,
-	      targetWidth: 1280,
-	      targetHeight: 1280,
+	      targetWidth: size.width || 1280,
+	      targetHeight: size.height || 1280,
 	      popoverOptions: CameraPopoverOptions,
 	      correctOrientation: true,
 	      saveToPhotoAlbum: true
@@ -380,15 +381,16 @@ angular.module('phopl.services')
     return deferred.promise;
 	};
 
-	function getPhotosFromAlbum(reqCount) {
+	function getPhotosFromAlbum(reqCount, size) {
     var deferred = $q.defer();
+    size = size || {width:null, height:null};
 
 		if (ionic.Platform.isIOS() || ionic.Platform.isAndroid()) {
 			$cordovaImagePicker.getPictures({
 	      maximumImagesCount: reqCount,
 	      quality: 70,
-        width: 1280,
-				height: 1280
+        width: size.width || 1280,
+				height: wize.height || 1280
 	    }).
 	    then(function(imageURIs) {
         deferred.resolve(imageURIs);

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('phopl.ctrls')
-.controller('confirmProfileCtrl', ['$scope', '$state', '$ionicPopup', '$http', 'PKFileStorage', 'RemoteAPIService', function($scope, $state, $ionicPopup, $http, PKFileStorage, RemoteAPIService) {
+.controller('confirmProfileCtrl', ['$scope', '$state', '$ionicPopup', '$http', '$ionicActionSheet', 'PKFileStorage', 'RemoteAPIService', function($scope, $state, $ionicPopup, $http, $ionicActionSheet, PKFileStorage, RemoteAPIService) {
   var confirmProfile = this;
   confirmProfile.nickname = '';
   confirmProfile.email = '';
@@ -13,22 +13,24 @@ angular.module('phopl.ctrls')
   //////////////////////////////////////////////////////////////////////////////
   function checkProfileInfo() {
     RemoteAPIService.checkVerified()
-    .then(function(result) {
-      if (result) {
-        var data =JSON.parse(result.data);
-        confirmProfile.accountID = result.email;
+    .then(function(accountInfo) {
+      if (accountInfo) {
+        var data =JSON.parse(accountInfo.data);
+        confirmProfile.accountID = accountInfo.email;
         if (!confirmProfile.accountID) {
           alertAndExit('프로필 정보를 가져오던 중 심각한');
           return;
         }
 
-        if (!result.nickname || !data.profileImg) {
-          fillProfileField(confirmProfile.accountID);
+        if (!accountInfo.nickname || !data.profileImg) {
+          fillProfileField(accountInfo);
         } else {
-          PKFileStorage.set('nickname', result.nickname);
+          PKFileStorage.set('nickname', accountInfo.nickname);
           PKFileStorage.set('profileImg', data.profileImg);
           console.warn('어? 정보가 다 있는데, 대체 여기로 왜 온거지?');
-          $state.go('tab.config');
+          //$state.go('tab.config');
+          console.warn('디버깅 중이라 원래는 tab.config로 보내야 하지만, 지금은 처리하지 않음');
+          fillProfileField(accountInfo);
         }
       } else if (result === null) {
         $ionicPopup.alert({
@@ -44,17 +46,18 @@ angular.module('phopl.ctrls')
     });
   }
 
-  function fillProfileField(accountID) {
-    if (accountID.indexOf('@facebook') !== -1) {
+  function fillProfileField(accountInfo) {
+    if (accountInfo.email.indexOf('@facebook') !== -1) {
       //  요부분부터 내일 다시 검토해야 함
       var fbProfile = PKFileStorage.get('fb_profile');
       confirmProfile.nickname = fbProfile.name;
       confirmProfile.email = fbProfile.email;
-    } else if (accountID.indexOf('@kakaotalk') !== -1) {
+    } else if (accountInfo.email.indexOf('@kakaotalk') !== -1) {
       var kakaoProfile = PKFileStorage.get('kakao_profile');
+      // confirmProfile.nickname =
     } else {
-      confirmProfile.nickname = '';
-      confirmProfile.email = accountID;
+      confirmProfile.nickname = accountInfo.nickname;
+      confirmProfile.email = accountInfo.email;
       confirmProfile.profileImg = 'img/blank-profile.png';
     }
   }
@@ -101,5 +104,100 @@ angular.module('phopl.ctrls')
 
   confirmProfile.changeProfileImg = function() {
     console.info('confirmProfile.changeProfileImg');
+    $ionicActionSheet.show({
+      buttons: [
+        { text: '카메라로 사진 찍기' },
+        { text: '앨범에서 선택' }
+      ],
+      titleText: '프로필 사진을 지정합니다.',
+      cancelText: '취소',
+      buttonClicked: function(index) {
+        console.log('[Event(ActionSheet:click)]Button['+ index + '] is clicked.');
+        if (index == 0) {
+          PhotoService.getPhotoFromCamera({width:300, height:300})
+      		.then(function(imageURI) {
+            confirmProfile.profileImg = imageURI;
+            // RemoteAPIService.uploadImage(imageURI)
+        		// .then(function(response) {
+        		// 	console.log('Image UUID: ' + response.uuid);
+      			// 	RemoteAPIService.sendUserPost({
+      			// 		images: [{
+      			// 			content: response.url
+      			// 		}],
+      			// 		uplace_uuid: place.uplace_uuid
+      			// 	})
+      			// 	.then(function(result) {
+            //     // place.loadPlaceInfo();
+            //     if (place.post.userPost.images === undefined || place.post.userPost.images === null || place.post.userPost.images.length === 0) {
+            //       place.post.userPost.images = [result.data.userPost.images[0]];
+            //       place.imagesForSlide = [result.data.userPost.images[0].content];
+            //       place.coverImage = result.data.userPost.images[0].summary;
+            //     } else {
+            //       place.post.userPost.images.splice(0, 0, result.data.userPost.images[0]);
+            //       place.imagesForSlide.splice(0, 0, result.data.userPost.images[0].content);
+            //     }
+      			// 	}, function(err) {
+      			// 		$ionicPopup.alert({
+      		  //       title: 'ERROR: Send user post',
+      		  //       template: JSON.stringify(err)
+      		  //     });
+      			// 	});
+        		// }, function(err) {
+        		// 	$ionicPopup.alert({
+            //     title: 'ERROR: Upload Image',
+            //     template: JSON.stringify(err)
+            //   });
+        		// });
+      		});
+        } else {
+          // PhotoService.getPhotosFromAlbum(5)
+      		// .then(function(imageURIs) {
+          //   // console.dir(imageURIs);
+          //   for (var i = 0; i < imageURIs.length; i++){
+          //     $ionicLoading.show({
+          // 			template: '<ion-spinner icon="lines">저장 중..</ion-spinner>',
+          // 			duration: 60000
+          // 		});
+          //     RemoteAPIService.uploadImage(imageURIs[i])
+          // 		.then(function(response) {
+          // 			console.log('Image UUID: ' + response.uuid);
+        	// 			RemoteAPIService.sendUserPost({
+        	// 				images: [{
+        	// 					content: response.url
+        	// 				}],
+        	// 				uplace_uuid: place.uplace_uuid
+        	// 			})
+        	// 			.then(function(result) {
+          //         // place.loadPlaceInfo();
+          //         $ionicLoading.hide();
+          //         if (place.post.userPost.images === undefined || place.post.userPost.images === null || place.post.userPost.images.length === 0) {
+          //           place.post.userPost.images = [result.data.userPost.images[0]];
+          //           place.imagesForSlide = [result.data.userPost.images[0].content];
+          //           place.coverImage = result.data.userPost.images[0].summary;
+          //         } else {
+          //           place.post.userPost.images.splice(0, 0, result.data.userPost.images[0]);
+          //           place.imagesForSlide.splice(0, 0, result.data.userPost.images[0].content);
+          //         }
+        	// 			}, function(err) {
+          //         $ionicLoading.hide();
+        	// 				$ionicPopup.alert({
+        	// 	        title: 'ERROR: Send user post',
+        	// 	        template: JSON.stringify(err)
+        	// 	      });
+        	// 			});
+          // 		}, function(err) {
+          //       $ionicLoading.hide();
+          // 			$ionicPopup.alert({
+          //         title: 'ERROR: Upload Image',
+          //         template: JSON.stringify(err)
+          //       });
+          // 		});
+          //   }
+      		// });
+        }
+
+        return true;
+      }
+    });
   }
 }]);
