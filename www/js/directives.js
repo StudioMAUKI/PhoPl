@@ -46,9 +46,11 @@ angular.module('phopl.directives')
       }).then(function(modal) {
         $scope.modal = modal;
       });
+
       element[0].addEventListener('click', function(event) {
         $scope.open();
       });
+
       $scope.$watch('search.query', function(newValue) {
         if (newValue) {
           LocationService.searchAddress(newValue)
@@ -84,7 +86,7 @@ angular.module('phopl.directives')
             });
           } else {
             $scope.location.type = 'mauki';
-            $scope.location.name = '현재 위치';
+            $scope.location.name = place.name;
             $scope.location.lps = null;
             $scope.close();
           }

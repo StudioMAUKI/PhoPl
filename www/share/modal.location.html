@@ -1,7 +1,6 @@
 <ion-modal-view>
   <ion-header-bar class="bar-positive" align-title="center">
-    <button class="button button-icon button-clear ion-ios-navigate-outline" ng-click="share.refreshPosition()"></button>
-		<h1 class="title">위치 지정</h1>
+    <h1 class="title">위치 지정</h1>
     <button class="button button-clear" ng-click="close()">취소</button>
 	</ion-header-bar>
   <ion-content scroll="false">
@@ -16,8 +15,8 @@
       <ion-item ng-show="search.error">
         {{search.error}}
       </ion-item>
-      <ion-item ng-click="choosePlace({place_id:-1})">
-        현재 위치
+      <ion-item ng-click="choosePlace({place_id:-1,name:search.query})">
+        {{search.query}}<span ng-show="search.query">(직접 입력)</span>
       </ion-item>
       <ion-item ng-repeat="suggestion in search.suggestions" ng-click="choosePlace(suggestion)">
         <!-- {{suggestion.description}} -->
