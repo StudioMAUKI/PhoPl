@@ -15,10 +15,15 @@ angular.module('phopl.ctrls')
     return height;
   }
 
+  //  회원 등록 페이지로 이동시킴
+  //  위치 정보 이용에 동의했으면, 바로 로그인 화면으로 보내고, 그렇지 않으면
+  //  위치 정보 이용 동의를 먼저 받는다.
   function goToNextStep() {
-    //  회원 등록 페이지로 이동시킴
-    //  위치 정보 이용에 동의했으면, 바로 로그인 화면으로 보내고, 그렇지 않으면
-    //  위치 정보 이용 동의를 먼저 받는다.
+
+    //  혹시 있을지 모르는 쓰레기 계정 정보를 삭제
+    PKFileStorage.remove('accountID');
+    PKFileStorage.remove('auth_vd_token');
+
     if (PKFileStorage.get('hasAgreedWithLocationPolicy')) {
       $state.go('register');
     } else {
@@ -69,14 +74,10 @@ angular.module('phopl.ctrls')
               });
             }, function(err) {
               console.error('loginVD failed.', err);
-              PKFileStorage.remove('accountID');
-              PKFileStorage.remove('auth_vd_token');
               goToNextStep();
             });
           }, function(err) {
             console.error('registerVD failed', err);
-            PKFileStorage.remove('accountID');
-            PKFileStorage.remove('auth_vd_token');
             goToNextStep();
           });
         } else {
@@ -84,13 +85,11 @@ angular.module('phopl.ctrls')
         }
       }, function(err) {
         console.error('loginUser failed', err);
-				PKFileStorage.remove('auth_user_token');
-        $state.go('register');
+				goToNextStep();
       });
     }, function(err) {
       console.error('registerUser failed', err);
-			PKFileStorage.remove('auth_user_token');
-			$state.go('register');
+			goToNextStep();
     });
   }
 

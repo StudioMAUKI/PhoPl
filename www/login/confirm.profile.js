@@ -1,12 +1,13 @@
 'use strict';
 
 angular.module('phopl.ctrls')
-.controller('confirmProfileCtrl', ['$scope', '$state', '$ionicPopup', '$http', '$ionicActionSheet', 'PKFileStorage', 'RemoteAPIService', function($scope, $state, $ionicPopup, $http, $ionicActionSheet, PKFileStorage, RemoteAPIService) {
+.controller('confirmProfileCtrl', ['$scope', '$state', '$ionicPopup', '$http', '$ionicActionSheet', 'PKFileStorage', 'RemoteAPIService', 'PhotoService', function($scope, $state, $ionicPopup, $http, $ionicActionSheet, PKFileStorage, RemoteAPIService, PhotoService) {
   var confirmProfile = this;
   confirmProfile.nickname = '';
   confirmProfile.email = '';
   confirmProfile.profileImg = '';
   confirmProfile.accountID = '';
+  confirmProfile.isKakaoAccount = false;
 
   //////////////////////////////////////////////////////////////////////////////
   //  private methods
@@ -32,7 +33,7 @@ angular.module('phopl.ctrls')
           console.warn('디버깅 중이라 원래는 tab.config로 보내야 하지만, 지금은 처리하지 않음');
           fillProfileField(accountInfo);
         }
-      } else if (result === null) {
+      } else if (accountInfo === null) {
         $ionicPopup.alert({
           title: '잠시만요!',
           template: '입력하신 이메일 주소로 확인 메일이 발송되었습니다. 메일에 포함된 링크를 클릭 하신 후 계속 진행해 주세요.'
@@ -51,10 +52,14 @@ angular.module('phopl.ctrls')
       //  요부분부터 내일 다시 검토해야 함
       var fbProfile = PKFileStorage.get('fb_profile');
       confirmProfile.nickname = fbProfile.name;
+      confirmProfile.profileImg = fbProfile.picture.data.url;
       confirmProfile.email = fbProfile.email;
     } else if (accountInfo.email.indexOf('@kakaotalk') !== -1) {
       var kakaoProfile = PKFileStorage.get('kakao_profile');
-      // confirmProfile.nickname =
+      confirmProfile.nickname = kakaoProfile.properties.nickname;
+      confirmProfile.profileImg = kakaoProfile.properties.thumbnail_image;
+      confirmProfile.isKakaoAccount = true;
+      confirmProfile.kakaoID = kakaoProfile.id;
     } else {
       confirmProfile.nickname = accountInfo.nickname;
       confirmProfile.email = accountInfo.email;
@@ -92,12 +97,18 @@ angular.module('phopl.ctrls')
       })
     })
     .then(function() {
-
+      $state.go('tab.config');
     }, function(err) {
       if (err.status === 400) {
-        //  닉네임이 유일하지 않은 경우임
+        $ionicPopup.alert({
+          title: '죄송합니다!',
+          template: '지정한 닉네임은 이미 사용되고 있습니다. 다른 닉네임을 지정해 주세요.'
+        });
       } else {
-        //  기타 에러 처리
+        $ionicPopup.alert({
+          title: '죄송합니다!',
+          template: '프로필 정보 등록 중 오류가 발생했습니다. 잠시후 다시 시작해 주세요.'
+        });
       }
     });
   }

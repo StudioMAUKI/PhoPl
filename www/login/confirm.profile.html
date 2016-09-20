@@ -20,10 +20,16 @@
           {{confirmProfile.nickname}}
         </span>
       </div> -->
-      <div class="item">
+      <div class="item" ng-show="!confirmProfile.isKakaoAccount">
         이메일
         <span class="item-note">
           {{confirmProfile.email}}
+        </span>
+      </div>
+      <div class="item" ng-show="confirmProfile.isKakaoAccount">
+        카카오 회원번호
+        <span class="item-note">
+          {{confirmProfile.kakaoID}}
         </span>
       </div>
     </div>
