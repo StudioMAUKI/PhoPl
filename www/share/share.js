@@ -43,10 +43,15 @@ angular.module('phopl.ctrls')
     }).then(function(modal) {
       share.modal = modal;
       share.modal.show();
+      var iframeDocument = document.getElementById('editor').contentDocument;
+      iframeDocument.designMode = 'on';
+      $(iframeDocument).find('body').append(share.note);
     });
   }
 
   share.closeModal = function() {
+    share.note = $('#editor').contents().find('body').html();
+    $('#note-result').html(share.note);
     share.modal.hide();
     share.modal.remove();
   }
@@ -54,4 +59,5 @@ angular.module('phopl.ctrls')
   share.upload = function() {
     console.info('upload images..');
   };
+
 }]);
