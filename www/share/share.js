@@ -46,8 +46,12 @@ angular.module('phopl.ctrls')
     });
   }
 
-  share.close = function() {
+  share.closeModal = function() {
     share.modal.hide();
     share.modal.remove();
   }
+
+  share.upload = function() {
+    console.info('upload images..');
+  };
 }]);

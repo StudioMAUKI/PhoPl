@@ -1,4 +1,9 @@
 <ion-view view-title="사진공유">
+  <ion-nav-buttons side="secondary">
+      <button class="button button-clear" ng-click="share.upload()">
+        저장
+      </button>
+    </ion-nav-buttons>
   <ion-content class="bold-container">
     <!-- 노트 영역 -->
 		<div class="row">
@@ -22,6 +27,7 @@
 		      <a class="button button-stable button-full icon-left ion-ios-location" location-suggestion location="share.location" style="height:32px;text-align:left;">
 						<strong>{{share.location.name || share.placeholderTitle}}</strong>
 						<small>{{share.location.formatted_address || share.placeholderSubTitle}}</small>
+            <small ng-show="share.location.geometry">({{share.location.geometry.location.lat()}}, {{share.location.geometry.location.lng()}})</small>
 					</a>
 		    </div>
 			</div>
