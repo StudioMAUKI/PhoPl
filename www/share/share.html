@@ -7,11 +7,12 @@
   <ion-content class="bold-container">
     <!-- 노트 영역 -->
 		<div class="row">
-			<div class="col padding">
+			<div class="col fake-input">
 				<!-- <label class="item item-input">
 			    <input type="text" placeholder="이 사진과 장소에 대해 이야기해 주세요." ng-model="share.note">
 			  </label> -->
-        <div class="padding fake-input" id="note-result" ng-click="share.promptNoteModal()">
+        <!-- <div class="padding" style="color:#444;" id="note-result" ng-click="share.promptNoteModal()"> -->
+        <div style="color:#444;" id="note-result" expanding-textarea content="share.note">
           메모를 남겨 주세요.
         </div>
 			</div>
@@ -22,8 +23,8 @@
 		</div>
     <!-- 장소명 입력 폼 -->
 		<div class="row">
-			<div class="col">
-				<div class="list fake-input">
+			<div class="col fake-input">
+				<div class="list">
 		      <a class="button button-stable button-full icon-left ion-ios-location" location-suggestion location="share.location" style="height:32px;text-align:left;">
 						<strong>{{share.location.name || share.placeholderTitle}}</strong>
 						<small>{{share.location.formatted_address || share.placeholderSubTitle}}</small>

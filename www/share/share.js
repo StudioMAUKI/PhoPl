@@ -16,7 +16,7 @@ angular.module('phopl.ctrls')
     'http://pds27.egloos.com/pds/201305/21/76/b0119476_519b41b6ae395.jpg',
     'http://thumbnail.egloos.net/850x0/http://pds25.egloos.com/pds/201412/09/76/b0119476_5485cf925668e.jpg'
   ];
-  share.note = '';
+  share.note = '메모를 남기세요.';
   share.placeNameForSave = '';
   share.placeholderTitle = '어디인가요?';
   share.placeholderSubTitle = '장소 이름을 입력하세요';
@@ -36,28 +36,33 @@ angular.module('phopl.ctrls')
   //////////////////////////////////////////////////////////////////////////////
   //  Public Methods
   //////////////////////////////////////////////////////////////////////////////
-  share.promptNoteModal = function() {
-    $ionicModal.fromTemplateUrl('share/modal.note.html', {
-      scope: $scope,
-      focusFirstInput: true
-    }).then(function(modal) {
-      share.modal = modal;
-      share.modal.show();
-      var iframeDocument = document.getElementById('editor').contentDocument;
-      iframeDocument.designMode = 'on';
-      $(iframeDocument).find('body').append(share.note);
-    });
-  }
 
-  share.closeModal = function() {
-    share.note = $('#editor').contents().find('body').html();
-    $('#note-result').html(share.note);
-    share.modal.hide();
-    share.modal.remove();
-  }
+  // share.promptNoteModal = function() {
+  //   $ionicModal.fromTemplateUrl('share/modal.note.html', {
+  //     scope: $scope,
+  //     focusFirstInput: true
+  //   }).then(function(modal) {
+  //     share.modal = modal;
+  //     share.modal.show();
+  //     var iframeDocument = document.getElementById('editor').contentDocument;
+  //     iframeDocument.designMode = 'on';
+  //     $(iframeDocument).find('body').append(share.note);
+  //   });
+  // }
+  //
+  // share.closeModal = function() {
+  //   share.note = $('#editor').contents().find('body').html();
+  //   $('#note-result').html(share.note);
+  //   share.modal.hide();
+  //   share.modal.remove();
+  // }
 
   share.upload = function() {
     console.info('upload images..');
   };
+
+  $scope.$watch('share.note', function(newValue) {
+    $('#note-result').html(share.note);
+  });
 
 }]);

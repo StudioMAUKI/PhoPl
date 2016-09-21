@@ -1,32 +1,50 @@
 angular.module('phopl.directives')
-.directive('expandingTextarea', [function () {
+.directive('expandingTextarea', ['$ionicModal', function ($ionicModal) {
     return {
-        restrict: 'A',
-        controller: function ($scope, $element, $attrs, $timeout) {
-            $element.css('min-height', '0');
-            $element.css('resize', 'none');
-            $element.css('overflow-y', 'hidden');
-            setHeight(0);
-            $timeout(setHeightToScrollHeight);
+      restrict: 'A',
+      scope: {
+        content: '='
+      },
+      link: function($scope, element) {
+        console.log('expandingTextarea started!');
 
-            function setHeight(height) {
-                $element.css('height', height + 'px');
-                $element.css('max-height', height + 'px');
+
+        $scope.open = function() {
+          $ionicModal.fromTemplateUrl('js/modal.note.html', {
+            scope: $scope,
+            focusFirstInput: true
+          })
+          .then(function(modal) {
+            $scope.modal = modal;
+            $scope.modal.show();
+            var iframeDocument = document.getElementById('editor').contentDocument;
+            iframeDocument.designMode = 'on';
+            if ($scope.content !== '메모를 남기세요.') {
+              $(iframeDocument).find('body').append($scope.content);
             }
+          });
 
-            function setHeightToScrollHeight() {
-                setHeight(0);
-                var scrollHeight = angular.element($element)[0]
-                  .scrollHeight;
-                if (scrollHeight !== undefined) {
-                    setHeight(scrollHeight);
-                }
-            }
+        };
 
-            $scope.$watch(function () {
-                return angular.element($element)[0].value;
-            }, setHeightToScrollHeight);
-        }
+        $scope.close = function() {
+          // if (window.cordova && window.cordova.plugins.Keyboard.isVisible) {
+          //   window.cordova.plugins.Keyboard.close();
+          // }
+
+          var contentText = $('#editor').contents().find('body').text();
+          if (contentText.trim().length === 0) {
+            $scope.content = '메모를 남기세요.';
+          } else {
+            $scope.content = $('#editor').contents().find('body').html();
+          }
+          $scope.modal.hide();
+          $scope.modal.remove();
+        };
+
+        element[0].addEventListener('click', function(event) {
+          $scope.open();
+        });
+      }
     };
 }])
 .directive('locationSuggestion', ['$ionicModal', 'LocationService', 'MapService', function($ionicModal, LocationService, MapService){
@@ -36,7 +54,7 @@ angular.module('phopl.directives')
       location: '='
     },
     link: function($scope, element){
-      console.log('locationSuggestion started!');
+      // console.log('locationSuggestion started!');
       $scope.search = {};
       $scope.search.suggestions = [];
       $scope.search.query = "";
