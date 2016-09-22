@@ -35,5 +35,30 @@
         <small>동네술집, 맥주한잔, 와인저렴, 콜키지무료, 이탈리안, 퓨전, 개성</small>
 			</div>
 		</div>
+
+    <!-- 검색 결과 -->
+		<div class="list">
+			<div class="item item-divider">
+		    이 장소와 관련된 블로그들
+		  </div>
+			<a ng-repeat="result in place.searchResults" class="item" href="#" ng-click="place.openLink(result.link)">
+				<h2>{{result.title}}</h2>
+				<h3>{{result.author}}</h3>
+				<p>{{result.description}}</p>
+			</a>
+			<!-- 블로그 더 보기 버튼 -->
+			<a class="item" href="#" style="text-align: center;" ng-show="place.post.name" ng-click="place.searchPlace()">
+				관련 블로그 더보기
+			</a>
+		</div>
   </ion-content>
+
+  <!-- 하단 버튼 바 -->
+  <ion-footer-bar>
+    <div class="button-bar" style="margin-top:5px;">
+      <a class="button button-stable" ng-click="showMap()">지도</a>
+      <a class="button button-stable">저장</a>
+      <a class="button button-stable" ng-click="share()">공유</a>
+    </div>
+  </ion-footer-bar>
 </ion-view>

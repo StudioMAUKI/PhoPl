@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('phopl.ctrls')
-.controller('albumCtrl', ['$scope', 'DOMHelper', function($scope, DOMHelper) {
+.controller('albumCtrl', ['$scope', '$q', '$ionicPopup', '$ionicModal', 'DOMHelper', function($scope, $q, $ionicPopup, $ionicModal, DOMHelper) {
   var result = this;
   $scope.attatchedImages = [
     'http://image.chosun.com/sitedata/image/201312/13/2013121302159_0.jpg',
@@ -17,4 +17,90 @@ angular.module('phopl.ctrls')
     'http://thumbnail.egloos.net/850x0/http://pds25.egloos.com/pds/201412/09/76/b0119476_5485cf925668e.jpg'
   ];
   $scope.calculatedHeight = DOMHelper.getImageHeight('view-container', 3, 5);
+
+  //////////////////////////////////////////////////////////////////////////////
+  //  Private Methods
+  //////////////////////////////////////////////////////////////////////////////
+  function copyLinkToClipboard() {
+    var deferred = $q.defer();
+    deferred.resolve();
+    return deferred.promise;
+  };
+  function fitMapToScreen() {
+    console.log('call fitMapToScreen');
+    var documentHeight = $(document).height();
+    // var contentHeight = document.getElementsByTagName('ion-content')[0].clientHeight;
+    console.info('documentHeight: ' + documentHeight);
+    var barHeight = document.getElementsByTagName('ion-header-bar')[0].clientHeight || 44;
+    $('#map').css({
+      height: documentHeight - barHeight
+    });
+    //  이거 꼭 해줘야 지도가 제대로 그려짐. (안그러면 걍 회색으로 나옴)
+    // google.maps.event.trigger($scope.map, 'resize');
+  }
+  function initMap(pos) {
+    pos = pos || {
+      latitude: 37.5666103,
+      longitude: 126.9783882
+    };
+    if ($scope.map) {
+      $scope.map.setCenter({
+        lat: pos.latitude,
+        lng: pos.longitude
+      });
+      return;
+    }
+    $scope.map = new google.maps.Map(document.getElementById('map'), {
+      center: {lat: pos.latitude, lng: pos.longitude},
+      zoom: 15,
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      zoomControl: false,
+      mapTypeControl: false,
+      streetViewControl: false
+    });
+    $scope.curMarker = new google.maps.Marker({
+      map: $scope.map,
+      position: { lat: pos.latitude, lng: pos.longitude },
+      draggable: true,
+      zIndex: 9999
+    });
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+  //  Event Handler
+  //////////////////////////////////////////////////////////////////////////////
+
+  //////////////////////////////////////////////////////////////////////////////
+  //  Public Methods
+  //////////////////////////////////////////////////////////////////////////////
+  $scope.showMap = function() {
+    $ionicModal.fromTemplateUrl('list/modal.map.html', {
+      scope: $scope
+    })
+    .then(function(modal) {
+      $scope.modalMap = modal;
+      $scope.modalMap.show();
+      fitMapToScreen();
+      initMap();
+    });
+  }
+  $scope.closeMap = function() {
+    $scope.modalMap.hide();
+    $scope.modalMap.remove();
+  }
+
+  $scope.share = function() {
+    copyLinkToClipboard()
+    .then(function() {
+      $ionicPopup.alert({
+        title: '성공!',
+        template: '링크를 클립보드에 복사했습니다. 원하시는 곳에 붙여넣기 하세요.'
+      })
+      .then(function() {
+        checkProfileInfo(); //  !!!
+      });
+    }, function(err) {
+      console.error(err);
+    });
+  }
 }]);

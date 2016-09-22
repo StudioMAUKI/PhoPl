@@ -25,7 +25,6 @@ angular.module('phopl.directives')
               // $(iframeDocument).find('body').append('공유할 사진과 장소에 대해 이야기해 주세요.<br>해시태그(#)를 활용하실 수 있습니다.');
             }
           });
-
         };
 
         $scope.close = function() {
