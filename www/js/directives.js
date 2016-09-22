@@ -21,6 +21,8 @@ angular.module('phopl.directives')
             iframeDocument.designMode = 'on';
             if ($scope.content !== '메모를 남기세요.') {
               $(iframeDocument).find('body').append($scope.content);
+            } else {
+              // $(iframeDocument).find('body').append('공유할 사진과 장소에 대해 이야기해 주세요.<br>해시태그(#)를 활용하실 수 있습니다.');
             }
           });
 

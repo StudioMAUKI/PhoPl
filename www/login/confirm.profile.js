@@ -48,21 +48,23 @@ angular.module('phopl.ctrls')
   }
 
   function fillProfileField(accountInfo) {
-    if (accountInfo.email.indexOf('@facebook') !== -1) {
+    confirmProfile.email = accountInfo.email;
+    if (accountInfo.email.indexOf('@facebook.auth') !== -1) {
       //  요부분부터 내일 다시 검토해야 함
       var fbProfile = PKFileStorage.get('fb_profile');
       confirmProfile.nickname = fbProfile.name;
       confirmProfile.profileImg = fbProfile.picture.data.url;
-      confirmProfile.email = fbProfile.email;
-    } else if (accountInfo.email.indexOf('@kakaotalk') !== -1) {
+      confirmProfile.realEmail = fbProfile.email;
+    } else if (accountInfo.email.indexOf('@kakaotalk.auth') !== -1) {
       var kakaoProfile = PKFileStorage.get('kakao_profile');
       confirmProfile.nickname = kakaoProfile.properties.nickname;
       confirmProfile.profileImg = kakaoProfile.properties.thumbnail_image;
       confirmProfile.isKakaoAccount = true;
+      confirmProfile.realEmail = null;
       confirmProfile.kakaoID = kakaoProfile.id;
     } else {
       confirmProfile.nickname = accountInfo.nickname;
-      confirmProfile.email = accountInfo.email;
+      confirmProfile.realEmail = accountInfo.email;
       confirmProfile.profileImg = 'img/blank-profile.png';
     }
   }
@@ -93,13 +95,19 @@ angular.module('phopl.ctrls')
       email: confirmProfile.email,
       nickname: confirmProfile.nickname,
       data: JSON.stringify({
-        profileImg: confirmProfile.profileImg
+        profileImg: confirmProfile.profileImg,
+        email: confirmProfile.realEmail
       })
     })
     .then(function() {
       $state.go('tab.config');
     }, function(err) {
       if (err.status === 400) {
+        // if (err.data.email !== null) {
+        //
+        // } else if (err.data.nickname !== null) {
+        //
+        // }
         $ionicPopup.alert({
           title: '죄송합니다!',
           template: '지정한 닉네임은 이미 사용되고 있습니다. 다른 닉네임을 지정해 주세요.'

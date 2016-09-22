@@ -9886,3 +9886,9 @@ a.button {
   color: #aaa;
   font-weight: normal;
   margin: -1px; }
+
+.border {
+  border: 1px solid #ccc; }
+
+.bg-light-gray {
+  background-color: #ccc; }

@@ -1,0 +1,82 @@
+<ion-view view-title="업로드 완료" hide-back-button="true">
+  <ion-nav-buttons side="secondary">
+      <button class="button button-clear" ng-click="goHome()">
+        홈으로
+      </button>
+    </ion-nav-buttons>
+  <ion-content>
+    <!-- 공유용 UI 영역 -->
+    <div class="row">
+      <div class="col border bg-light-gray">
+        <div class="row">
+          <div class="col">
+            클립보드에 링크가 복사되었습니다. 이제 공유하세요~!
+            <button class="button button-small button-stable button-block">
+              http://phopl.com/asdfasdfasf
+            </button>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            링크 바로 공유!
+            <div class="row">
+              <div class="col">
+                <button class="button button-small button-stable button-block">
+                  카카오톡
+                </button>
+              </div>
+              <div class="col">
+                <button class="button button-small button-stable button-block">
+                  밴드
+                </button>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <button class="button button-small button-stable button-block">
+                  페이스북
+                </button>
+              </div>
+              <div class="col">
+                <button class="button button-small button-stable button-block">
+                  카카오스토리
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="list">
+      <div class="item item-avatar item-button-right" href="#">
+        <img src="https://scontent.xx.fbcdn.net/v/t1.0-9/394254_10151614052309668_790260105_n.jpg?oh=efedbd1134bef22d504121e3a0a5289f&oe=586B56FA">
+        <h2><strong>rapaki</strong></h2>
+        <small>8월 29일</small>
+        <a class="button button-outline button-stable icon ion-ios-more" style="top:15px;">
+        </a>
+      </div>
+    </div>
+    <!-- 노트 영역 -->
+		<div class="row">
+			<div class="col">
+				<div>
+          서판교 동네 술집 발굴 - 운중동 젠틀 테이블 운중동 젠틀 테이블<br>
+          캐주얼하게 맥주 한 잔, 와인 한 잔하기에 최적화!!
+        </div>
+			</div>
+		</div>
+    <!-- 이미지 영역 -->
+    <div ng-repeat="image in attatchedImages | limitTo: 9 track by $index" style="width:{{calculatedHeight+5}}px;height:{{calculatedHeight}}px;display:inline-block;overflow:hidden;padding-left:5px;">
+			<img style="height:{{calculatedHeight}}px;" ng-src="{{image}}" on-hold="deleteAttatchedImage($index)">
+		</div>
+    <!-- 장소명 입력 폼 -->
+		<div class="row">
+			<div class="col border">
+				<strong><i class="ion-ios-location"></i>젠틀테이블</strong><br>
+				<small>경기도 성남시 분당구 운중동 932 1층</small><br>
+        <small>동네술집, 맥주한잔, 와인저렴, 콜키지무료, 이탈리안, 퓨전, 개성</small>
+			</div>
+		</div>
+  </ion-content>
+</ion-view>

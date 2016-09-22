@@ -25,6 +25,15 @@ angular.module('phopl.config', [])
       }
     }
   })
+	.state('tab.album', {
+    url: '/album',
+    views: {
+      'list': {
+        templateUrl: 'list/album.html',
+        controller: 'albumCtrl'
+      }
+    }
+  })
 	.state('tab.choose', {
     url: '/choose',
     views: {
@@ -42,6 +51,15 @@ angular.module('phopl.config', [])
         templateUrl: 'share/share.html',
         controller: 'shareCtrl',
         controllerAs: 'share'
+      }
+    }
+  })
+	.state('tab.shareResult', {
+    url: '/share/result',
+    views: {
+      'share': {
+        templateUrl: 'share/result.html',
+				controller: 'resultCtrl'
       }
     }
   })

@@ -163,7 +163,7 @@ angular.module('phopl.ctrls')
       .then(function (result) {
         console.log('FB me result', result);
         PKFileStorage.set('fb_profile', result.data);
-        var accountID = result.data.id + '@facebook';
+        var accountID = result.data.id + '@facebook.auth';
         login(accountID)
         .then(function() {
           goToNextStep();
@@ -191,7 +191,7 @@ angular.module('phopl.ctrls')
       .then(function(result) {
         console.log('Kakao me result', result);
         PKFileStorage.set('kakao_profile', result.data);
-        var accountID = result.data.id + '@kakaotalk';
+        var accountID = result.data.id + '@kakaotalk.auth';
         login(accountID)
         .then(function() {
           goToNextStep();
