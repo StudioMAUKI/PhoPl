@@ -1,8 +1,13 @@
 'use strict';
 
 angular.module('phopl.ctrls')
-.controller('resultCtrl', ['$scope', '$ionicHistory', 'DOMHelper', function($scope, $ionicHistory, DOMHelper) {
+.controller('resultCtrl', ['$scope', '$ionicHistory', '$q', 'DOMHelper', 'PKSessionStorage', 'PostHelper', 'RemoteAPIService', 'PKLocalStorage', function($scope, $ionicHistory, $q, DOMHelper, PKSessionStorage, PostHelper, RemoteAPIService, PKLocalStorage) {
   var result = this;
+  $scope.post = null;
+  $scope.clipboardMsg = '단축 URL 얻기 전';
+  $scope.profileImg = PKLocalStorage.get('profileImg');
+  $scope.nickname = PKLocalStorage.get('nickname');
+
   $scope.attatchedImages = [
     'http://image.chosun.com/sitedata/image/201312/13/2013121302159_0.jpg',
     'http://cfile227.uf.daum.net/image/192ABF3350BC88EB224FF9',
@@ -21,10 +26,55 @@ angular.module('phopl.ctrls')
   //////////////////////////////////////////////////////////////////////////////
   //  Private Methods
   //////////////////////////////////////////////////////////////////////////////
+  function copyURLToClipboard(url) {
+    var deferred = $q.defer();
+
+    if (ionic.Platform.isIOS() || ionic.Platform.isAndroid()) {
+      $cordovaClipboard.copy(url)
+      .then(function(result) {
+        console.log('Copying URL was successed.', url);
+        $scope.clipboardMsg = '클립보드에 링크가 복사 되었습니다!';
+        deferred.resolve();
+      }, function(err) {
+        console.error('Copying URL was failed.', error);
+        $scope.clipboardMsg = '오류가 발생하여 클립보드 복사에 실패했습니다.';
+        deferred.reject(err);
+      });
+    } else {
+      deferred.resolve();
+    }
+
+    return deferred.promise;
+  }
+
+  function getShortenURLAndCopyToClipboard() {
+    if ($scope.post.shorten_url === null || $scope.post.shorten_url === '') {
+      // shoten url을 얻어서 복사
+      RemoteAPIService.getShortenURL($scope.post.uplace_uuid)
+      .then(function(url) {
+        $scope.shortenUrl = url;
+        $scope.post.shorten_url = url;
+        copyURLToClipboard($scope.shortenUrl);
+      }, function(err) {
+        seveSecond.clipboardMsg = '단축 URL을 얻어오지 못했습니다.';
+        $scope.shortenUrl = '';
+      })
+    } else {
+      $scope.shortenUrl = $scope.post.shorten_url;
+      copyURLToClipboard($scope.shortenUrl);
+    }
+  }
 
   //////////////////////////////////////////////////////////////////////////////
   //  Event Handler
   //////////////////////////////////////////////////////////////////////////////
+  $scope.$on('$ionicView.afterEnter', function() {
+    $scope.post = PKSessionStorage.get('lastSavedPost');
+    PostHelper.decoratePost($scope.post);
+    console.debug('The last saved place', $scope.post);
+
+    getShortenURLAndCopyToClipboard();
+  });
 
   //////////////////////////////////////////////////////////////////////////////
   //  Public Methods
