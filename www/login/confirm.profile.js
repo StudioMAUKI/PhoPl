@@ -100,7 +100,7 @@ angular.module('phopl.ctrls')
       })
     })
     .then(function() {
-      $state.go('tab.config');
+      $state.go('tab.choose');
     }, function(err) {
       if (err.status === 400) {
         // if (err.data.email !== null) {

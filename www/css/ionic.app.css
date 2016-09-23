@@ -3513,13 +3513,13 @@ ion-infinite-scroll {
   top: 0; }
 
 .has-subheader {
-  top: 88px; }
+  top: 82px; }
 
 .has-tabs-top {
   top: 93px; }
 
 .has-header.has-subheader.has-tabs-top {
-  top: 137px; }
+  top: 131px; }
 
 .has-footer {
   bottom: 44px; }
@@ -4305,10 +4305,10 @@ a.subdued {
 
 .bar-subheader {
   top: 44px;
-  height: 44px; }
+  height: 38px; }
   .bar-subheader .title {
-    height: 43px;
-    line-height: 44px; }
+    height: 37px;
+    line-height: 38px; }
 
 .bar-subfooter {
   bottom: 44px;
@@ -5367,11 +5367,11 @@ ion-tabs.tabs-striped.tabs-color-active-dark .tab-item.tab-item-active, ion-tabs
   .platform-ios.platform-cordova .modal-wrapper .modal .bar-subheader {
     top: 44px; }
   .platform-ios.platform-cordova .modal-wrapper .modal .has-subheader {
-    top: 88px; }
+    top: 82px; }
   .platform-ios.platform-cordova .modal-wrapper .modal .has-header.has-tabs-top {
     top: 93px; }
   .platform-ios.platform-cordova .modal-wrapper .modal .has-header.has-subheader.has-tabs-top {
-    top: 137px; }
+    top: 131px; }
   .modal-backdrop-bg {
     -webkit-transition: opacity 300ms ease-in-out;
     transition: opacity 300ms ease-in-out;
@@ -9614,13 +9614,13 @@ a.button {
   top: 64px; }
 
 .platform-ios.platform-cordova:not(.fullscreen) .has-subheader {
-  top: 108px; }
+  top: 102px; }
 
 .platform-ios.platform-cordova:not(.fullscreen) .has-header.has-tabs-top {
   top: 113px; }
 
 .platform-ios.platform-cordova:not(.fullscreen) .has-header.has-subheader.has-tabs-top {
-  top: 157px; }
+  top: 151px; }
 
 .platform-ios.platform-cordova .popover .bar-header:not(.bar-subheader) {
   height: 44px; }
@@ -9634,7 +9634,7 @@ a.button {
   top: 44px; }
 
 .platform-ios.platform-cordova .popover .has-subheader {
-  top: 88px; }
+  top: 82px; }
 
 .platform-ios.platform-cordova.status-bar-hide {
   margin-bottom: 20px; }
@@ -9816,7 +9816,7 @@ a.button {
   transition-duration: 0s; }
 
 .bar.bar-positive .title {
-  color: #fff; }
+  color: white; }
 
 .profile-avatar {
   text-align: center; }
@@ -9882,7 +9882,7 @@ a.button {
   font-weight: bold; }
 
 .fake-input {
-  border: 1px solid #ddd;
+  border: 1px solid #ccc;
   color: #aaa;
   font-weight: normal;
   margin: -1px; }
@@ -9892,3 +9892,9 @@ a.button {
 
 .bg-light-gray {
   background-color: #ccc; }
+
+.light-gray {
+  color: #ccc; }
+
+.mid-gray {
+  color: #555; }

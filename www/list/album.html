@@ -1,9 +1,4 @@
-<ion-view view-title="업로드 완료">
-  <ion-nav-buttons side="secondary">
-      <button class="button button-clear" ng-click="goHome()">
-        홈으로
-      </button>
-    </ion-nav-buttons>
+<ion-view view-title="업로드 완료">  
   <ion-content>
     <div class="list">
       <div class="item item-avatar item-button-right" href="#">
@@ -39,7 +34,7 @@
     <!-- 검색 결과 -->
 		<div class="list">
 			<div class="item item-divider">
-		    이 장소와 관련된 블로그들
+		    관련 정보
 		  </div>
 			<a ng-repeat="result in place.searchResults" class="item" href="#" ng-click="place.openLink(result.link)">
 				<h2>{{result.title}}</h2>
@@ -47,9 +42,9 @@
 				<p>{{result.description}}</p>
 			</a>
 			<!-- 블로그 더 보기 버튼 -->
-			<a class="item" href="#" style="text-align: center;" ng-show="place.post.name" ng-click="place.searchPlace()">
+			<!-- <a class="item" href="#" style="text-align: center;" ng-show="place.post.name" ng-click="place.searchPlace()">
 				관련 블로그 더보기
-			</a>
+			</a> -->
 		</div>
   </ion-content>
 

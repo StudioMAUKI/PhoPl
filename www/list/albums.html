@@ -1,5 +1,75 @@
-<ion-view view-title="List" hide-nav-bar="true">
-  <ion-content>
-    albums
+<ion-view view-title="목록">
+  <ion-nav-buttons side="secondary">
+    <button class="button button-clear" ng-click="goHome()">
+      정렬
+    </button>
+  </ion-nav-buttons>
+  <div class="bar bar-subheader">
+    <div class="button-bar">
+      <a class="button">전체</a>
+      <a class="button">공유</a>
+      <a class="button">저장</a>
+    </div>
+  </div>
+  <ion-content class="has-subheader">
+    <div class="padding-top" ng-click="albums.showAlbum()">
+      <div class="padding-left">
+        <strong>젠틀테이블</strong>&nbsp;<small class="mid-gray">운중동,성남시</small>
+      </div>
+      <div class="padding-left padding-right mid-gray" style="height:21px;overflow:hidden;">
+        <small>동네술집에 가볍게 맥주한잔하기 딱! 표전 이탈리안 안주가 개성 넘치는 뭔가 졸라 긴 이야기를 막 열리하고 싶은</small>
+      </div>
+      <div class="padding-top">
+        <div ng-repeat="image in albums.images | limitTo: 4 track by $index" style="width:{{albums.calculatedHeight+5}}px;height:{{albums.calculatedHeight}}px;display:inline-block;overflow:hidden;padding-left:5px;">
+    			<img style="height:{{albums.calculatedHeight}}px;" ng-src="{{image}}">
+    		</div>
+      </div>
+    </div>
+    <div class="padding-top" ng-click="albums.showAlbum()">
+      <div class="padding-left">
+        <strong>젠틀테이블</strong>&nbsp;<small class="mid-gray">운중동,성남시</small>
+      </div>
+      <div class="padding-top">
+        <div ng-repeat="image in albums.images | limitTo: 2 track by $index" style="width:{{albums.calculatedHeight+5}}px;height:{{albums.calculatedHeight}}px;display:inline-block;overflow:hidden;padding-left:5px;">
+    			<img style="height:{{albums.calculatedHeight}}px;" ng-src="{{image}}">
+    		</div>
+      </div>
+    </div>
+    <div class="padding-top" ng-click="albums.showAlbum()">
+      <div class="padding-left">
+        <strong>젠틀테이블</strong>&nbsp;<small class="mid-gray">운중동,성남시</small>
+      </div>
+      <div class="padding-top">
+        <div ng-repeat="image in albums.images | limitTo: 4 track by $index" style="width:{{albums.calculatedHeight+5}}px;height:{{albums.calculatedHeight}}px;display:inline-block;overflow:hidden;padding-left:5px;">
+    			<img style="height:{{albums.calculatedHeight}}px;" ng-src="{{image}}">
+    		</div>
+      </div>
+    </div>
+    <div class="padding-top" ng-click="albums.showAlbum()">
+      <div class="padding-left">
+        <strong>젠틀테이블</strong>&nbsp;<small class="mid-gray">운중동,성남시</small>
+      </div>
+      <div class="padding-left padding-right mid-gray" style="height:21px;overflow:hidden;">
+        <small>동네술집에 가볍게 맥주한잔하기 딱! 표전 이탈리안 안주가 개성 넘치는 뭔가 졸라 긴 이야기를 막 열리하고 싶은</small>
+      </div>
+      <div class="padding-top">
+        <div ng-repeat="image in albums.images | limitTo: 4 track by $index" style="width:{{albums.calculatedHeight+5}}px;height:{{albums.calculatedHeight}}px;display:inline-block;overflow:hidden;padding-left:5px;">
+    			<img style="height:{{albums.calculatedHeight}}px;" ng-src="{{image}}">
+    		</div>
+      </div>
+    </div>
+    <div class="padding-top" ng-click="albums.showAlbum()">
+      <div class="padding-left">
+        <strong>젠틀테이블</strong>&nbsp;<small class="mid-gray">운중동,성남시</small>
+      </div>
+      <div class="padding-left padding-right mid-gray" style="height:21px;overflow:hidden;">
+        <small>동네술집에 가볍게 맥주한잔하기 딱! 표전 이탈리안 안주가 개성 넘치는 뭔가 졸라 긴 이야기를 막 열리하고 싶은</small>
+      </div>
+      <div class="padding-top">
+        <div ng-repeat="image in albums.images | limitTo: 4 track by $index" style="width:{{albums.calculatedHeight+5}}px;height:{{albums.calculatedHeight}}px;display:inline-block;overflow:hidden;padding-left:5px;">
+    			<img style="height:{{albums.calculatedHeight}}px;" ng-src="{{image}}">
+    		</div>
+      </div>
+    </div>
   </ion-content>
 </ion-view>

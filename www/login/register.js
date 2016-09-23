@@ -63,7 +63,7 @@ angular.module('phopl.ctrls')
           PKFileStorage.set('nickname', result.nickname);
           PKFileStorage.set('profileImg', data.profileImg);
           PKFileStorage.set('email', result.email);
-          $state.go('tab.config');
+          $state.go('tab.choose');
         }
       } else if (result === null) {
         $ionicPopup.alert({
@@ -115,7 +115,7 @@ angular.module('phopl.ctrls')
     console.info('프로필 확정 뷰로 이동해야 함.');
     PKFileStorage.set('accountID', 'test');
     if (PKFileStorage.get('hasConfirmedProfileInfo')) {
-      $state.go('tab.config');
+      $state.go('tab.choose');
     } else {
       $state.go('confirmProfile');
     }

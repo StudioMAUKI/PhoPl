@@ -23,12 +23,15 @@ $stable: #ffffff;
 $facebook: #26458b;
 $kakao-background: #f8dd09;
 $kakao: #2d1617;
+$bar-subheader-height: 38px;
+$light-gray: #ccc;
+$mid-gray: #555;
 
 // Include all of Ionic
 @import "www/lib/ionic/scss/ionic";
 
 .bar.bar-positive .title {
-  color: #fff;
+  color: white;
 }
 
 .profile-avatar {
@@ -111,16 +114,24 @@ $kakao: #2d1617;
   font-weight: bold;
 }
 .fake-input {
-  border: 1px solid #ddd;
+  border: 1px solid $light-gray;
   color: #aaa;
   font-weight: normal;
   margin: -1px;
 }
 
 .border {
-  border: 1px solid #ccc;
+  border: 1px solid $light-gray;
 }
 
 .bg-light-gray {
-  background-color: #ccc;
+  background-color: $light-gray;
+}
+
+.light-gray {
+  color: $light-gray;
+}
+
+.mid-gray {
+  color: $mid-gray;
 }

@@ -58,7 +58,7 @@ angular.module('phopl.ctrls')
                     PKFileStorage.set('nickname', result.nickname);
                     PKFileStorage.set('profileImg', data.profileImg);
                     PKFileStorage.set('email', result.email);
-                    $state.go('tab.config');
+                    $state.go('tab.choose');
                   }
                 } else if (result === null) {
                   $ionicPopup.alert({
