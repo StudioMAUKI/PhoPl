@@ -18,7 +18,7 @@
 			</div>
 		</div>
     <!-- 이미지 영역 -->
-    <div ng-repeat="image in share.attatchedImages track by $index" style="width:{{share.calculatedHeight+5}}px;height:{{share.calculatedHeight}}px;display:inline-block;overflow:hidden;padding-left:5px;">
+    <div ng-repeat="image in share.attatchedImages track by $index" style="width:{{share.calculatedHeight+5}}px;height:{{share.calculatedHeight}}px;display:inline-block;overflow:hidden;padding-left:5px;text-align:center;">
 			<img style="height:{{share.calculatedHeight}}px;" ng-src="{{image}}" on-hold="share.deleteAttatchedImage($index)">
 		</div>
     <!-- 장소명 입력 폼 -->

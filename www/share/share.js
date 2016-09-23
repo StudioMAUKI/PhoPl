@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('phopl.ctrls')
-.controller('shareCtrl', ['$scope', '$ionicModal', '$state', 'DOMHelper', function($scope, $ionicModal, $state, DOMHelper) {
+.controller('shareCtrl', ['$scope', '$ionicModal', '$state', 'DOMHelper', 'PKLocalStorage', function($scope, $ionicModal, $state, DOMHelper, PKLocalStorage) {
   var share = this;
   share.attatchedImages = [
     'http://image.chosun.com/sitedata/image/201312/13/2013121302159_0.jpg',
@@ -32,6 +32,9 @@ angular.module('phopl.ctrls')
   //////////////////////////////////////////////////////////////////////////////
   //  Event Handler
   //////////////////////////////////////////////////////////////////////////////
+  $scope.$on('$ionicView.afterEnter', function() {
+    share.attatchedImages = PKLocalStorage.get('savedImgs');
+  });
 
   //////////////////////////////////////////////////////////////////////////////
   //  Public Methods

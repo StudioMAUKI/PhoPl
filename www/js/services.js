@@ -390,7 +390,7 @@ angular.module('phopl.services')
 	      maximumImagesCount: reqCount,
 	      quality: 70,
         width: size.width || 1280,
-				height: wize.height || 1280
+				height: size.height || 1280
 	    }).
 	    then(function(imageURIs) {
         deferred.resolve(imageURIs);
