@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('phopl.ctrls')
-.controller('resultCtrl', ['$scope', '$ionicHistory', '$q', 'DOMHelper', 'PKSessionStorage', 'PostHelper', 'RemoteAPIService', 'PKLocalStorage', function($scope, $ionicHistory, $q, DOMHelper, PKSessionStorage, PostHelper, RemoteAPIService, PKLocalStorage) {
+.controller('resultCtrl', ['$scope', '$ionicHistory', '$q', '$ionicPopup', 'DOMHelper', 'PKSessionStorage', 'PostHelper', 'RemoteAPIService', 'PKLocalStorage', function($scope, $ionicHistory, $q, $ionicPopup, DOMHelper, PKSessionStorage, PostHelper, RemoteAPIService, PKLocalStorage) {
   var result = this;
   $scope.post = null;
   $scope.clipboardMsg = '단축 URL 얻기 전';
@@ -81,5 +81,27 @@ angular.module('phopl.ctrls')
   //////////////////////////////////////////////////////////////////////////////
   $scope.goHome = function() {
     $ionicHistory.goBack(-2);
+  }
+
+  $scope.copyAgain = function() {
+    if ($scope.shorten_url === '') {
+      $ionicPopup.alert({
+        title: '오류',
+        template: '단축 URL을 얻어오지 못했습니다.'
+      });
+    } else {
+      copyURLToClipboard($scope.shortenUrl)
+      .then(function() {
+        $ionicPopup.alert({
+          title: '성공',
+          template: '클립보드에 링크가 복사되었습니다.'
+        });
+      }, function(err) {
+        $ionicPopup.alert({
+          title: '오류',
+          template: '오류가 발생하여 클립보드 복사에 실패했습니다.'
+        });
+      })
+    }
   }
 }]);
