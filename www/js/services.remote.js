@@ -549,7 +549,7 @@ angular.module('phopl.services')
             cachedUPWaiting.push(cacheMngr.uplaces.items[i]);
           }
         }
-        deferred.resolve({assigned : cachedUPAssigned, waiting: cachedUPWaiting, totalCount: cacheMngr.uplaces.totalCount});
+        deferred.resolve({total: cacheMngr.uplaces.items, assigned : cachedUPAssigned, waiting: cachedUPWaiting, totalCount: cacheMngr.uplaces.totalCount});
       }, function(err) {
         console.error(err);
         deferred.reject(err);

@@ -1,6 +1,6 @@
 <ion-view view-title="목록">
   <ion-nav-buttons side="secondary">
-    <button class="button button-clear" ng-click="goHome()">
+    <button class="button button-clear" ng-click="albums.popOverOrdering($event)">
       정렬
     </button>
   </ion-nav-buttons>
@@ -12,20 +12,28 @@
     </div>
   </div>
   <ion-content class="has-subheader">
-    <div class="padding-top" ng-click="albums.showAlbum()">
-      <div class="padding-left">
-        <strong>젠틀테이블</strong>&nbsp;<small class="mid-gray">운중동,성남시</small>
+    <ion-refresher pulling-text="Pull to refresh..." on-refresh="albums.doRefresh('top')">
+  	</ion-refresher>
+    <div ng-repeat="post in albums.posts" class="padding-top" ng-click="albums.showAlbum(post.uplace_uuid)">
+      <div class="padding-left row">
+        <div class="col-67">
+          <strong ng-show="post.name">{{post.name}}&nbsp;</strong><small class="mid-gray">{{post.address}}</small>
+        </div>
+        <div class="col-33 right">
+          <small>{{post.datetime}}</small>
+        </div>
       </div>
       <div class="padding-left padding-right mid-gray" style="height:21px;overflow:hidden;">
-        <small>동네술집에 가볍게 맥주한잔하기 딱! 표전 이탈리안 안주가 개성 넘치는 뭔가 졸라 긴 이야기를 막 열리하고 싶은</small>
+        <small>{{post.desc}}</small>
       </div>
       <div class="padding-top">
-        <div ng-repeat="image in albums.images | limitTo: 4 track by $index" style="width:{{albums.calculatedHeight+5}}px;height:{{albums.calculatedHeight}}px;display:inline-block;overflow:hidden;padding-left:5px;">
-    			<img style="height:{{albums.calculatedHeight}}px;" ng-src="{{image}}">
+        <div ng-repeat="image in post.userPost.images| limitTo: 4 track by $index" style="width:{{albums.calculatedHeight+5}}px;height:{{albums.calculatedHeight}}px;display:inline-block;overflow:hidden;padding-left:5px;">
+    			<img style="height:{{albums.calculatedHeight}}px;" ng-src="{{image.summary}}">
     		</div>
       </div>
     </div>
-    <div class="padding-top" ng-click="albums.showAlbum()">
+
+    <!-- <div class="padding-top" ng-click="albums.showAlbum()">
       <div class="padding-left">
         <strong>젠틀테이블</strong>&nbsp;<small class="mid-gray">운중동,성남시</small>
       </div>
@@ -70,6 +78,9 @@
     			<img style="height:{{albums.calculatedHeight}}px;" ng-src="{{image}}">
     		</div>
       </div>
-    </div>
+    </div> -->
+
+    <ion-infinite-scroll ng-if="!albums.isEndOfList()" on-infinite="albums.doRefresh('bottom')" immediate-check="false" distance="1%">
+	  </ion-infinite-scroll>
   </ion-content>
 </ion-view>

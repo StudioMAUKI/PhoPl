@@ -9890,6 +9890,9 @@ a.button {
 .border {
   border: 1px solid #ccc; }
 
+.right {
+  text-align: right; }
+
 .bg-light-gray {
   background-color: #ccc; }
 
