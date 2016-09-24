@@ -8,6 +8,7 @@ angular.module('phopl.ctrls')
   confirmProfile.profileImg = '';
   confirmProfile.accountID = '';
   confirmProfile.isKakaoAccount = false;
+  confirmProfile.needToUploadImg = false;
 
   //////////////////////////////////////////////////////////////////////////////
   //  private methods
@@ -79,18 +80,7 @@ angular.module('phopl.ctrls')
     });
   }
 
-  //////////////////////////////////////////////////////////////////////////////
-  //  event handler
-  //////////////////////////////////////////////////////////////////////////////
-  $scope.$on('$ionicView.afterEnter', checkProfileInfo);
-
-  //////////////////////////////////////////////////////////////////////////////
-  //  public methods
-  //////////////////////////////////////////////////////////////////////////////
-  confirmProfile.submit = function() {
-    // console.info('완료했고, 공유 화면으로 이동해야 함');
-    // PKFileStorage.set('hasConfirmedProfileInfo', true);
-    // $state.go('tab.config');
+  function updateUserInfo() {
     RemoteAPIService.updateUserInfo({
       email: confirmProfile.email,
       nickname: confirmProfile.nickname,
@@ -121,6 +111,36 @@ angular.module('phopl.ctrls')
     });
   }
 
+  //////////////////////////////////////////////////////////////////////////////
+  //  event handler
+  //////////////////////////////////////////////////////////////////////////////
+  $scope.$on('$ionicView.afterEnter', checkProfileInfo);
+
+  //////////////////////////////////////////////////////////////////////////////
+  //  public methods
+  //////////////////////////////////////////////////////////////////////////////
+  confirmProfile.submit = function() {
+    // console.info('완료했고, 공유 화면으로 이동해야 함');
+    // PKFileStorage.set('hasConfirmedProfileInfo', true);
+    // $state.go('tab.config');
+    if (confirmProfile.needToUploadImg) {
+      RemoteAPIService.uploadImage(confirmProfile.profileImg)
+      .then(function(response) {
+      	console.log('uploadImage', response);
+        confirmProfile.profileImg = response.url;
+        updateUserInfo();
+      }, function(err) {
+      	$ionicPopup.alert({
+          title: 'ERROR: Upload Image',
+          template: JSON.stringify(err)
+        });
+      });
+    } else {
+      updateUserInfo();
+    }
+
+  }
+
   confirmProfile.changeProfileImg = function() {
     console.info('confirmProfile.changeProfileImg');
     $ionicActionSheet.show({
@@ -128,7 +148,7 @@ angular.module('phopl.ctrls')
         { text: '카메라로 사진 찍기' },
         { text: '앨범에서 선택' }
       ],
-      titleText: '프로필 사진을 지정합니다.',
+      titleText: '프로필 사진을 수정합니다.',
       cancelText: '취소',
       buttonClicked: function(index) {
         console.log('[Event(ActionSheet:click)]Button['+ index + '] is clicked.');
@@ -136,83 +156,17 @@ angular.module('phopl.ctrls')
           PhotoService.getPhotoFromCamera({width:300, height:300})
       		.then(function(imageURI) {
             confirmProfile.profileImg = imageURI;
-            // RemoteAPIService.uploadImage(imageURI)
-        		// .then(function(response) {
-        		// 	console.log('Image UUID: ' + response.uuid);
-      			// 	RemoteAPIService.sendUserPost({
-      			// 		images: [{
-      			// 			content: response.url
-      			// 		}],
-      			// 		uplace_uuid: place.uplace_uuid
-      			// 	})
-      			// 	.then(function(result) {
-            //     // place.loadPlaceInfo();
-            //     if (place.post.userPost.images === undefined || place.post.userPost.images === null || place.post.userPost.images.length === 0) {
-            //       place.post.userPost.images = [result.data.userPost.images[0]];
-            //       place.imagesForSlide = [result.data.userPost.images[0].content];
-            //       place.coverImage = result.data.userPost.images[0].summary;
-            //     } else {
-            //       place.post.userPost.images.splice(0, 0, result.data.userPost.images[0]);
-            //       place.imagesForSlide.splice(0, 0, result.data.userPost.images[0].content);
-            //     }
-      			// 	}, function(err) {
-      			// 		$ionicPopup.alert({
-      		  //       title: 'ERROR: Send user post',
-      		  //       template: JSON.stringify(err)
-      		  //     });
-      			// 	});
-        		// }, function(err) {
-        		// 	$ionicPopup.alert({
-            //     title: 'ERROR: Upload Image',
-            //     template: JSON.stringify(err)
-            //   });
-        		// });
+            confirmProfile.needToUploadImg = true;
       		});
         } else {
-          // PhotoService.getPhotosFromAlbum(5)
-      		// .then(function(imageURIs) {
-          //   // console.dir(imageURIs);
-          //   for (var i = 0; i < imageURIs.length; i++){
-          //     $ionicLoading.show({
-          // 			template: '<ion-spinner icon="lines">저장 중..</ion-spinner>',
-          // 			duration: 60000
-          // 		});
-          //     RemoteAPIService.uploadImage(imageURIs[i])
-          // 		.then(function(response) {
-          // 			console.log('Image UUID: ' + response.uuid);
-        	// 			RemoteAPIService.sendUserPost({
-        	// 				images: [{
-        	// 					content: response.url
-        	// 				}],
-        	// 				uplace_uuid: place.uplace_uuid
-        	// 			})
-        	// 			.then(function(result) {
-          //         // place.loadPlaceInfo();
-          //         $ionicLoading.hide();
-          //         if (place.post.userPost.images === undefined || place.post.userPost.images === null || place.post.userPost.images.length === 0) {
-          //           place.post.userPost.images = [result.data.userPost.images[0]];
-          //           place.imagesForSlide = [result.data.userPost.images[0].content];
-          //           place.coverImage = result.data.userPost.images[0].summary;
-          //         } else {
-          //           place.post.userPost.images.splice(0, 0, result.data.userPost.images[0]);
-          //           place.imagesForSlide.splice(0, 0, result.data.userPost.images[0].content);
-          //         }
-        	// 			}, function(err) {
-          //         $ionicLoading.hide();
-        	// 				$ionicPopup.alert({
-        	// 	        title: 'ERROR: Send user post',
-        	// 	        template: JSON.stringify(err)
-        	// 	      });
-        	// 			});
-          // 		}, function(err) {
-          //       $ionicLoading.hide();
-          // 			$ionicPopup.alert({
-          //         title: 'ERROR: Upload Image',
-          //         template: JSON.stringify(err)
-          //       });
-          // 		});
-          //   }
-      		// });
+          PhotoService.getPhotosFromAlbum(1)
+      		.then(function(imageURIs) {
+            if (imageURIs.length == 0) {
+              return;
+            }
+            confirmProfile.profileImg = imageURIs[0];
+            confirmProfile.needToUploadImg = true;
+      		});
         }
 
         return true;

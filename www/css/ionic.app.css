@@ -9831,7 +9831,9 @@ a.button {
   .profile-avatar > img:first-child {
     max-width: 150px;
     max-height: 150px;
-    border-radius: 50%; }
+    border-radius: 50%;
+    width: 150px;
+    height: 150px; }
 
 .popup-title {
   color: #ff0066;

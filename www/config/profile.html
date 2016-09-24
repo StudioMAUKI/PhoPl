@@ -1,8 +1,13 @@
 <ion-view view-title="내정보">
+  <ion-nav-buttons side="secondary">
+    <button class="button button-clear" ng-click="profile.submit()" ng-show="profile.needToSubmit">
+      저장
+    </button>
+  </ion-nav-buttons>
   <ion-content>
     <div class="row">
       <div class="col profile-avatar">
-        <img ng-src="{{profile.profileImg}}">
+        <img ng-src="{{profile.profileImg}}" ng-click="profile.changeProfileImg()">
         <!-- <span class="modify-img">
           <i class="icon ion-ios-camera-outline"></i>
         </span> -->
