@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('phopl.ctrls')
-.controller('resultCtrl', ['$scope', '$ionicHistory', '$q', '$ionicPopup', 'DOMHelper', 'PKSessionStorage', 'PostHelper', 'RemoteAPIService', 'PKLocalStorage', function($scope, $ionicHistory, $q, $ionicPopup, DOMHelper, PKSessionStorage, PostHelper, RemoteAPIService, PKLocalStorage) {
+.controller('resultCtrl', ['$scope', '$ionicHistory', '$q', '$ionicPopup', '$cordovaClipboard', 'DOMHelper', 'PKSessionStorage', 'PostHelper', 'RemoteAPIService', 'PKLocalStorage', function($scope, $ionicHistory, $q, $ionicPopup, $cordovaClipboard, DOMHelper, PKSessionStorage, PostHelper, RemoteAPIService, PKLocalStorage) {
   var result = this;
   $scope.post = null;
   $scope.clipboardMsg = '단축 URL 얻기 전';

@@ -24,8 +24,10 @@ angular.module('phopl.ctrls')
   function getPhotosFromAlbum() {
     PhotoService.getPhotosFromAlbum(100)
     .then(function(imageURIs) {
-      PKLocalStorage.set('savedImgs', imageURIs);
-      $state.go('tab.share');
+      if (imageURIs.length > 0) {
+        PKLocalStorage.set('savedImgs', imageURIs);
+        $state.go('tab.share');
+      }
     }, function(err) {
       console.error(err);
     });
