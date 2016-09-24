@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('phopl.ctrls')
-.controller('configCtrl', ['$scope', '$state', 'PKFileStorage', 'PKLocalStorage', function($scope, $state, PKFileStorage, PKLocalStorage) {
+.controller('configCtrl', ['$scope', '$state', '$ionicPopup', 'PKFileStorage', 'PKLocalStorage', function($scope, $state, $ionicPopup, PKFileStorage, PKLocalStorage) {
   var config = this;
   config.version = '1.0.0';
 
@@ -10,10 +10,18 @@ angular.module('phopl.ctrls')
   //////////////////////////////////////////////////////////////////////////////
   config.logout = function() {
     console.info('logout');
-    PKFileStorage.remove('accountID');
-    PKFileStorage.remove('auth_vd_token');
-    PKFileStorage.remove('auth_user_token');
-    $state.go('register');
+    $ionicPopup.confirm({
+			title: '로그아웃',
+			template: '정말 로그아웃 하시겠습니까?'
+		})
+		.then(function(res){
+			if (res) {
+        PKFileStorage.remove('accountID');
+        PKFileStorage.remove('auth_vd_token');
+        PKFileStorage.remove('auth_user_token');
+        $state.go('register');
+      }
+    });    
   }
 
   config.reset = function() {

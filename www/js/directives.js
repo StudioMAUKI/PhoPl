@@ -7,37 +7,51 @@ angular.module('phopl.directives')
       },
       link: function($scope, element) {
         console.log('expandingTextarea started!');
-
+        $scope.isOS = function() {
+          return ionic.Platform.isIOS();
+        }
 
         $scope.open = function() {
           $ionicModal.fromTemplateUrl('js/modal.note.html', {
-            scope: $scope,
-            focusFirstInput: true
+            scope: $scope
+            // focusFirstInput: true
           })
           .then(function(modal) {
             $scope.modal = modal;
             $scope.modal.show();
-            var iframeDocument = document.getElementById('editor').contentDocument;
-            iframeDocument.designMode = 'on';
-            if ($scope.content !== '메모를 남기세요.') {
-              $(iframeDocument).find('body').append($scope.content);
+
+            // var iframe = document.getElementById('editor');
+            // var iframeDocument = iframe.contentDocument;
+            // iframeDocument.designMode = 'on';
+            // if ($scope.content !== '메모를 남기세요.') {
+            //   $(iframeDocument).find('body').append($scope.content);
+            // } else {
+            //   // $(iframeDocument).find('body').append('공유할 사진과 장소에 대해 이야기해 주세요.<br>해시태그(#)를 활용하실 수 있습니다.');
+            // }
+            if ($scope.content === '메모를 남기세요.') {
+              $('#editor').val('');
             } else {
-              // $(iframeDocument).find('body').append('공유할 사진과 장소에 대해 이야기해 주세요.<br>해시태그(#)를 활용하실 수 있습니다.');
+              // $('#editor').val($scope.content.replace(/<br>/g, '\n'));
+              $('#editor').val($scope.content);
             }
           });
         };
 
         $scope.close = function() {
-          // if (window.cordova && window.cordova.plugins.Keyboard.isVisible) {
-          //   window.cordova.plugins.Keyboard.close();
+          // var contentText = $('#editor').contents().find('body').text();
+          // if (contentText.trim().length === 0) {
+          //   $scope.content = '메모를 남기세요.';
+          // } else {
+          //   $scope.content = $('#editor').contents().find('body').html();
           // }
-
-          var contentText = $('#editor').contents().find('body').text();
-          if (contentText.trim().length === 0) {
+          var contentText = $('#editor').val();
+          if (contentText.length === 0) {
             $scope.content = '메모를 남기세요.';
           } else {
-            $scope.content = $('#editor').contents().find('body').html();
+            // $scope.content = contentText.replace(/\n/g, '<br>');
+            $scope.content = contentText;
           }
+          console.debug('content', contentText);
           $scope.modal.hide();
           $scope.modal.remove();
         };

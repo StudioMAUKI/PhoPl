@@ -123,6 +123,23 @@ angular.module('phopl.ctrls')
     // console.info('완료했고, 공유 화면으로 이동해야 함');
     // PKFileStorage.set('hasConfirmedProfileInfo', true);
     // $state.go('tab.config');
+    if (confirmProfile.nickname.length > 10) {
+      $ionicPopup.alert({
+        title: '죄송합니다',
+        template: '닉네임은 10자 이내로 정해 주세요.'
+      });
+      return;
+    }
+    var blank_pattern = /[\s]/g;
+    var special_pattern = /[`~!@#$%^&*|\\\'\";:\/?]/gi;
+    if (blank_pattern.test(confirmProfile.nickname) || special_pattern.test(confirmProfile.nickname)){
+      $ionicPopup.alert({
+        title: '죄송합니다',
+        template: '닉네임에 공백이나 특수문자는 사용할 수 없습니다.'
+      });
+      return;
+    }
+
     if (confirmProfile.needToUploadImg) {
       RemoteAPIService.uploadImage(confirmProfile.profileImg)
       .then(function(response) {

@@ -1080,7 +1080,7 @@ angular.module('phopl.services')
 	}
 
   function getDistance(post, curPos) {
-    if (post.lonLat) {
+    if (post.lonLat && curPos) {
       return calcDistance(curPos.latitude, curPos.longitude, post.lonLat.lat, post.lonLat.lon);
     } else {
       return null;

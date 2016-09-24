@@ -22,15 +22,21 @@
 			<img style="height:{{share.calculatedHeight}}px;" ng-src="{{image}}" on-hold="share.deleteAttatchedImage($index)">
 		</div>
     <!-- 장소명 입력 폼 -->
-		<div class="row">
+		<!-- <div class="row">
 			<div class="col fake-input">
 				<div class="list">
 		      <a class="button button-stable button-full icon-left ion-ios-location" location-suggestion location="share.location" style="height:32px;text-align:left;">
-						<strong>{{share.location.name || share.placeholderTitle}}</strong>
+						<strong>{{share.location.name || share.placeholderTitle}}</strong><br>
 						<small>{{share.location.formatted_address || share.placeholderSubTitle}}</small>
-            <small ng-show="share.location.geometry">({{share.location.geometry.location.lat()}}, {{share.location.geometry.location.lng()}})</small>
 					</a>
 		    </div>
+			</div>
+		</div> -->
+    <div class="row">
+			<div class="col border" location-suggestion location="share.location">
+			  <strong><i class="ion-ios-location"></i>&nbsp;{{share.location.name || share.placeholderTitle}}</strong><br>
+				<small>{{share.location.formatted_address || share.placeholderSubTitle}}</small>
+        <!-- <small ng-show="share.location.geometry">({{share.location.geometry.location.lat()}}, {{share.location.geometry.location.lng()}})</small> -->
 			</div>
 		</div>
   </ion-content>

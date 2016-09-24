@@ -165,6 +165,7 @@ angular.module('phopl.ctrls')
 
   $scope.$watch('share.note', function(newValue) {
     $('#note-result').html(share.note);
+    console.debug('share.note', share.note);
   });
 
 }]);

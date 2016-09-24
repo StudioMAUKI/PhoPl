@@ -18,7 +18,7 @@ angular.module('phopl.ctrls')
         }
         profile.data =JSON.parse(accountInfo.data);
         profile.nickname = accountInfo.nickname;
-        profile.email = accountInfo.email;
+        profile.email = profile.data.email || accountInfo.email;
         profile.profileImg = profile.data.profileImg;
 
       } else if (accountInfo === null) {
