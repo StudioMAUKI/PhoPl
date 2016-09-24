@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('phopl.ctrls')
-.controller('albumsCtrl', ['$scope', '$state', '$q', '$ionicLoading', '$ionicPopover', 'DOMHelper', 'RemoteAPIService', 'PKLocalStorage', function($scope, $state, $q, $ionicLoading, $ionicPopover, DOMHelper, RemoteAPIService, PKLocalStorage) {
+.controller('albumsCtrl', ['$scope', '$state', '$q', '$ionicLoading', '$ionicPopover', 'DOMHelper', 'RemoteAPIService', 'PKLocalStorage', 'PKSessionStorage', function($scope, $state, $q, $ionicLoading, $ionicPopover, DOMHelper, RemoteAPIService, PKLocalStorage, PKSessionStorage) {
   var albums = this;
   albums.completedFirstLoading = false;
   albums.orderingTypeName = ['-modified', 'placename', 'distance_from_origin'];
@@ -28,7 +28,8 @@ angular.module('phopl.ctrls')
 		console.log('loadSavedPlace : ' + position);
 		var deferred = $q.defer();
 		position = position || 'top';
-    var curPos = PKLocalStorage.get('curPos') || { latitude: 37.5666103, longitude: 126.9783882 };
+    // var curPos = PKLocalStorage.get('curPos') || { latitude: 37.5666103, longitude: 126.9783882 };
+    var curPos = {};
 		var lon = curPos.longitude || null;
     var lat = curPos.latitude || null;
     var radius = 0;
@@ -44,7 +45,7 @@ angular.module('phopl.ctrls')
 		.then(function(result) {
 			albums.posts = result.total;
 			deferred.resolve();
-			console.dir(albums.posts);
+			// console.dir(albums.posts);
 		}, function(err) {
 			console.error('loadSavedPlace', err);
 			deferred.reject(err);
@@ -69,8 +70,9 @@ angular.module('phopl.ctrls')
   //////////////////////////////////////////////////////////////////////////////
   //  Public Methods
   //////////////////////////////////////////////////////////////////////////////
-  albums.showAlbum = function() {
-    $state.go('tab.album');
+  albums.showAlbum = function(index) {
+    PKSessionStorage.set('albumToShow', albums.posts[index]);
+    $state.go('tab.album', {uplace_uuid: albums.posts[index].uplace_uuid});
   }
 
   albums.isEndOfList = function() {

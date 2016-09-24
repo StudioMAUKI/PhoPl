@@ -1,31 +1,76 @@
 'use strict';
 
 angular.module('phopl.ctrls')
-.controller('albumCtrl', ['$scope', '$q', '$ionicPopup', '$ionicModal', 'DOMHelper', function($scope, $q, $ionicPopup, $ionicModal, DOMHelper) {
+.controller('albumCtrl', ['$scope', '$q', '$ionicPopup', '$ionicModal', '$cordovaClipboard', 'DOMHelper', 'PKLocalStorage', 'PKSessionStorage', 'RemoteAPIService', 'daumSearchService', function($scope, $q, $ionicPopup, $ionicModal, $cordovaClipboard, DOMHelper, PKLocalStorage, PKSessionStorage, RemoteAPIService, daumSearchService) {
   var result = this;
+  // $scope.uplace_uuid = $stateParams.uplace_uuid;
+  $scope.profileImg = PKLocalStorage.get('profileImg');
+  $scope.nickname = PKLocalStorage.get('nickname');
+  $scope.searchResults = [];
   $scope.attatchedImages = [
-    'http://image.chosun.com/sitedata/image/201312/13/2013121302159_0.jpg',
-    'http://cfile227.uf.daum.net/image/192ABF3350BC88EB224FF9',
-    'http://pds25.egloos.com/pds/201207/23/96/e0063996_500c1d8f0a41d.jpg',
-    'http://cfile28.uf.tistory.com/image/240FD148543CB20803D582',
-    'http://cfile2.uf.tistory.com/image/2551564D54CC3B5128C971',
-    'http://cfile22.uf.tistory.com/image/2643CC4451C8657E237976',
-    'http://xguru.net/wp-content/uploads/2013/08/b0012399_10054380.jpg',
-    'http://pds18.egloos.com/pds/201010/19/66/b0008466_4cbd1a5e1db64.jpg',
-    'http://cfile8.uf.tistory.com/image/112CC25A4D9DA7E81EB86E',
-    'http://pds27.egloos.com/pds/201305/21/76/b0119476_519b41b6ae395.jpg',
-    'http://thumbnail.egloos.net/850x0/http://pds25.egloos.com/pds/201412/09/76/b0119476_5485cf925668e.jpg'
+    // 'http://image.chosun.com/sitedata/image/201312/13/2013121302159_0.jpg',
+    // 'http://cfile227.uf.daum.net/image/192ABF3350BC88EB224FF9',
+    // 'http://pds25.egloos.com/pds/201207/23/96/e0063996_500c1d8f0a41d.jpg',
+    // 'http://cfile28.uf.tistory.com/image/240FD148543CB20803D582',
+    // 'http://cfile2.uf.tistory.com/image/2551564D54CC3B5128C971',
+    // 'http://cfile22.uf.tistory.com/image/2643CC4451C8657E237976',
+    // 'http://xguru.net/wp-content/uploads/2013/08/b0012399_10054380.jpg',
+    // 'http://pds18.egloos.com/pds/201010/19/66/b0008466_4cbd1a5e1db64.jpg',
+    // 'http://cfile8.uf.tistory.com/image/112CC25A4D9DA7E81EB86E',
+    // 'http://pds27.egloos.com/pds/201305/21/76/b0119476_519b41b6ae395.jpg',
+    // 'http://thumbnail.egloos.net/850x0/http://pds25.egloos.com/pds/201412/09/76/b0119476_5485cf925668e.jpg'
   ];
   $scope.calculatedHeight = DOMHelper.getImageHeight('view-container', 3, 5);
 
   //////////////////////////////////////////////////////////////////////////////
   //  Private Methods
   //////////////////////////////////////////////////////////////////////////////
-  function copyLinkToClipboard() {
+  function copyURLToClipboard(url) {
     var deferred = $q.defer();
-    deferred.resolve();
+
+    if (ionic.Platform.isIOS() || ionic.Platform.isAndroid()) {
+      $cordovaClipboard.copy(url)
+      .then(function(result) {
+        $ionicPopup.alert({
+          title: '성공',
+          template: '클립보드에 링크가 복사되었습니다.'
+        });
+      }, function(err) {
+        console.error('Copying URL was failed.', err);
+        $ionicPopup.alert({
+          title: '오류',
+          template: '오류가 발생하여 클립보드 복사에 실패했습니다.'
+        });
+      });
+    } else {
+      $ionicPopup.alert({
+        title: '경고',
+        template: '웹브라우저에서는 지원하지 않는 기능입니다.'
+      });
+    }
+
     return deferred.promise;
-  };
+  }
+
+  function getShortenURLAndCopyToClipboard() {
+    if ($scope.post.shorten_url === null || $scope.post.shorten_url === '') {
+      // shoten url을 얻어서 복사
+      RemoteAPIService.getShortenURL($scope.post.uplace_uuid)
+      .then(function(url) {
+        $scope.post.shorten_url = url;
+        return copyURLToClipboard(url);
+      }, function(err) {
+        console.error('getShortenURL', err);
+        $ionicPopup.alert({
+          title: '오류',
+          template: err
+        });
+      })
+    } else {
+      return copyURLToClipboard($scope.post.shorten_url);
+    }
+  }
+
   function fitMapToScreen() {
     console.log('call fitMapToScreen');
     var documentHeight = $(document).height();
@@ -38,20 +83,18 @@ angular.module('phopl.ctrls')
     //  이거 꼭 해줘야 지도가 제대로 그려짐. (안그러면 걍 회색으로 나옴)
     // google.maps.event.trigger($scope.map, 'resize');
   }
+
   function initMap(pos) {
     pos = pos || {
-      latitude: 37.5666103,
-      longitude: 126.9783882
+      lat: 37.5666103,
+      lng: 126.9783882
     };
     if ($scope.map) {
-      $scope.map.setCenter({
-        lat: pos.latitude,
-        lng: pos.longitude
-      });
+      $scope.map.setCenter(pos);
       return;
     }
     $scope.map = new google.maps.Map(document.getElementById('map'), {
-      center: {lat: pos.latitude, lng: pos.longitude},
+      center: pos,
       zoom: 15,
       mapTypeId: google.maps.MapTypeId.ROADMAP,
       zoomControl: false,
@@ -60,15 +103,65 @@ angular.module('phopl.ctrls')
     });
     $scope.curMarker = new google.maps.Marker({
       map: $scope.map,
-      position: { lat: pos.latitude, lng: pos.longitude },
+      position: pos,
       draggable: true,
       zIndex: 9999
     });
   }
 
+  function makeKeyword() {
+    var keyword = '';
+    if ($scope.post.placePost) {
+      var region = $scope.post.placePost.addr2 || $scope.post.placePost.addr1 || $scope.post.placePost.addr3 || null;
+      if (region) {
+        var region_items = region.content.split(' ');
+        var loopCount = region_items.length >= 4 ? 4 : region_items.length;
+        for (var i = 1; i < loopCount; i++) {
+          keyword += region_items[i] + '+';
+        }
+      }
+
+      keyword += ($scope.post.placePost.name.content || $scope.post.userPost.name.content);
+      console.log('Calculated keyword : ', keyword);
+      keyword = encodeURI(keyword);
+      console.log('URL encoded keyword : ', keyword);
+    }
+    return keyword;
+  }
+
+  function getDaumResult() {
+    var keyword = makeKeyword();
+    if (keyword !== '') {
+      daumSearchService.search(keyword)
+      .then(function(items) {
+        $scope.searchResults = items;
+        for (var i = 0; i < $scope.searchResults.length; i++) {
+          $scope.searchResults[i].title = $scope.searchResults[i].title.replace(/<b>/g, '').replace(/&lt;b&gt;/g, '').replace(/&lt;\/b&gt;/g, '').replace(/&quot;/g, '"');
+          $scope.searchResults[i].description = $scope.searchResults[i].description.replace(/<b>/g, '').replace(/&lt;b&gt;/g, '').replace(/&lt;\/b&gt;/g, '').replace(/&quot;/g, '"');
+        }
+        // console.dir($scope.searchResults);
+
+      }, function(err) {
+        $scope.searchResults = [];
+        $scope.searchResults.push({
+          author: 'MAUKI studio',
+          comment: '',
+          description: JSON.stringify(err),
+          link: '',
+          title: '검색 결과를 얻어 오는데 실패했습니다'
+        })
+      });
+    }
+  }
+
   //////////////////////////////////////////////////////////////////////////////
   //  Event Handler
   //////////////////////////////////////////////////////////////////////////////
+  $scope.$on('$ionicView.afterEnter', function() {
+		$scope.post = PKSessionStorage.get('albumToShow');
+    console.debug('post', $scope.post);
+    getDaumResult();
+	});
 
   //////////////////////////////////////////////////////////////////////////////
   //  Public Methods
@@ -81,7 +174,10 @@ angular.module('phopl.ctrls')
       $scope.modalMap = modal;
       $scope.modalMap.show();
       fitMapToScreen();
-      initMap();
+      initMap({
+        lat: $scope.post.lonLat.lat,
+        lng: $scope.post.lonLat.lon
+      });
     });
   }
   $scope.closeMap = function() {
@@ -90,17 +186,11 @@ angular.module('phopl.ctrls')
   }
 
   $scope.share = function() {
-    copyLinkToClipboard()
-    .then(function() {
-      $ionicPopup.alert({
-        title: '성공!',
-        template: '링크를 클립보드에 복사했습니다. 원하시는 곳에 붙여넣기 하세요.'
-      })
-      .then(function() {
-        checkProfileInfo(); //  !!!
-      });
-    }, function(err) {
-      console.error(err);
-    });
+    getShortenURLAndCopyToClipboard();
   }
+
+  $scope.openLink = function(url) {
+    console.info('url: ' + url);
+    window.open(url, '_system');
+  };
 }]);

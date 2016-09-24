@@ -497,6 +497,7 @@ angular.module('phopl.services')
     }
 
     if (checkNeedToRefresh('uplaces')) {
+      console.debug('limit, offset, order_by, lon, lat, r', limit, offset, orderBy, lon, lat, radius);
       $http({
         method: 'GET',
         url: getServerURL() + '/uplaces/',
@@ -511,7 +512,7 @@ angular.module('phopl.services')
         }
       })
       .then(function(response) {
-        // console.dir(response.data.results);
+        console.dir(response.data.results);
         cacheMngr.uplaces.totalCount = response.data.count;
         PostHelper.decoratePosts(response.data.results);
         if (position === 'top') {
@@ -1095,7 +1096,7 @@ angular.module('phopl.services')
     post.datetime = getTimeString(post.modified);
     // post.address = getAddress(post);
     post.addrs = getAddresses(post);
-    post.address = post.addrs.length > 0 ? getShortenAddress(post.addrs[0]) : '주소 없음';
+    post.address = post.addrs.length > 0 ? getShortenAddress(post.addrs[0]) : '위치 정보 없음';
     post.desc = getDescFromUserNote(post);
     post.phoneNo = getPhoneNo(post);
     if (!post.userPost.tags) {

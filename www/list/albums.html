@@ -14,7 +14,7 @@
   <ion-content class="has-subheader">
     <ion-refresher pulling-text="Pull to refresh..." on-refresh="albums.doRefresh('top')">
   	</ion-refresher>
-    <div ng-repeat="post in albums.posts" class="padding-top" ng-click="albums.showAlbum(post.uplace_uuid)">
+    <div ng-repeat="post in albums.posts" class="padding-top" ng-click="albums.showAlbum($index)">
       <div class="padding-left row">
         <div class="col-67">
           <strong ng-show="post.name">{{post.name}}&nbsp;</strong><small class="mid-gray">{{post.address}}</small>
@@ -23,7 +23,7 @@
           <small>{{post.datetime}}</small>
         </div>
       </div>
-      <div class="padding-left padding-right mid-gray" style="height:21px;overflow:hidden;">
+      <div ng-show="post.desc" class="padding-left padding-right mid-gray" style="height:21px;overflow:hidden;">
         <small>{{post.desc}}</small>
       </div>
       <div class="padding-top">

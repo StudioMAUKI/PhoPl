@@ -54,14 +54,14 @@ angular.module('phopl.ctrls')
       .then(function(url) {
         $scope.shortenUrl = url;
         $scope.post.shorten_url = url;
-        copyURLToClipboard($scope.shortenUrl);
+        return copyURLToClipboard($scope.shortenUrl);
       }, function(err) {
         seveSecond.clipboardMsg = '단축 URL을 얻어오지 못했습니다.';
         $scope.shortenUrl = '';
       })
     } else {
       $scope.shortenUrl = $scope.post.shorten_url;
-      copyURLToClipboard($scope.shortenUrl);
+      return copyURLToClipboard($scope.shortenUrl);
     }
   }
 

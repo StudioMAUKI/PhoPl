@@ -26,7 +26,7 @@ angular.module('phopl.config', [])
     }
   })
 	.state('tab.album', {
-    url: '/album',
+    url: '/album/:uplace_uuid',
     views: {
       'list': {
         templateUrl: 'list/album.html',

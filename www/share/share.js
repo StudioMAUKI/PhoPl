@@ -48,9 +48,9 @@ angular.module('phopl.ctrls')
 
       if (share.location.type === 'mauki') {
         console.warn('커스텀 장소 정보로 넘어 왔기 때문에 채워 넣어야 함.');
-        addrs[0] = StorageService.get('addr1');
-        addrs[1] = StorageService.get('addr2');
-        addrs[2] = StorageService.get('addr3');
+        addrs[0] = PKLocalStorage.get('addr1');
+        addrs[1] = PKLocalStorage.get('addr2');
+        addrs[2] = PKLocalStorage.get('addr3');
       } else if (share.location.type === 'google'){
         addrs[0] = share.location.formatted_address;
       } else {

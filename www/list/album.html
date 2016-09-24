@@ -1,10 +1,10 @@
-<ion-view view-title="업로드 완료">  
+<ion-view view-title="{{post.name || '앨범'}}">
   <ion-content>
     <div class="list">
       <div class="item item-avatar item-button-right" href="#">
-        <img src="https://scontent.xx.fbcdn.net/v/t1.0-9/394254_10151614052309668_790260105_n.jpg?oh=efedbd1134bef22d504121e3a0a5289f&oe=586B56FA">
-        <h2><strong>rapaki</strong></h2>
-        <small>8월 29일</small>
+        <img ng-src="{{profileImg}}">
+        <h2><strong>{{nickname}}</strong></h2>
+        <small>{{post.datetime}}</small>
         <a class="button button-outline button-stable icon ion-ios-more" style="top:15px;">
         </a>
       </div>
@@ -13,30 +13,33 @@
 		<div class="row">
 			<div class="col">
 				<div>
-          서판교 동네 술집 발굴 - 운중동 젠틀 테이블 운중동 젠틀 테이블<br>
-          캐주얼하게 맥주 한 잔, 와인 한 잔하기에 최적화!!
+          {{post.desc}}
         </div>
 			</div>
 		</div>
     <!-- 이미지 영역 -->
-    <div ng-repeat="image in attatchedImages | limitTo: 9 track by $index" style="width:{{calculatedHeight+5}}px;height:{{calculatedHeight}}px;display:inline-block;overflow:hidden;padding-left:5px;">
-			<img style="height:{{calculatedHeight}}px;" ng-src="{{image}}" on-hold="deleteAttatchedImage($index)">
+    <div ng-repeat="image in post.userPost.images | limitTo: 9 track by $index" style="width:{{calculatedHeight+5}}px;height:{{calculatedHeight}}px;display:inline-block;overflow:hidden;padding-left:5px;">
+			<img style="height:{{calculatedHeight}}px;" ng-src="{{image.summary}}" on-hold="deleteAttatchedImage($index)">
 		</div>
-    <!-- 장소명 입력 폼 -->
-		<div class="row">
+    <!-- 장소 정보 출력 영역 -->
+		<div class="row" ng-show="post.name">
 			<div class="col border">
-				<strong><i class="ion-ios-location"></i>젠틀테이블</strong><br>
-				<small>경기도 성남시 분당구 운중동 932 1층</small><br>
-        <small>동네술집, 맥주한잔, 와인저렴, 콜키지무료, 이탈리안, 퓨전, 개성</small>
+				<strong><i class="ion-ios-location"></i>{{post.name}}</strong><br>
+				<small>{{post.addrs[0]}}</small><br>
+        <!-- <small>동네술집, 맥주한잔, 와인저렴, 콜키지무료, 이탈리안, 퓨전, 개성</small> -->
+        <small ng-repeat="tag in post.userPost.tags">#{{tag.content}},&nbsp;</small>
 			</div>
 		</div>
 
     <!-- 검색 결과 -->
 		<div class="list">
-			<div class="item item-divider">
+			<div class="item item-divider" ng-show="searchResults.length > 0">
 		    관련 정보
 		  </div>
-			<a ng-repeat="result in place.searchResults" class="item" href="#" ng-click="place.openLink(result.link)">
+      <div class="item item-divider" ng-show="searchResults.length == 0">
+		    관련 정보 없음
+		  </div>
+			<a ng-repeat="result in searchResults" class="item" href="#" ng-click="openLink(result.link)">
 				<h2>{{result.title}}</h2>
 				<h3>{{result.author}}</h3>
 				<p>{{result.description}}</p>
@@ -51,8 +54,8 @@
   <!-- 하단 버튼 바 -->
   <ion-footer-bar>
     <div class="button-bar" style="margin-top:5px;">
-      <a class="button button-stable" ng-click="showMap()">지도</a>
-      <a class="button button-stable">저장</a>
+      <a class="button button-stable" ng-click="showMap()" ng-show="post.lonLat">지도</a>
+      <!-- <a class="button button-stable">저장</a> -->
       <a class="button button-stable" ng-click="share()">공유</a>
     </div>
   </ion-footer-bar>
