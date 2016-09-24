@@ -80,7 +80,7 @@ angular.module('phopl.ctrls')
         RemoteAPIService.sendUserPost({
           lonLat: pos,
   				notes: [{
-  					content: (share.note === '메모를 남기세요') ? null : share.note
+  					content: (share.note === '메모를 남기세요.') ? null : share.note
   				}],
   				images: uploadedImages,
   				addr1: { content: addrs[0] || null },
