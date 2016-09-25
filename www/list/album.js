@@ -89,10 +89,7 @@ angular.module('phopl.ctrls')
       lat: 37.5666103,
       lng: 126.9783882
     };
-    if ($scope.map) {
-      $scope.map.setCenter(pos);
-      return;
-    }
+
     $scope.map = new google.maps.Map(document.getElementById('map'), {
       center: pos,
       zoom: 15,
@@ -104,7 +101,7 @@ angular.module('phopl.ctrls')
     $scope.curMarker = new google.maps.Marker({
       map: $scope.map,
       position: pos,
-      draggable: true,
+      draggable: false,
       zIndex: 9999
     });
   }
@@ -183,6 +180,7 @@ angular.module('phopl.ctrls')
   $scope.closeMap = function() {
     $scope.modalMap.hide();
     $scope.modalMap.remove();
+    $scope.map = null;
   }
 
   $scope.share = function() {

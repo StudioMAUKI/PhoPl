@@ -158,14 +158,7 @@ angular.module('phopl.directives')
             longitude: 126.9783882
           };
           $scope.mapCenterCoord.lat = pos.latitude;
-          $scope.mapCenterCoord.lng = pos.longitude;
-          if ($scope.map) {
-            $scope.map.setCenter({
-              lat: pos.latitude,
-              lng: pos.longitude
-            });
-            return;
-          }
+          $scope.mapCenterCoord.lng = pos.longitude;          
           $scope.map = new google.maps.Map(document.getElementById('map'), {
             center: {lat: pos.latitude, lng: pos.longitude},
             zoom: 15,
