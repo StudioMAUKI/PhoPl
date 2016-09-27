@@ -1089,6 +1089,30 @@ angular.module('phopl.services')
     }
   }
 
+  function makeFullUrlImg(post) {
+    if (post.placePost.images) {
+      for (var i = 0; i < post.placePost.images.length; i++){
+        if (post.placePost.images[i].content.indexOf('http') !== 0) {
+          post.placePost.images[i].content = 'http://placekoob.com' + post.placePost.images[i].content;
+        }
+        if (post.placePost.images[i].summary.indexOf('http') !== 0) {
+          post.placePost.images[i].summary = 'http://placekoob.com' + post.placePost.images[i].summary;
+        }
+      }
+    }
+
+    if (post.userPost.images) {
+      for (var i = 0; i < post.userPost.images.length; i++){
+        if (post.userPost.images[i].content.indexOf('http') !== 0) {
+          post.userPost.images[i].content = 'http://placekoob.com' + post.userPost.images[i].content;
+        }
+        if (post.userPost.images[i].summary.indexOf('http') !== 0) {
+          post.userPost.images[i].summary = 'http://placekoob.com' + post.userPost.images[i].summary;
+        }
+      }
+    }
+  }
+
   //  ng-repeat안에서 함수가 호출되는 것을 최대한 방지하기 위해, 로딩된 포스트의 썸네일 URL, 전화번호, 주소, 태그 등을
   //  계산해서 속성으로 담아둔다.
   function decoratePost(post) {
@@ -1113,6 +1137,7 @@ angular.module('phopl.services')
     //  서버로부터 받은 distance_from_origin은 질의때 보낸 좌표를 기준으로 한 거리이기 때문에
     //  현재 위치를 기준으로 다시 계산해야 한다.
     post.distance_from_origin = getDistance(post, curPos);
+    makeFullUrlImg(post);
   }
 
   function decoratePosts(posts) {

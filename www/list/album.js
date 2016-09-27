@@ -4,8 +4,8 @@ angular.module('phopl.ctrls')
 .controller('albumCtrl', ['$scope', '$q', '$ionicPopup', '$ionicModal', '$cordovaClipboard', 'DOMHelper', 'PKLocalStorage', 'PKSessionStorage', 'RemoteAPIService', 'daumSearchService', function($scope, $q, $ionicPopup, $ionicModal, $cordovaClipboard, DOMHelper, PKLocalStorage, PKSessionStorage, RemoteAPIService, daumSearchService) {
   var result = this;
   // $scope.uplace_uuid = $stateParams.uplace_uuid;
-  $scope.profileImg = PKLocalStorage.get('profileImg');
-  $scope.nickname = PKLocalStorage.get('nickname');
+  // $scope.profileImg = PKLocalStorage.get('profileImg');
+  // $scope.nickname = PKLocalStorage.get('nickname');
   $scope.searchResults = [];
   $scope.attatchedImages = [
     // 'http://image.chosun.com/sitedata/image/201312/13/2013121302159_0.jpg',
@@ -157,6 +157,12 @@ angular.module('phopl.ctrls')
   $scope.$on('$ionicView.afterEnter', function() {
 		$scope.post = PKSessionStorage.get('albumToShow');
     console.debug('post', $scope.post);
+    if ($scope.post.userPost.ru.data) {
+      $scope.profileImg = $scope.post.userPost.ru.data.profileImg || 'img/blank-profile.png';
+    } else {
+      $scope.profileImg = 'img/blank-profile.png';
+    }
+    $scope.nickname = $scope.post.userPost.ru.nickname;
     getDaumResult();
 	});
 
