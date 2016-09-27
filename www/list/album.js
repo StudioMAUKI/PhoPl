@@ -20,6 +20,7 @@ angular.module('phopl.ctrls')
     // 'http://pds27.egloos.com/pds/201305/21/76/b0119476_519b41b6ae395.jpg',
     // 'http://thumbnail.egloos.net/850x0/http://pds25.egloos.com/pds/201412/09/76/b0119476_5485cf925668e.jpg'
   ];
+  $scope.showAll = false;
   $scope.calculatedHeight = DOMHelper.getImageHeight('view-container', 3, 5);
 
   //////////////////////////////////////////////////////////////////////////////
@@ -197,4 +198,9 @@ angular.module('phopl.ctrls')
     console.info('url: ' + url);
     window.open(url, '_system');
   };
+
+  $scope.showAllImages = function() {
+    $scope.showAll = true;
+    // $scope.$apply();
+  }
 }]);
