@@ -17,8 +17,7 @@ angular.module('phopl.services')
 
           resolve(pos);
         }, function(err) {
-          console.error('MapService.getCurrentPosition() is failed.');
-          console.dir(err);
+          console.error('MapService.getCurrentPosition() is failed.', err);
           // PositionError
           // code:3
           // message:"Timeout expired"
@@ -52,8 +51,7 @@ angular.module('phopl.services')
 
         success(pos);
       }, function(err) {
-        console.error('MapService.watchCurrentPosition() is failed.');
-        console.dir(err);
+        console.error('MapService.watchCurrentPosition() is failed.', err);
         fail(err);
       }, {
         timeout: 5000
@@ -167,6 +165,7 @@ angular.module('phopl.services')
   var dicSaved = {};
   var inited = false;
   var storageFileName = 'storage.txt';
+  var inWriting = false;
 
   function init() {
     var deferred = $q.defer();
@@ -209,8 +208,7 @@ angular.module('phopl.services')
                   PKLocalStorage.set('data_in_storage', '');
                   deferred.resolve();
                 }, function (err) {
-                  console.error('Cannot create the storage file.');
-                  console.dir(err);
+                  console.error('Cannot create the storage file.', err);
                   inited = false;
                   dicSaved = {};
                   deferred.reject(err);
@@ -221,16 +219,14 @@ angular.module('phopl.services')
               });
             }
 
-          }, function (error) {
-            console.error('Reading from the StorageFile was failed.');
-            console.dir(error);
+          }, function (err) {
+            console.error('Reading from the StorageFile was failed.', err);
 
             inited = false;
-            deferred.reject(error);
+            deferred.reject(err);
           });
-        }, function (error) {
-          console.error('StorageFile is not exist.');
-          console.dir(error);
+        }, function (err) {
+          console.error('StorageFile is not exist.', err);
 
           $cordovaFile.createFile(cordova.file.dataDirectory, storageFileName, true)
           .then(function (success) {
@@ -239,12 +235,11 @@ angular.module('phopl.services')
             dicSaved = {};
             PKLocalStorage.set('data_in_storage', '');
             deferred.resolve();
-          }, function (error) {
-            console.error('Cannot create the storage file.');
-            console.dir(error);
+          }, function (err) {
+            console.error('Cannot create the storage file.', err);
             inited = false;
             dicSaved = {};
-            deferred.reject(error);
+            deferred.reject(err);
           });
         });
       } else {
@@ -258,16 +253,9 @@ angular.module('phopl.services')
   function get(key) {
     if (ionic.Platform.isIOS() || ionic.Platform.isAndroid()) {
       console.log('PKFileStorage.get(' + key + ') :' + dicSaved[key]);
-      // $cordovaFile.readAsText(cordova.file.dataDirectory, storageFileName)
-      // .then(function (data) {
-      //   console.dir(data);
-      // }, function (error) {
-      //   cosole.error('Reading from the StorageFile was failed.');
-      //   console.dir(error);
-      // });
 
       if (dicSaved[key]) {
-        return JSON.parse(dicSaved[key]);
+        return dicSaved[key];
       } else {
         return null;
       }
@@ -278,8 +266,8 @@ angular.module('phopl.services')
 
   function set(key, value) {
     if (ionic.Platform.isIOS() || ionic.Platform.isAndroid()) {
-      console.log('PKFileStorage.setItem(' + key + ', ' + value + ')');
-      dicSaved[key] = JSON.stringify(value);
+      console.log('PKFileStorage.set(' + key + ') :' + value + ')');
+      dicSaved[key] = value;
       saveToFile();
       PKLocalStorage.set(key, value);
     } else {
@@ -289,13 +277,25 @@ angular.module('phopl.services')
 
   function saveToFile() {
     //  파일 저장
-    if (ionic.Platform.isIOS() || ionic.Platform.isAndroid()) {
-      $cordovaFile.writeFile(cordova.file.dataDirectory, storageFileName, JSON.stringify(dicSaved), true)
-      .then(function (success) {
-      }, function (error) {
-        console.error('Writing to storage file is failed.');
-        console.dir(error);
-      });
+    if (!inWriting) {
+      inWriting = true;
+      if (ionic.Platform.isIOS() || ionic.Platform.isAndroid()) {
+        $cordovaFile.writeFile(cordova.file.dataDirectory, storageFileName, JSON.stringify(dicSaved), true)
+        .then(function (success) {
+          PKLocalStorage.set('data_in_storage', dicSaved);
+          inWriting = false;
+          //  for debug
+          // $cordovaFile.readAsText(cordova.file.dataDirectory, storageFileName)
+          // .then(function (data) {
+          //   console.log('data in storage.txt', data);
+          //   inWriting = false;
+          // });
+        }, function (err) {
+          console.error('Writing to storage file is failed.', err);
+        });
+      }
+    } else {
+      setTimeout(saveToFile, 10);
     }
   }
 
@@ -394,7 +394,7 @@ angular.module('phopl.services')
 	    }).
 	    then(function(imageURIs) {
         deferred.resolve(imageURIs);
-	    }, function (error) {
+	    }, function (err) {
 	      console.error(err);
         deferred.reject(err);
 	    });

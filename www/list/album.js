@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('phopl.ctrls')
-.controller('albumCtrl', ['$scope', '$q', '$ionicPopup', '$ionicModal', '$cordovaClipboard', 'DOMHelper', 'PKLocalStorage', 'PKSessionStorage', 'RemoteAPIService', 'daumSearchService', function($scope, $q, $ionicPopup, $ionicModal, $cordovaClipboard, DOMHelper, PKLocalStorage, PKSessionStorage, RemoteAPIService, daumSearchService) {
+.controller('albumCtrl', ['$scope', '$q', '$ionicPopup', '$ionicModal', '$cordovaClipboard', '$ionicSlideBoxDelegate', '$ionicScrollDelegate', 'DOMHelper', 'PKLocalStorage', 'PKSessionStorage', 'RemoteAPIService', 'daumSearchService', function($scope, $q, $ionicPopup, $ionicModal, $cordovaClipboard, $ionicSlideBoxDelegate, $ionicScrollDelegate, DOMHelper, PKLocalStorage, PKSessionStorage, RemoteAPIService, daumSearchService) {
   var result = this;
   // $scope.uplace_uuid = $stateParams.uplace_uuid;
   // $scope.profileImg = PKLocalStorage.get('profileImg');
@@ -21,6 +21,7 @@ angular.module('phopl.ctrls')
     // 'http://thumbnail.egloos.net/850x0/http://pds25.egloos.com/pds/201412/09/76/b0119476_5485cf925668e.jpg'
   ];
   $scope.showAll = false;
+  $scope.zoomMin = 1;
   $scope.calculatedHeight = DOMHelper.getImageHeight('view-container', 3, 5);
 
   //////////////////////////////////////////////////////////////////////////////
@@ -203,4 +204,28 @@ angular.module('phopl.ctrls')
     $scope.showAll = true;
     // $scope.$apply();
   }
+
+  $scope.showImagesWithFullScreen = function(index) {
+    $scope.activeSlide = index;
+    $ionicModal.fromTemplateUrl('list/modal.images.html', {
+      scope: $scope
+    }).then(function(modal) {
+      $scope.modalImages = modal;
+      $scope.modalImages.show();
+    });
+  }
+
+  $scope.closeImages = function() {
+    $scope.modalImages.hide();
+    $scope.modalImages.remove();
+  };
+
+  $scope.updateSlideStatus = function(slide) {
+    var zoomFactor = $ionicScrollDelegate.$getByHandle('scrollHandle' + slide).getScrollPosition().zoom;
+    if (zoomFactor == $scope.zoomMin) {
+      $ionicSlideBoxDelegate.enableSlide(true);
+    } else {
+      $ionicSlideBoxDelegate.enableSlide(false);
+    }
+  };
 }]);
