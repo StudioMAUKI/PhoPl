@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('phopl.ctrls')
-.controller('confirmLocationCtrl', ['$scope', '$state', 'PKFileStorage', function($scope, $state, PKFileStorage) {
+.controller('confirmLocationCtrl', ['$scope', '$state', '$ionicModal', 'PKFileStorage', function($scope, $state, $ionicModal, PKFileStorage) {
   var confirmLocation = this;
 
   //////////////////////////////////////////////////////////////////////////////
@@ -16,11 +16,21 @@ angular.module('phopl.ctrls')
   //  public methods
   //////////////////////////////////////////////////////////////////////////////
   confirmLocation.showPolicy = function() {
-    console.info('위치기반 서비스 이용약관 모달창 띄워야 함');
+    $ionicModal.fromTemplateUrl('login/modal.location.html', {
+      scope: $scope
+    })
+    .then(function(modal) {
+      confirmLocation.modal = modal;
+      confirmLocation.modal.show();
+    });
   };
 
+  confirmLocation.closeLocationPolicy = function() {
+    confirmLocation.modal.hide();
+    confirmLocation.modal.remove();
+  }
+
   confirmLocation.preceedToRegister = function() {
-    console.info('회원 가입으로 진행');
     PKFileStorage.set('hasAgreedWithLocationPolicy', true);
     $state.go('register');
   };

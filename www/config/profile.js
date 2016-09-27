@@ -16,7 +16,7 @@ angular.module('phopl.ctrls')
           alertAndExit('프로필 정보를 가져오던 중 심각한');
           return;
         }
-        profile.data =JSON.parse(accountInfo.data);
+        profile.data =accountInfo.data;
         profile.nickname = accountInfo.nickname;
         profile.email = profile.data.email || accountInfo.email;
         profile.profileImg = profile.data.profileImg;

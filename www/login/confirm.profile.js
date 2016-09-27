@@ -17,7 +17,7 @@ angular.module('phopl.ctrls')
     RemoteAPIService.checkVerified()
     .then(function(accountInfo) {
       if (accountInfo) {
-        var data =JSON.parse(accountInfo.data);
+        var data =accountInfo.data;
         confirmProfile.accountID = accountInfo.email;
         if (!confirmProfile.accountID) {
           alertAndExit('프로필 정보를 가져오던 중 심각한');

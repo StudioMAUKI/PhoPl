@@ -1050,8 +1050,10 @@ angular.module('phopl.services')
       }
     } else if (timegap < 24 * 3600) {
       return parseInt(timegap / 3600) + '시간전';
-    } else {
+    } else if (timegap < 7 * 24 * 3600){
       return parseInt(timegap / 86400) + '일전';
+    } else {
+      return new Date(timestamp).toLocaleDateString();
     }
     // return new Date(timestamp).toLocaleDateString();
   }

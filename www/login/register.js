@@ -56,7 +56,7 @@ angular.module('phopl.ctrls')
     RemoteAPIService.checkVerified()
     .then(function(result) {
       if (result) {
-        var data =JSON.parse(result.data);
+        var data =result.data;
         if (!result.nickname || !data.profileImg) {
           $state.go('confirmProfile');
         } else {

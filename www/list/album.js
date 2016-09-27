@@ -77,7 +77,7 @@ angular.module('phopl.ctrls')
     // var contentHeight = document.getElementsByTagName('ion-content')[0].clientHeight;
     console.info('documentHeight: ' + documentHeight);
     var barHeight = document.getElementsByTagName('ion-header-bar')[0].clientHeight || 44;
-    $('#map').css({
+    $('#map-album').css({
       height: documentHeight - barHeight
     });
     //  이거 꼭 해줘야 지도가 제대로 그려짐. (안그러면 걍 회색으로 나옴)
@@ -90,7 +90,7 @@ angular.module('phopl.ctrls')
       lng: 126.9783882
     };
 
-    $scope.map = new google.maps.Map(document.getElementById('map'), {
+    $scope.map = new google.maps.Map(document.getElementById('map-album'), {
       center: pos,
       zoom: 15,
       mapTypeId: google.maps.MapTypeId.ROADMAP,

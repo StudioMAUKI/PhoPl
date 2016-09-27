@@ -79,12 +79,12 @@ angular.module('phopl.directives')
       }).then(function(modal) {
         $scope.modal = modal;
       });
-      $ionicModal.fromTemplateUrl('js/modal.map.html', {
-        scope: $scope,
-        focusFirstInput: true
-      }).then(function(modal) {
-        $scope.modalMap = modal;
-      });
+      // $ionicModal.fromTemplateUrl('js/modal.map.html', {
+      //   scope: $scope,
+      //   focusFirstInput: true
+      // }).then(function(modal) {
+      //   $scope.modalMap = modal;
+      // });
       $scope.mapCenterCoord = {
         lat: 0.0,
         lng: 0.0
@@ -158,7 +158,7 @@ angular.module('phopl.directives')
             longitude: 126.9783882
           };
           $scope.mapCenterCoord.lat = pos.latitude;
-          $scope.mapCenterCoord.lng = pos.longitude;          
+          $scope.mapCenterCoord.lng = pos.longitude;
           $scope.map = new google.maps.Map(document.getElementById('map'), {
             center: {lat: pos.latitude, lng: pos.longitude},
             zoom: 15,
@@ -173,7 +173,7 @@ angular.module('phopl.directives')
             draggable: true,
             zIndex: 9999
           });
-          $scope.map.addListener('center_changed', function() {
+          $scope.mapEventListener = $scope.map.addListener('center_changed', function() {
             console.info('map center_changed');
             var mapCenter = $scope.map.getCenter();
             $scope.curMarker.setPosition({
@@ -191,16 +191,22 @@ angular.module('phopl.directives')
           });
         }
         $scope.openMap = function() {
-          $scope.modalMap.show()
-          .then(function() {
-            MapService.getCurrentPosition()
-            .then(function(pos) {
-              fitMapToScreen();
-              initMap(pos);
-            }, function(err) {
-              console.error(err);
-              fitMapToScreen();
-              initMap();
+          $ionicModal.fromTemplateUrl('js/modal.map.html', {
+            scope: $scope,
+            focusFirstInput: true
+          }).then(function(modal) {
+            $scope.modalMap = modal;
+            $scope.modalMap.show()
+            .then(function() {
+              MapService.getCurrentPosition()
+              .then(function(pos) {
+                fitMapToScreen();
+                initMap(pos);
+              }, function(err) {
+                console.error(err);
+                fitMapToScreen();
+                initMap();
+              });
             });
           });
         };
@@ -214,7 +220,10 @@ angular.module('phopl.directives')
           MapService.getCurrentAddress($scope.mapCenterCoord.lat, $scope.mapCenterCoord.lng)
           .then(function(res) {
             $scope.location.formatted_address = res.roadAddress.name || res.jibunAddress.name || res.region;
-            return $scope.modalMap.hide();
+            google.maps.event.removeListener($scope.mapEventListener);
+            $scope.map = null;
+            $scope.modalMap.hide();
+            return $scope.modalMap.remove();
           });
         };
       });
