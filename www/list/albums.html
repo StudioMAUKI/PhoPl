@@ -29,6 +29,7 @@
       <div class="padding-top">
         <div ng-repeat="image in post.userPost.images| limitTo: 4 track by $index" style="width:{{albums.calculatedHeight+5}}px;height:{{albums.calculatedHeight}}px;display:inline-block;overflow:hidden;padding-left:5px;">
     			<img style="height:{{albums.calculatedHeight}}px;" ng-src="{{image.summary}}">
+          <div style="width:{{albums.calculatedHeight+5}}px;height:{{albums.calculatedHeight}}px;position:relative;text-align:center;top:-{{albums.calculatedHeight}}px;z-index:100;background-color:rgba(0,0,0,0.5);padding-top:30px;" ng-show="$index === 3 && post.userPost.images.length > 4"><h2 style="color:white;">+{{post.userPost.images.length - 4}}</h2></div>
     		</div>
       </div>
     </div>
