@@ -1090,7 +1090,7 @@ angular.module('phopl.services')
   }
 
   function makeFullUrlImg(post) {
-    if (post.placePost.images) {
+    if (post.placePost && post.placePost.images) {
       for (var i = 0; i < post.placePost.images.length; i++){
         if (post.placePost.images[i].content.indexOf('http') !== 0) {
           post.placePost.images[i].content = 'http://placekoob.com' + post.placePost.images[i].content;
@@ -1101,7 +1101,7 @@ angular.module('phopl.services')
       }
     }
 
-    if (post.userPost.images) {
+    if (post.userPost && post.userPost.images) {
       for (var i = 0; i < post.userPost.images.length; i++){
         if (post.userPost.images[i].content.indexOf('http') !== 0) {
           post.userPost.images[i].content = 'http://placekoob.com' + post.userPost.images[i].content;
