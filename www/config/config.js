@@ -1,9 +1,27 @@
 'use strict';
 
 angular.module('phopl.ctrls')
-.controller('configCtrl', ['$scope', '$state', '$ionicPopup', 'PKFileStorage', 'PKLocalStorage', function($scope, $state, $ionicPopup, PKFileStorage, PKLocalStorage) {
+.controller('configCtrl', ['$scope', '$state', '$ionicPopup', '$cordovaAppVersion', 'PKFileStorage', 'PKLocalStorage', function($scope, $state, $ionicPopup, $cordovaAppVersion, PKFileStorage, PKLocalStorage) {
   var config = this;
   config.version = '1.0.0';
+
+  //////////////////////////////////////////////////////////////////////////////
+  //  Private Methods
+  //////////////////////////////////////////////////////////////////////////////
+
+  //////////////////////////////////////////////////////////////////////////////
+  //  Event Handler
+  //////////////////////////////////////////////////////////////////////////////
+  // $scope.$on('$ionicView.afterEnter', function() {
+	//
+	// });
+
+  if (ionic.Platform.isIOS() || ionic.Platform.isAndroid()) {
+    $cordovaAppVersion.getVersionNumber()
+    .then(function (version) {
+        config.version = version;
+    });
+  }  
 
   //////////////////////////////////////////////////////////////////////////////
   //  public methods
@@ -21,7 +39,7 @@ angular.module('phopl.ctrls')
         PKFileStorage.remove('auth_user_token');
         $state.go('register');
       }
-    });    
+    });
   }
 
   config.reset = function() {
