@@ -57,6 +57,8 @@ angular.module('phopl.ctrls')
 			}
 		});
 
+    RemoteAPIService.getUplaces('top', 'total');
+
 		return deferred.promise;
 	};
 

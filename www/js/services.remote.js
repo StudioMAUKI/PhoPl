@@ -66,7 +66,22 @@ angular.module('phopl.services')
   var cachedUPAssigned = [];
   var cachedUPWaiting = [];
   var cacheKeys = ['all', 'uplaces', 'places', 'iplaces'];
-  var cacheMngr = { uplaces: null, places: null, iplaces: null};
+  var cacheMngr = {
+    uplaces: createCacheItem(),
+    places: createCacheItem(),
+    iplaces: createCacheItem()
+  };
+  var totalList = [];
+  var totalSharedList = [];
+  var totalSavedList = [];
+  var returnedTotalList = [];
+  var returnedSharedList = [];
+  var returnedSavedList = [];
+  var currentTail = 0;
+  var currentSharedTail = 0;
+  var currentSavedTail = 0;
+  var currentOrderingType = '-modified';
+
 
   function createCacheItem() {
     return {
@@ -85,11 +100,6 @@ angular.module('phopl.services')
     item.needToUpdate = true;
     item.totalCount = 0;
   }
-
-  cacheMngr.uplaces = createCacheItem();
-  cacheMngr.places = createCacheItem();
-  cacheMngr.iplaces = createCacheItem();
-  // console.dir(cacheMngr);
 
   function registerUser(force) {
     var deferred = $q.defer();
@@ -456,6 +466,115 @@ angular.module('phopl.services')
       deferred.reject(err);
     })
 
+    return deferred.promise;
+  }
+
+  function getFullListOfUplaces() {
+    var deferred = $q.defer();
+    var nickname = PKLocalStorage.get('nickname');
+    $http({
+      method: 'GET',
+      url: getServerURL() + '/uplaces/',
+      params: {
+        ru: 'myself',
+        limit: 100000,
+        offset: 0,
+        order_by: '-modified'
+      }
+    })
+    .then(function(response) {
+      console.dir(response.data.results);
+      PostHelper.decoratePosts(response.data.results);
+      totalList = response.data.results;
+
+      //  저장한것, 공유한것 분별하기
+      for (var i = 0; i < totalList.length; i++) {
+        if (totalList[i].userPost && totalList[i].userPost.ru && totalList[i].userPost.ru.nickname) {
+          if (totalList[i].userPost.ru.nickname === nickname) {
+            totalSharedList.push(totalList[i]);
+          } else {
+            totalSavedList.push(totalList[i]);
+          }
+        }
+      }
+      console.debug('totalList', totalList);
+      console.debug('totalSharedList', totalSharedList);
+      console.debug('totalSavedList', totalSavedList);
+
+      currentTail = Math.min(20, totalList.length);
+      returnedTotalList.concat(totalList.slice(0, currentTail));
+      currentSharedTail = Math.min(20, totalSharedList.length);
+      returnedSharedList.concat(totalSharedList.slice(0, currentSharedTail));
+      currentSavedTail = Math.min(20, totalSavedList.length);
+      returnedSavedList.concat(totalSavedList.slice(0, currentSavedTail));
+
+      deferred.resolve({total: returnedTotalList, shared : returnedSharedList, saved: returnedSavedList, totalCount: totalList.length});
+    }, function(err) {
+      deferred.reject(err);
+    });
+
+    return deferred.promise;
+  }
+
+  function getUplaces(position, type, orderingOption) {
+    console.info('getUplaces : ' + position);
+    var deferred = $q.defer();
+    var nickname = PKLocalStorage.get('nickname');
+    position = position || 'top';
+
+    //  아직 uplace 리스트를 얻어오지 않았다면 일단 얻고 시작
+    if (totalList.length === 0 || position === 'top') {
+      totalList = [];
+      totalSharedList = [];
+      totalSavedList = [];
+      returnedTotalList = [];
+      returnedSharedList = [];
+      returnedSavedList = [];
+      currentTail = 0;
+      currentSharedTail = 0;
+      currentSavedTail = 0;
+      getFullListOfUplaces()
+      .then(function(data) {
+        deferred.resolve(data);
+      }, function(err) {
+        console.error('getUplaces', err);
+        deferred.reject(err);
+      });
+    } else {
+      if (position === 'bottom') {
+        var newTail = 0;
+        if (type === 'total') {
+          if (currentTail === totalList.length) {
+            deferred.reject('endOfList(total)');
+          } else {
+            newTail = Math.min(currentTail + 20, totalList.length);
+            returnedTotalList.concat(totalList.slice(currentTail, newTail));
+            currentTail = newTail;
+          }
+        } else if (type === 'shared') {
+          if (currentSharedTail === totalSharedList.length) {
+            deferred.reject('endOfList(shared)');
+          } else {
+            newTail = Math.min(currentSharedTail + 20, totalSharedList.length);
+            returnedSharedList.concat(totalList.slice(currentSharedTail, newTail));
+            currentSharedTail = newTail;
+          }
+        } else if (type === 'saved') {
+          if (currentSavedTail === totalSavedList.length) {
+            deferred.reject('endOfList(saved)');
+          } else {
+            newTail = Math.min(currentSavedTail + 20, totalSavedList.length);
+            returnedSavedList.concat(totalList.slice(currentSavedTail, newTail));
+            currentSavedTail = newTail;
+          }
+        } else {
+          deferred.reject('Wrong parameter(type)');
+        }
+        deferred.resolve({total: returnedTotalList, shared : returnedSharedList, saved: returnedSavedList, totalCount: totalList.length});
+      } else {
+        deferred.reject('Wrong parameter(position)');
+      }
+    }
     return deferred.promise;
   }
 
@@ -841,7 +960,8 @@ angular.module('phopl.services')
     getIplaces: getIplaces,
     takeIplace: takeIplace,
     dropIplace: dropIplace,
-    getShortenURL: getShortenURL
+    getShortenURL: getShortenURL,
+    getUplaces: getUplaces
   }
 }])
 .factory('PostHelper', ['RESTServer', 'PKLocalStorage', 'MapService', function(RESTServer, PKLocalStorage, MapService) {
@@ -1136,7 +1256,7 @@ angular.module('phopl.services')
     }
     //  서버로부터 받은 distance_from_origin은 질의때 보낸 좌표를 기준으로 한 거리이기 때문에
     //  현재 위치를 기준으로 다시 계산해야 한다.
-    post.distance_from_origin = getDistance(post, curPos);
+    //post.distance_from_origin = getDistance(post, curPos);
     makeFullUrlImg(post);
   }
 
