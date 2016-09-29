@@ -9895,6 +9895,9 @@ a.button {
 .right {
   text-align: right; }
 
+.center {
+  text-align: center; }
+
 .bg-light-gray {
   background-color: #ccc; }
 
