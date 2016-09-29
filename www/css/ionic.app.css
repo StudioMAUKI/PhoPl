@@ -5412,9 +5412,9 @@ ion-tabs.tabs-striped.tabs-color-active-dark .tab-item.tab-item-active, ion-tabs
   z-index: 10;
   display: block;
   margin-top: 12px;
-  margin-left: -110px;
+  margin-left: -50px;
   height: 140px;
-  width: 220px;
+  width: 100px;
   background-color: #fff;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
   opacity: 0; }
