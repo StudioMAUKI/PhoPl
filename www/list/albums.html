@@ -14,7 +14,45 @@
   <ion-content class="has-subheader">
     <ion-refresher pulling-text="Pull to refresh..." on-refresh="albums.doRefresh('top')">
   	</ion-refresher>
-    <div ng-repeat="post in albums.posts" class="padding-top" ng-click="albums.showAlbum($index)">
+    <div ng-repeat="post in albums.totalPosts track by $index" class="padding-top" ng-show="albums.filteringType === 'total'" ng-click="albums.showAlbum($index)">
+      <div class="padding-left row">
+        <div class="col-67">
+          <strong ng-show="post.name">{{post.name}}&nbsp;</strong><small class="mid-gray">{{post.address}}</small>
+        </div>
+        <div class="col-33 right">
+          <small>{{post.datetime}}</small>
+        </div>
+      </div>
+      <div ng-show="post.desc" class="padding-left padding-right mid-gray" style="height:21px;overflow:hidden;">
+        <small>{{post.desc}}</small>
+      </div>
+      <div class="padding-top">
+        <div ng-repeat="image in post.userPost.images| limitTo: 4 track by $index" style="width:{{albums.calculatedHeight+5}}px;height:{{albums.calculatedHeight}}px;display:inline-block;overflow:hidden;padding-left:5px;">
+    			<img style="height:{{albums.calculatedHeight}}px;" ng-src="{{image.summary}}">
+          <div style="width:{{albums.calculatedHeight+5}}px;height:{{albums.calculatedHeight}}px;position:relative;text-align:center;top:-{{albums.calculatedHeight}}px;z-index:100;background-color:rgba(0,0,0,0.5);padding-top:30px;" ng-show="$index === 3 && post.userPost.images.length > 4"><h2 style="color:white;">+{{post.userPost.images.length - 4}}</h2></div>
+    		</div>
+      </div>
+    </div>
+    <div ng-repeat="post in albums.sharedPosts track by $index" class="padding-top" ng-show="albums.filteringType === 'shared'" ng-click="albums.showAlbum($index)">
+      <div class="padding-left row">
+        <div class="col-67">
+          <strong ng-show="post.name">{{post.name}}&nbsp;</strong><small class="mid-gray">{{post.address}}</small>
+        </div>
+        <div class="col-33 right">
+          <small>{{post.datetime}}</small>
+        </div>
+      </div>
+      <div ng-show="post.desc" class="padding-left padding-right mid-gray" style="height:21px;overflow:hidden;">
+        <small>{{post.desc}}</small>
+      </div>
+      <div class="padding-top">
+        <div ng-repeat="image in post.userPost.images| limitTo: 4 track by $index" style="width:{{albums.calculatedHeight+5}}px;height:{{albums.calculatedHeight}}px;display:inline-block;overflow:hidden;padding-left:5px;">
+    			<img style="height:{{albums.calculatedHeight}}px;" ng-src="{{image.summary}}">
+          <div style="width:{{albums.calculatedHeight+5}}px;height:{{albums.calculatedHeight}}px;position:relative;text-align:center;top:-{{albums.calculatedHeight}}px;z-index:100;background-color:rgba(0,0,0,0.5);padding-top:30px;" ng-show="$index === 3 && post.userPost.images.length > 4"><h2 style="color:white;">+{{post.userPost.images.length - 4}}</h2></div>
+    		</div>
+      </div>
+    </div>
+    <div ng-repeat="post in albums.savedPosts track by $index" class="padding-top" ng-show="albums.filteringType === 'saved'" ng-click="albums.showAlbum($index)">
       <div class="padding-left row">
         <div class="col-67">
           <strong ng-show="post.name">{{post.name}}&nbsp;</strong><small class="mid-gray">{{post.address}}</small>

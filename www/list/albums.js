@@ -1,12 +1,15 @@
 'use strict';
 
 angular.module('phopl.ctrls')
-.controller('albumsCtrl', ['$scope', '$state', '$q', '$ionicLoading', '$ionicPopover', 'DOMHelper', 'RemoteAPIService', 'PKLocalStorage', 'PKSessionStorage', function($scope, $state, $q, $ionicLoading, $ionicPopover, DOMHelper, RemoteAPIService, PKLocalStorage, PKSessionStorage) {
+.controller('albumsCtrl', ['$scope', '$state', '$q', '$ionicLoading', '$ionicPopover', '$ionicScrollDelegate', 'DOMHelper', 'RemoteAPIService', 'PKLocalStorage', 'PKSessionStorage', function($scope, $state, $q, $ionicLoading, $ionicPopover, $ionicScrollDelegate, DOMHelper, RemoteAPIService, PKLocalStorage, PKSessionStorage) {
   var albums = this;
   albums.completedFirstLoading = false;
   albums.orderingTypeName = ['-modified', 'placename', 'distance_from_origin'];
 	albums.orderingType = 0;
   albums.filteringType = 'total';
+  albums.totalScrollPosition = {left:0, top:0, zoom:1};
+  albums.sharedScrollPosition = {left:0, top:0, zoom:1};
+  albums.savedScrollPosition = {left:0, top:0, zoom:1};
   albums.images = [
     'http://image.chosun.com/sitedata/image/201312/13/2013121302159_0.jpg',
     'http://cfile227.uf.daum.net/image/192ABF3350BC88EB224FF9',
@@ -47,7 +50,10 @@ angular.module('phopl.ctrls')
 		.then(function(result) {
 			// albums.posts = result.total;
       albums.postsSet = result;
-      albums.posts = albums.postsSet[albums.filteringType];
+      // albums.posts = albums.postsSet[albums.filteringType];
+      albums.totalPosts = albums.postsSet['total'];
+      albums.sharedPosts = albums.postsSet['shared'];
+      albums.savedPosts = albums.postsSet['saved'];
 			deferred.resolve();
 			// console.dir(albums.posts);
 		}, function(err) {
@@ -77,8 +83,8 @@ angular.module('phopl.ctrls')
   //  Public Methods
   //////////////////////////////////////////////////////////////////////////////
   albums.showAlbum = function(index) {
-    PKSessionStorage.set('albumToShow', albums.posts[index]);
-    $state.go('tab.album', {uplace_uuid: albums.posts[index].uplace_uuid});
+    PKSessionStorage.set('albumToShow', albums[albums.filteringType + 'Posts'][index]);
+    $state.go('tab.album', {uplace_uuid: albums[albums.filteringType + 'Posts'][index].uplace_uuid});
   }
 
   albums.isEndOfList = function() {
@@ -134,17 +140,20 @@ angular.module('phopl.ctrls')
 	};
 
   albums.showTotalList = function() {
+    albums[albums.filteringType + 'ScrollPosition'] = $ionicScrollDelegate.getScrollPosition();
     albums.filteringType = 'total';
-    albums.posts = albums.postsSet[albums.filteringType];
+    $ionicScrollDelegate.scrollTo(albums.totalScrollPosition.left, albums.totalScrollPosition.top, false);
   };
 
   albums.showSharedList = function() {
+    albums[albums.filteringType + 'ScrollPosition'] = $ionicScrollDelegate.getScrollPosition();
     albums.filteringType = 'shared';
-    albums.posts = albums.postsSet[albums.filteringType];
+    $ionicScrollDelegate.scrollTo(albums.sharedScrollPosition.left, albums.sharedScrollPosition.top, false);
   };
 
   albums.showSavedList = function() {
+    albums[albums.filteringType + 'ScrollPosition'] = $ionicScrollDelegate.getScrollPosition();
     albums.filteringType = 'saved';
-    albums.posts = albums.postsSet[albums.filteringType];
+    $ionicScrollDelegate.scrollTo(albums.savedScrollPosition.left, albums.savedScrollPosition.top, false);
   }
 }]);
