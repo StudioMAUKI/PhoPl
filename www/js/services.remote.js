@@ -484,12 +484,13 @@ angular.module('phopl.services')
   function getFullListOfUplaces() {
     var deferred = $q.defer();
     var nickname = PKLocalStorage.get('nickname');
+
     $http({
       method: 'GET',
       url: getServerURL() + '/uplaces/',
       params: {
         ru: 'myself',
-        limit: 100000,
+        limit: 100000,  //  설마 10만을 넘지는 않겠지..?
         offset: 0,
         order_by: '-modified'
       }
