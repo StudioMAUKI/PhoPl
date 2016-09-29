@@ -1262,7 +1262,7 @@ angular.module('phopl.services')
     if (post.userPost && !post.userPost.tags) {
       post.userPost.tags = [];
     }
-    post.visited = post.userPost.visit? post.userPost.visit.content : false;
+    post.visited = (post.userPost && post.userPost.visit)? post.userPost.visit.content : false;
     if (post.visited === false) {
       if (post.userPost.rating && parseInt(post.userPost.rating.content) > 0) {
         post.visited = true;
