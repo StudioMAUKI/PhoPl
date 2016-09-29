@@ -126,7 +126,6 @@ angular.module('phopl.ctrls')
       albums.totalPosts = albums.postsSet['total'];
       albums.sharedPosts = albums.postsSet['shared'];
       albums.savedPosts = albums.postsSet['saved'];
-      console.debug('postsSet', albums.postsSet);
 
       setTimeout(function() {
         albums.totalScrollPosition = {left:0, top:0, zoom:1};
@@ -134,7 +133,7 @@ angular.module('phopl.ctrls')
         albums.savedScrollPosition = {left:0, top:0, zoom:1};
 
         $ionicScrollDelegate.scrollTo(0, 0, true);
-      }, 300);      
+      }, 300);
 		}
 	};
 

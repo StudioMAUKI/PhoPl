@@ -548,9 +548,15 @@ angular.module('phopl.services')
       totalList = response.data.results;
 
       //  저장한것, 공유한것 분별하기
-      divideListByType();
+      if (currentOrderingType === '-modified') {
+        divideListByType();
+        appendUplacesToReturnedList('all', true);
+      } else {
+        changeOrderingTypeOfUplaces({type:currentOrderingType});
+      }
 
-      deferred.resolve({total: totalList, shared : totalSharedList, saved: totalSavedList, totalCount: totalList.length});
+      console.log('uplaces', {total: totalList, shared : totalSharedList, saved: totalSavedList, totalCount: totalList.length});
+      deferred.resolve();
     }, function(err) {
       deferred.reject(err);
     });
@@ -567,10 +573,7 @@ angular.module('phopl.services')
     //  아직 uplace 리스트를 얻어오지 않았다면 일단 얻고 시작
     if (totalList.length === 0 || position === 'top') {
       getFullListOfUplaces()
-      .then(function(data) {
-        console.log('uplaces', data);
-        appendUplacesToReturnedList('all', true);
-
+      .then(function() {
         deferred.resolve({total: returnedTotalList, shared : returnedSharedList, saved: returnedSavedList, totalCount: totalList.length});
       }, function(err) {
         console.error('getUplaces', err);
@@ -612,11 +615,6 @@ angular.module('phopl.services')
     console.debug('orderingOption', orderingOption);
     if (totalList.length === 0) {
       console.warn('리스트를 얻어오지 못한 상태에서 정렬 메소드가 호출되었음');
-      return null;
-    }
-
-    //  ordering의 변화가 없으면 바로 리턴
-    if (currentOrderingType === orderingOption.type) {
       return null;
     }
 
