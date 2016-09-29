@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('phopl.ctrls')
-.controller('albumsCtrl', ['$scope', '$state', '$q', '$ionicLoading', '$ionicPopover', '$ionicScrollDelegate', 'DOMHelper', 'RemoteAPIService', 'PKLocalStorage', 'PKSessionStorage', function($scope, $state, $q, $ionicLoading, $ionicPopover, $ionicScrollDelegate, DOMHelper, RemoteAPIService, PKLocalStorage, PKSessionStorage) {
+.controller('albumsCtrl', ['$scope', '$state', '$q', '$ionicLoading', '$ionicPopover', '$ionicScrollDelegate', 'DOMHelper', 'RemoteAPIService', 'PKLocalStorage', 'PKSessionStorage', 'MapService', function($scope, $state, $q, $ionicLoading, $ionicPopover, $ionicScrollDelegate, DOMHelper, RemoteAPIService, PKLocalStorage, PKSessionStorage, MapService) {
   var albums = this;
   albums.completedFirstLoading = false;
   albums.orderingType = '-modified';
@@ -18,17 +18,6 @@ angular.module('phopl.ctrls')
 		console.log('loadSavedPlace : ' + position);
 		var deferred = $q.defer();
 		position = position || 'top';
-    // var curPos = PKLocalStorage.get('curPos') || { latitude: 37.5666103, longitude: 126.9783882 };
-    var curPos = {};
-		var lon = curPos.longitude || null;
-    var lat = curPos.latitude || null;
-    var radius = 0;
-    var limit = 0;
-    var orderingOption = {
-      type: albums.orderingType,
-      lng: lon,
-      lat: lat
-    };
 
 		if (albums.completedFirstLoading === false) {
 			$ionicLoading.show({
@@ -36,16 +25,13 @@ angular.module('phopl.ctrls')
 			});
 		}
 
-    RemoteAPIService.getUplaces(position, albums.filteringType, orderingOption)
+    RemoteAPIService.getUplaces(position, albums.filteringType)
 		.then(function(result) {
-			// albums.posts = result.total;
-      albums.postsSet = result;
-      // albums.posts = albums.postsSet[albums.filteringType];
+			albums.postsSet = result;
       albums.totalPosts = albums.postsSet['total'];
       albums.sharedPosts = albums.postsSet['shared'];
       albums.savedPosts = albums.postsSet['saved'];
 			deferred.resolve();
-			// console.dir(albums.posts);
 		}, function(err) {
 			console.error('loadSavedPlace', err);
 			deferred.reject(err);
@@ -56,8 +42,6 @@ angular.module('phopl.ctrls')
 				albums.completedFirstLoading = true;
 			}
 		});
-
-    // RemoteAPIService.getUplaces('top', 'total');
 
 		return deferred.promise;
 	};
@@ -119,10 +103,9 @@ angular.module('phopl.ctrls')
 	};
 
 	albums.changeOrderingType = function(type) {
-		albums.popOver.hide();
-		if (albums.orderingType !== type) {
-			albums.orderingType = type;
-			albums.postsSet = RemoteAPIService.changeOrderingTypeOfUplaces({type: type});
+    function sort(orderingOption) {
+      albums.orderingType = orderingOption.type;
+      albums.postsSet = RemoteAPIService.changeOrderingTypeOfUplaces(orderingOption);
       albums.totalPosts = albums.postsSet['total'];
       albums.sharedPosts = albums.postsSet['shared'];
       albums.savedPosts = albums.postsSet['saved'];
@@ -134,6 +117,33 @@ angular.module('phopl.ctrls')
 
         $ionicScrollDelegate.scrollTo(0, 0, true);
       }, 300);
+    }
+
+		albums.popOver.hide();
+		if (albums.orderingType !== type) {
+      if (type === 'distance_from_origin') {
+        $ionicLoading.show({
+  				template: '<ion-spinner icon="lines">로딩 중..</ion-spinner>'
+  			});
+        MapService.getCurrentPosition()
+        .then(function(pos) {
+          $ionicLoading.hide();
+          console.debug('pos', pos);
+          sort({
+            type: type,
+            lat: pos.latitude,
+            lon: pos.longitude
+          });
+        }, function(err) {
+          $ionicLoading.hide();
+          $ionicPopup.alert({
+            title: '죄송합니다!',
+            template: '현재의 위치를 얻어오지 못했습니다. 잠시후 다시 시도해 주세요.'
+          });
+        });
+      } else {
+        sort({type: type});
+      }
 		}
 	};
 

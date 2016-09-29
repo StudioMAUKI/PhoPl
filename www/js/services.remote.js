@@ -564,7 +564,7 @@ angular.module('phopl.services')
     return deferred.promise;
   }
 
-  function getUplaces(position, filteringType, orderingOption) {
+  function getUplaces(position, filteringType) {
     console.info('getUplaces : ' + position);
     var deferred = $q.defer();
     var nickname = PKLocalStorage.get('nickname');
@@ -644,7 +644,10 @@ angular.module('phopl.services')
       });
     } else if (orderingOption.type === 'distance_from_origin') {
       currentOrderingType = orderingOption.type;
-
+      PostHelper.updateDistance(totalList, {longitude:orderingOption.lon, latitude:orderingOption.lat});
+      totalList.sort(function(a, b) {
+        return a.distance_from_origin - b.distance_from_origin;
+      });
     } else {
       console.error('지원되지 않는 방식의 정렬을 시도했음');
       return null;
@@ -1271,12 +1274,13 @@ angular.module('phopl.services')
 	  dist = rad2deg(dist);
 	  dist = dist * 60 * 1.1515;
 	  dist = dist * 1.609344;
-	  var result = Number(dist*1000).toFixed(0);
-    if (result < 1000) {
-      return result + 'm';
-    } else {
-      return Number(result/1000.0).toFixed(1) + 'km';
-    }
+	  // var result = Number(dist*1000).toFixed(0);
+    // if (result < 1000) {
+    //   return result + 'm';
+    // } else {
+    //   return Number(result/1000.0).toFixed(1) + 'km';
+    // }
+    return Number(dist*1000).toFixed(0);
 	}
 
   function getDistance(post, curPos) {
