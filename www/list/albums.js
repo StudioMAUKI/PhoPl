@@ -6,6 +6,7 @@ angular.module('phopl.ctrls')
   albums.completedFirstLoading = false;
   albums.orderingTypeName = ['-modified', 'placename', 'distance_from_origin'];
 	albums.orderingType = 0;
+  albums.filteringType = 'total';
   albums.images = [
     'http://image.chosun.com/sitedata/image/201312/13/2013121302159_0.jpg',
     'http://cfile227.uf.daum.net/image/192ABF3350BC88EB224FF9',
@@ -41,9 +42,12 @@ angular.module('phopl.ctrls')
 			});
 		}
 		// console.log('getPostsOfMine', position, albums.orderingTypeName[albums.orderingType], lon, lat, radius);
-		RemoteAPIService.getPostsOfMine(position, albums.orderingTypeName[albums.orderingType], lon, lat, radius, limit)
+		// RemoteAPIService.getPostsOfMine(position, albums.orderingTypeName[albums.orderingType], lon, lat, radius, limit)
+    RemoteAPIService.getUplaces(position, albums.filteringType)
 		.then(function(result) {
-			albums.posts = result.total;
+			// albums.posts = result.total;
+      albums.postsSet = result;
+      albums.posts = albums.postsSet[albums.filteringType];
 			deferred.resolve();
 			// console.dir(albums.posts);
 		}, function(err) {
@@ -57,7 +61,7 @@ angular.module('phopl.ctrls')
 			}
 		});
 
-    RemoteAPIService.getUplaces('top', 'total');
+    // RemoteAPIService.getUplaces('top', 'total');
 
 		return deferred.promise;
 	};
@@ -78,7 +82,7 @@ angular.module('phopl.ctrls')
   }
 
   albums.isEndOfList = function() {
-		return RemoteAPIService.isEndOfList('uplaces');
+		return RemoteAPIService.isEndOfList(albums.filteringType);
 	};
 
   albums.doRefresh = function(direction) {
@@ -128,4 +132,19 @@ angular.module('phopl.ctrls')
 			});
 		}
 	};
+
+  albums.showTotalList = function() {
+    albums.filteringType = 'total';
+    albums.posts = albums.postsSet[albums.filteringType];
+  };
+
+  albums.showSharedList = function() {
+    albums.filteringType = 'shared';
+    albums.posts = albums.postsSet[albums.filteringType];
+  };
+
+  albums.showSavedList = function() {
+    albums.filteringType = 'saved';
+    albums.posts = albums.postsSet[albums.filteringType];
+  }
 }]);

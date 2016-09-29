@@ -154,9 +154,13 @@ $mid-gray: #555;
 }
 
 .image {
-    width: 100%;
-    height: 600px;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center center;
+  width: 100%;
+  height: 600px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.bold {
+  color: $positive;
 }

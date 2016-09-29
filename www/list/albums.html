@@ -6,9 +6,9 @@
   </ion-nav-buttons>
   <div class="bar bar-subheader">
     <div class="button-bar">
-      <a class="button">전체</a>
-      <a class="button">공유</a>
-      <a class="button">저장</a>
+      <a class="button" ng-disabled="albums.filteringType === 'total'" ng-click="albums.showTotalList()">전체</a>
+      <a class="button" ng-disabled="albums.filteringType === 'shared'" ng-click="albums.showSharedList()">공유</a>
+      <a class="button" ng-disabled="albums.filteringType === 'saved'" ng-click="albums.showSavedList()">저장</a>
     </div>
   </div>
   <ion-content class="has-subheader">

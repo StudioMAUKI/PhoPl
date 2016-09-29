@@ -391,9 +391,21 @@ angular.module('phopl.services')
     }
   }
 
-  function isEndOfList(key) {
-    return cacheMngr[key].endOfList;
+  function isEndOfList(filteringType) {
+    if (filteringType === 'total') {
+      return totalList.length === returnedTotalList.length;
+    } else if (filteringType === 'shared') {
+      return totalSharedList.length === returnedSharedList.length;
+    } else if (filteringType === 'saved') {
+      return totalSavedList.length === returnedSavedList.length;
+    } else {
+      return true;
+    }
   }
+
+  // function isEndOfList(key) {
+  //   return cacheMngr[key].endOfList;
+  // }
 
   function setAllNeedToUpdate() {
     for (var item in cacheMngr) {
@@ -483,7 +495,7 @@ angular.module('phopl.services')
       }
     })
     .then(function(response) {
-      console.dir(response.data.results);
+      // console.dir(response.data.results);
       PostHelper.decoratePosts(response.data.results);
       totalList = response.data.results;
 
@@ -497,16 +509,16 @@ angular.module('phopl.services')
           }
         }
       }
-      console.debug('totalList', totalList);
-      console.debug('totalSharedList', totalSharedList);
-      console.debug('totalSavedList', totalSavedList);
+      // console.debug('totalList', totalList);
+      // console.debug('totalSharedList', totalSharedList);
+      // console.debug('totalSavedList', totalSavedList);
 
       currentTail = Math.min(20, totalList.length);
-      returnedTotalList.concat(totalList.slice(0, currentTail));
+      returnedTotalList = returnedTotalList.concat(totalList.slice(0, currentTail));
       currentSharedTail = Math.min(20, totalSharedList.length);
-      returnedSharedList.concat(totalSharedList.slice(0, currentSharedTail));
+      returnedSharedList = returnedSharedList.concat(totalSharedList.slice(0, currentSharedTail));
       currentSavedTail = Math.min(20, totalSavedList.length);
-      returnedSavedList.concat(totalSavedList.slice(0, currentSavedTail));
+      returnedSavedList = returnedSavedList.concat(totalSavedList.slice(0, currentSavedTail));
 
       deferred.resolve({total: returnedTotalList, shared : returnedSharedList, saved: returnedSavedList, totalCount: totalList.length});
     }, function(err) {
@@ -535,6 +547,7 @@ angular.module('phopl.services')
       currentSavedTail = 0;
       getFullListOfUplaces()
       .then(function(data) {
+        console.log('uplaces', data);
         deferred.resolve(data);
       }, function(err) {
         console.error('getUplaces', err);
@@ -548,7 +561,7 @@ angular.module('phopl.services')
             deferred.reject('endOfList(total)');
           } else {
             newTail = Math.min(currentTail + 20, totalList.length);
-            returnedTotalList.concat(totalList.slice(currentTail, newTail));
+            returnedTotalList = returnedTotalList.concat(totalList.slice(currentTail, newTail));
             currentTail = newTail;
           }
         } else if (type === 'shared') {
@@ -556,7 +569,7 @@ angular.module('phopl.services')
             deferred.reject('endOfList(shared)');
           } else {
             newTail = Math.min(currentSharedTail + 20, totalSharedList.length);
-            returnedSharedList.concat(totalList.slice(currentSharedTail, newTail));
+            returnedSharedList = returnedSharedList.concat(totalList.slice(currentSharedTail, newTail));
             currentSharedTail = newTail;
           }
         } else if (type === 'saved') {
@@ -564,7 +577,7 @@ angular.module('phopl.services')
             deferred.reject('endOfList(saved)');
           } else {
             newTail = Math.min(currentSavedTail + 20, totalSavedList.length);
-            returnedSavedList.concat(totalList.slice(currentSavedTail, newTail));
+            returnedSavedList = returnedSavedList.concat(totalList.slice(currentSavedTail, newTail));
             currentSavedTail = newTail;
           }
         } else {
@@ -1245,7 +1258,7 @@ angular.module('phopl.services')
     post.address = post.addrs.length > 0 ? getShortenAddress(post.addrs[0]) : '위치 정보 없음';
     post.desc = getDescFromUserNote(post);
     post.phoneNo = getPhoneNo(post);
-    if (!post.userPost.tags) {
+    if (post.userPost && !post.userPost.tags) {
       post.userPost.tags = [];
     }
     post.visited = post.userPost.visit? post.userPost.visit.content : false;
