@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('phopl.ctrls')
-.controller('configCtrl', ['$scope', '$state', '$ionicPopup', '$cordovaAppVersion', 'PKFileStorage', 'PKLocalStorage', function($scope, $state, $ionicPopup, $cordovaAppVersion, PKFileStorage, PKLocalStorage) {
+.controller('configCtrl', ['$scope', '$state', '$ionicPopup', '$ionicHistory', '$cordovaAppVersion', 'PKFileStorage', 'PKLocalStorage', function($scope, $state, $ionicPopup, $ionicHistory, $cordovaAppVersion, PKFileStorage, PKLocalStorage) {
   var config = this;
   config.version = '1.0.0';
 
@@ -21,7 +21,7 @@ angular.module('phopl.ctrls')
     .then(function (version) {
         config.version = version;
     });
-  }  
+  }
 
   //////////////////////////////////////////////////////////////////////////////
   //  public methods
@@ -37,7 +37,10 @@ angular.module('phopl.ctrls')
         PKFileStorage.remove('accountID');
         PKFileStorage.remove('auth_vd_token');
         PKFileStorage.remove('auth_user_token');
-        $state.go('register');
+        $ionicHistory.clearCache()
+        .then(function() {
+          $state.go('register');
+        });        
       }
     });
   }
