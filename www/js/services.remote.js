@@ -574,7 +574,7 @@ angular.module('phopl.services')
       url: getServerURL() + '/uplaces/',
       params: {
         ru: 'myself',
-        limit: 26,  //  설마 10만을 넘지는 않겠지..?
+        limit: 100000,  //  설마 10만을 넘지는 않겠지..?
         offset: 0,
         order_by: '-modified'
       }
