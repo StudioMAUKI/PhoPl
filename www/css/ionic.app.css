@@ -9935,3 +9935,9 @@ a.button {
   .policy table td {
     border: 1px solid grey;
     padding-left: 5px; }
+
+.policy dl {
+  padding-left: 5px; }
+  .policy dl dt, .policy dl dd {
+    padding-left: 5px;
+    font-size: 90%; }

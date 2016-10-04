@@ -183,4 +183,11 @@ $popover-width: 100px;
       padding-left: 5px;
     }
   }
+  dl {
+    padding-left: 5px;
+    dt, dd {
+      padding-left: 5px;
+      font-size: 90%;
+    }
+  }
 }
