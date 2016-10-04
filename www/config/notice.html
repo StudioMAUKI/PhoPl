@@ -1,5 +1,8 @@
-<ion-view view-title="{{notice.item.title}}">
-  <ion-content>
-    {{notice.item.content}}.
+<ion-view view-title="{{notice.notice.title}}">
+  <ion-content class="padding-left padding-top">
+    <dl>
+      <!-- <dt>{{notice.notice.datetime}}에 작성된 공지사항입니다.</dt> -->
+      <dd>{{notice.notice.data.content}}</dd>
+    </dl>
   </ion-content>
 </ion-view>

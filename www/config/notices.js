@@ -1,25 +1,33 @@
 'use strict';
 
 angular.module('phopl.ctrls')
-.controller('noticesCtrl', ['$scope', function($scope) {
+.controller('noticesCtrl', ['$scope', '$state', 'RemoteAPIService', 'PKSessionStorage', 'PostHelper', function($scope, $state, RemoteAPIService, PKSessionStorage, PostHelper) {
   var notices = this;
 
-  notices.items = [
-    {
-      date: '16.08.29',
-      title: '시스템 점검 일정에 대한 안내'
-    },
-    {
-      date: '16.07.25',
-      title: '시스템 점검 일정에 대한 안내'
-    },
-    {
-      date: '16.07.03',
-      title: '시스템 점검 일정에 대한 안내'
-    },
-    {
-      date: '16.06.15',
-      title: '시스템 점검 일정에 대한 안내'
-    }
-  ];
+  //////////////////////////////////////////////////////////////////////////////
+  //  Private Methods
+  //////////////////////////////////////////////////////////////////////////////
+
+  //////////////////////////////////////////////////////////////////////////////
+  //  Event Handler
+  //////////////////////////////////////////////////////////////////////////////
+  $scope.$on('$ionicView.afterEnter', function() {
+	  RemoteAPIService.getNotices()
+    .then(function(res) {
+      notices.notices = res.results;
+      for (var i = 0; i < notices.notices.length; i++) {
+        notices.notices[i].datetime = PostHelper.getTimeString(notices.notices[i].created);
+      }
+    }, function(err) {
+      console.error('notices: getNotices', err);
+    });
+	});
+
+  //////////////////////////////////////////////////////////////////////////////
+  //  Public Methods
+  //////////////////////////////////////////////////////////////////////////////
+  notices.showNotice = function(index) {
+    PKSessionStorage.set('noticeToShow', notices.notices[index]);
+    $state.go('tab.notice', {noticeId: notices.notices[index].id});
+  };
 }]);

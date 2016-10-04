@@ -1052,6 +1052,25 @@ angular.module('phopl.services')
     return deferred.promise;
   }
 
+  function getNotices() {
+    var deferred = $q.defer();
+
+    console.log('GET request to ' + getServerURL() + '/notices/');
+    $http({
+      method: 'GET',
+      url: getServerURL() + '/notices/'
+    })
+    .then(function(response) {
+      console.dir(response);
+      deferred.resolve(response.data);
+    }, function(err) {
+      console.error(err);
+      deferred.reject(err);
+    });
+
+    return deferred.promise;
+  }
+
   return {
     registerUser: registerUser,
     loginUser: loginUser,
@@ -1079,7 +1098,8 @@ angular.module('phopl.services')
     dropIplace: dropIplace,
     getShortenURL: getShortenURL,
     getUplaces: getUplaces,
-    changeOrderingTypeOfUplaces: changeOrderingTypeOfUplaces
+    changeOrderingTypeOfUplaces: changeOrderingTypeOfUplaces,
+    getNotices: getNotices
   }
 }])
 .factory('PostHelper', ['RESTServer', 'PKLocalStorage', 'MapService', function(RESTServer, PKLocalStorage, MapService) {
@@ -1355,7 +1375,7 @@ angular.module('phopl.services')
   //  ng-repeat안에서 함수가 호출되는 것을 최대한 방지하기 위해, 로딩된 포스트의 썸네일 URL, 전화번호, 주소, 태그 등을
   //  계산해서 속성으로 담아둔다.
   function decoratePost(post) {
-    var curPos = PKLocalStorage.get('curPos');
+    // var curPos = PKLocalStorage.get('curPos');
     post.name = getPlaceName(post);
     post.thumbnailURL = getThumbnailURLByFirstImage(post);
     post.datetime = getTimeString(post.modified);
