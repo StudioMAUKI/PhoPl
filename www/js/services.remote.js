@@ -1071,6 +1071,23 @@ angular.module('phopl.services')
     return deferred.promise;
   }
 
+  function sendInquiry(inquiryObj){
+    var deferred = $q.defer();
+    $http({
+      method: 'POST',
+      url: getServerURL() + '/inquiries/',
+      data: JSON.stringify({ data: JSON.stringify(inquiryObj) })
+    })
+    .then(function(result) {
+      console.debug('sendInquiry', result);
+      deferred.resolve(result);
+    }, function(err) {
+      console.error(err);
+      deferred.reject(err);
+    });
+    return deferred.promise;
+  }
+
   return {
     registerUser: registerUser,
     loginUser: loginUser,
@@ -1099,7 +1116,8 @@ angular.module('phopl.services')
     getShortenURL: getShortenURL,
     getUplaces: getUplaces,
     changeOrderingTypeOfUplaces: changeOrderingTypeOfUplaces,
-    getNotices: getNotices
+    getNotices: getNotices,
+    sendInquiry: sendInquiry
   }
 }])
 .factory('PostHelper', ['RESTServer', 'PKLocalStorage', 'MapService', function(RESTServer, PKLocalStorage, MapService) {
