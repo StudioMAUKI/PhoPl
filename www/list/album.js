@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('phopl.ctrls')
-.controller('albumCtrl', ['$scope', '$q', '$ionicPopup', '$ionicModal', '$cordovaClipboard', '$ionicSlideBoxDelegate', '$ionicScrollDelegate', 'DOMHelper', 'PKLocalStorage', 'PKSessionStorage', 'RemoteAPIService', 'daumSearchService', function($scope, $q, $ionicPopup, $ionicModal, $cordovaClipboard, $ionicSlideBoxDelegate, $ionicScrollDelegate, DOMHelper, PKLocalStorage, PKSessionStorage, RemoteAPIService, daumSearchService) {
+.controller('albumCtrl', ['$scope', '$q', '$ionicPopup', '$ionicModal', '$cordovaClipboard', '$ionicSlideBoxDelegate', '$ionicScrollDelegate', '$ionicPopover', '$ionicHistory', 'DOMHelper', 'PKLocalStorage', 'PKSessionStorage', 'RemoteAPIService', 'daumSearchService', function($scope, $q, $ionicPopup, $ionicModal, $cordovaClipboard, $ionicSlideBoxDelegate, $ionicScrollDelegate, $ionicPopover, $ionicHistory, DOMHelper, PKLocalStorage, PKSessionStorage, RemoteAPIService, daumSearchService) {
   var result = this;
   // $scope.uplace_uuid = $stateParams.uplace_uuid;
   // $scope.profileImg = PKLocalStorage.get('profileImg');
@@ -227,5 +227,45 @@ angular.module('phopl.ctrls')
     } else {
       $ionicSlideBoxDelegate.enableSlide(false);
     }
+  };
+
+  $scope.popOverMore = function(event) {
+    console.info('popOverMore() called');
+		$ionicPopover.fromTemplateUrl('list/popover.edit.html', {
+			scope: $scope
+		})
+		.then(function(popover){
+			$scope.popOver = popover;
+			$scope.popOver.show(event);
+      console.info('popOverShow()');
+		});
+	};
+
+  $scope.edit = function() {
+    console.info('edit() called');
+  };
+
+  $scope.delete = function() {
+    console.info('delete() called');
+    $ionicPopup.confirm({
+			title: '삭제',
+			template: '앨범을 삭제 하시겠습니까?'
+		})
+		.then(function(res){
+			if (res) {
+        // RemoteAPIService.deleteUserPost($scope.post.uplace_uuid)
+        // .then(function() {
+          $ionicPopup.alert({
+            title: '성공',
+            template: '삭제되었습니다'
+          })
+          .then(function() {
+            $ionicHistory.goBack();
+          });
+        // }, function(err) {
+        //   console.error(err);
+        // });
+      }
+    });
   };
 }]);
