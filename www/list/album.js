@@ -247,14 +247,16 @@ angular.module('phopl.ctrls')
 
   $scope.delete = function() {
     console.info('delete() called');
+    $scope.popOver.hide();
+    $scope.popOver.remove();
     $ionicPopup.confirm({
 			title: '삭제',
 			template: '앨범을 삭제 하시겠습니까?'
 		})
 		.then(function(res){
 			if (res) {
-        // RemoteAPIService.deleteUserPost($scope.post.uplace_uuid)
-        // .then(function() {
+        RemoteAPIService.deleteUserPost($scope.post.uplace_uuid)
+        .then(function() {
           $ionicPopup.alert({
             title: '성공',
             template: '삭제되었습니다'
@@ -262,9 +264,9 @@ angular.module('phopl.ctrls')
           .then(function() {
             $ionicHistory.goBack();
           });
-        // }, function(err) {
-        //   console.error(err);
-        // });
+        }, function(err) {
+          console.error(err);
+        });
       }
     });
   };

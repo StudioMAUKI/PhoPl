@@ -9925,3 +9925,7 @@ a.button {
 
 .bold {
   color: #ff0066; }
+
+.policy ol li {
+  padding-left: 10px;
+  font-size: 90%; }

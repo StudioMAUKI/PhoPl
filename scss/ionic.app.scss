@@ -170,3 +170,10 @@ $popover-width: 100px;
 .bold {
   color: $positive;
 }
+
+.policy {
+  ol li {
+    padding-left: 10px;
+    font-size: 90%;
+  }
+}

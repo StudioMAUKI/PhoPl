@@ -273,6 +273,42 @@ angular.module('phopl.services')
     return deferred.promise;
   }
 
+  function deleteUserPostInCachedList(uplace_uuid) {
+    for (var i = 0; i < totalList.length; i++) {
+      if (totalList[i].uplace_uuid === uplace_uuid) {
+        totalList.splice(i, 1);
+      }
+    }
+    for (var i = 0; i < returnedTotalList.length; i++) {
+      if (returnedTotalList[i].uplace_uuid === uplace_uuid) {
+        returnedTotalList.splice(i, 1);
+        currentTail--;
+      }
+    }
+    for (var i = 0; i < totalSharedList.length; i++) {
+      if (totalSharedList[i].uplace_uuid === uplace_uuid) {
+        totalSharedList.splice(i, 1);
+      }
+    }
+    for (var i = 0; i < returnedSharedList.length; i++) {
+      if (returnedSharedList[i].uplace_uuid === uplace_uuid) {
+        returnedSharedList.splice(i, 1);
+        currentSharedTail--;
+      }
+    }
+    for (var i = 0; i < totalSavedList.length; i++) {
+      if (totalSavedList[i].uplace_uuid === uplace_uuid) {
+        totalSavedList.splice(i, 1);
+      }
+    }
+    for (var i = 0; i < returnedSavedList.length; i++) {
+      if (returnedSavedList[i].uplace_uuid === uplace_uuid) {
+        returnedSavedList.splice(i, 1);
+        currentSavedTail--;
+      }
+    }
+  }
+
   function deleteUserPost(uplace_uuid) {
     var deferred = $q.defer();
     var ret_uplace_uuid = uplace_uuid.split('.')[0];
@@ -298,6 +334,7 @@ angular.module('phopl.services')
         }
       }
       setAllNeedToUpdate();
+      deleteUserPostInCachedList(uplace_uuid);
       deferred.resolve(result);
     }, function(err) {
       console.error(err);
@@ -537,7 +574,7 @@ angular.module('phopl.services')
       url: getServerURL() + '/uplaces/',
       params: {
         ru: 'myself',
-        limit: 100000,  //  설마 10만을 넘지는 않겠지..?
+        limit: 26,  //  설마 10만을 넘지는 않겠지..?
         offset: 0,
         order_by: '-modified'
       }
