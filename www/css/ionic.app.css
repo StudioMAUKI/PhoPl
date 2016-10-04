@@ -9926,6 +9926,12 @@ a.button {
 .bold {
   color: #ff0066; }
 
-.policy ol li {
+.policy ol li, .policy ul li, .policy p {
   padding-left: 10px;
   font-size: 90%; }
+
+.policy table {
+  font-size: 80%; }
+  .policy table td {
+    border: 1px solid grey;
+    padding-left: 5px; }

@@ -172,8 +172,15 @@ $popover-width: 100px;
 }
 
 .policy {
-  ol li {
+  ol li, ul li, p {
     padding-left: 10px;
     font-size: 90%;
+  }
+  table {
+    font-size: 80%;
+    td {
+      border: 1px solid grey;
+      padding-left: 5px;
+    }
   }
 }
