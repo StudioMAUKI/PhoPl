@@ -1407,7 +1407,7 @@ angular.module('phopl.services')
     }
     post.visited = (post.userPost && post.userPost.visit)? post.userPost.visit.content : false;
     if (post.visited === false) {
-      if (post.userPost.rating && parseInt(post.userPost.rating.content) > 0) {
+      if (post.userPost && post.userPost.rating && parseInt(post.userPost.rating.content) > 0) {
         post.visited = true;
       }
     }
