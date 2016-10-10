@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('phopl.ctrls')
-.controller('chooseCtrl', ['$scope', '$state', 'PhotoService', 'PKLocalStorage', function($scope, $state, PhotoService, PKLocalStorage) {
+.controller('chooseCtrl', ['$scope', '$state', 'PhotoService', 'PKLocalStorage', 'loginStatus', function($scope, $state, PhotoService, PKLocalStorage, loginStatus) {
   var choose = this;
 
   //////////////////////////////////////////////////////////////////////////////
@@ -9,6 +9,7 @@ angular.module('phopl.ctrls')
   //////////////////////////////////////////////////////////////////////////////
   function init() {
     PKLocalStorage.set('savedImgs', []);
+    loginStatus.setLoginStatus(true);
   }
 
   function getPhotoFromCamera() {

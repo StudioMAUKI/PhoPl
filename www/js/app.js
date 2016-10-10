@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 angular.module('phopl', ['ionic', 'ngCordova', 'ngCordovaOauth', 'phopl.config', 'phopl.ctrls', 'phopl.directives', 'phopl.services'])
-.run(['$ionicPlatform', '$window', 'PKLocalStorage', function($ionicPlatform, $window, PKLocalStorage) {
+.run(['$ionicPlatform', '$window', 'PKLocalStorage', 'loginStatus', 'PKFileStorage', function($ionicPlatform, $window, PKLocalStorage, loginStatus, PKFileStorage) {
   $ionicPlatform.ready(function() {
     if(window.cordova && window.cordova.plugins.Keyboard) {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -51,12 +51,33 @@ angular.module('phopl', ['ionic', 'ngCordova', 'ngCordovaOauth', 'phopl.config',
     $window.addEventListener('LaunchUrl', function(event) {
       console.debug('app-link event', event);
       // gets page name from url
-      var param =/.*:[/]{2}([^?]*)[?]?(.*)/.exec(event.detail.url)[2];
-      var uplace_uuid = param.substr(12);
+      var params =/.*:[/]{2}([^?]*)[?]?(.*)/.exec(event.detail.url)[2].split('&');
+      var uplace_uuid = params[0].substr(12);
+      var nickname = params[1].substr(9);
       console.debug('uplace_uuid: ' + uplace_uuid);
+      console.debug('nickname: ' + nickname);
 
-      // $state.go('tab.'+ page, {});
+      openAlbum(uplace_uuid, nickname);
     });
+
+    function openAlbum(uplace_uuid, nickname) {
+      if (loginStatus.isLogin()) {
+        PKFileStorage.init()
+        .then(function() {
+          var localNickname = PKFileStorage.get('nickname');
+          if (localNickname === nickname) {
+            alert('이미 내가 갖고 있는 앨범');
+          } else {
+            alert('타인으로부터 공유받아, 내가 저장하려는 앨범');
+          }
+        })
+      } else {
+        console.info('로그인 상태가 아니므로, 로그인이 완료될때까지 링크 열기 대기');
+        setTimeout(function() {
+          openAlbum(uplace_uuid, nickname);
+        }, 1000);
+      }
+    }
   });
 }]);
 

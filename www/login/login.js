@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('phopl.ctrls')
-.controller('loginCtrl', ['$scope', '$ionicPopup', '$state', '$ionicPlatform', 'PKFileStorage', 'RemoteAPIService', function($scope, $ionicPopup, $state, $ionicPlatform, PKFileStorage, RemoteAPIService) {
+.controller('loginCtrl', ['$scope', '$ionicPopup', '$state', '$ionicPlatform', 'PKFileStorage', 'RemoteAPIService', 'loginStatus', function($scope, $ionicPopup, $state, $ionicPlatform, PKFileStorage, RemoteAPIService, loginStatus) {
   var login = this;
   login.loginned = false;
   login.height = calculateHeight();
@@ -32,6 +32,7 @@ angular.module('phopl.ctrls')
   }
 
   function doLogin() {
+    loginStatus.setLoginStatus(false);
     RemoteAPIService.registerUser()
     .then(function(token) {
       // 유저 로그인

@@ -61,6 +61,20 @@ angular.module('phopl.services')
     uploadData: uploadData
   };
 }])
+.factory('loginStatus', [function(
+) {
+  var _isLogin = false;
+  function isLogin() {
+    return _isLogin;
+  }
+  function setLoginStatus(status) {
+    _isLogin = status;
+  }
+  return {
+    isLogin: isLogin,
+    setLoginStatus: setLoginStatus
+  };
+}])
 .factory('RemoteAPIService', ['$http', '$cordovaFileTransfer', '$q', 'RESTServer', 'PKLocalStorage', 'PostHelper', 'PKFileStorage', function($http, $cordovaFileTransfer, $q, RESTServer, PKLocalStorage, PostHelper, PKFileStorage){
   var getServerURL = RESTServer.getURL;
   var cachedUPAssigned = [];

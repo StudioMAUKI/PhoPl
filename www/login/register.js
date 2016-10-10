@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('phopl.ctrls')
-.controller('registerCtrl', ['$scope', '$state', '$ionicPlatform', '$ionicPopup', '$q', '$cordovaOauth', '$http', 'PKFileStorage', 'RemoteAPIService', 'oauthKakao', function($scope, $state, $ionicPlatform, $ionicPopup, $q, $cordovaOauth, $http, PKFileStorage, RemoteAPIService, oauthKakao) {
+.controller('registerCtrl', ['$scope', '$state', '$ionicPlatform', '$ionicPopup', '$q', '$cordovaOauth', '$http', 'PKFileStorage', 'RemoteAPIService', 'oauthKakao', 'loginStatus', function($scope, $state, $ionicPlatform, $ionicPopup, $q, $cordovaOauth, $http, PKFileStorage, RemoteAPIService, oauthKakao, loginStatus) {
   var register = this;
   register.email = '';
 
@@ -12,6 +12,7 @@ angular.module('phopl.ctrls')
     var deferred = $q.defer();
     PKFileStorage.set('accountID', accountID);
 
+    loginStatus.setLoginStatus(false);
     RemoteAPIService.registerUser(true)
     .then(function(token) {
       // 유저 로그인
