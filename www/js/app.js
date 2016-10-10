@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 angular.module('phopl', ['ionic', 'ngCordova', 'ngCordovaOauth', 'phopl.config', 'phopl.ctrls', 'phopl.directives', 'phopl.services'])
-.run(['$ionicPlatform', 'PKLocalStorage', function($ionicPlatform, PKLocalStorage) {
+.run(['$ionicPlatform', '$window', 'PKLocalStorage', function($ionicPlatform, $window, PKLocalStorage) {
   $ionicPlatform.ready(function() {
     if(window.cordova && window.cordova.plugins.Keyboard) {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -46,9 +46,27 @@ angular.module('phopl', ['ionic', 'ngCordova', 'ngCordovaOauth', 'phopl.config',
       document.body.classList.remove('platform-android');
       document.body.classList.add('platform-ionic');
     }
+
+    //  app-link part
+    $window.addEventListener('LaunchUrl', function(event) {
+      console.debug('app-link event', event);
+      // gets page name from url
+      var param =/.*:[/]{2}([^?]*)[?]?(.*)/.exec(event.detail.url)[2];
+      var uplace_uuid = param.substr(12);
+      console.debug('uplace_uuid: ' + uplace_uuid);
+
+      // $state.go('tab.'+ page, {});
+    });
   });
 }]);
 
 angular.module('phopl.ctrls', []);
 angular.module('phopl.directives', []);
 angular.module('phopl.services', []);
+
+function handleOpenURL(url) {
+  setTimeout(function() {
+    var event = new CustomEvent('LaunchUrl', {detail: {'url': url}});
+    window.dispatchEvent(event);
+  }, 0);
+}
