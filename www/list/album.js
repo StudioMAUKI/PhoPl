@@ -166,6 +166,11 @@ angular.module('phopl.ctrls')
     }
     $scope.nickname = $scope.post.userPost.ru.nickname;
     getDaumResult();
+    if (RemoteAPIService.isTakenPlace($scope.post.uplace_uuid)) {
+      $scope.canTakeToMyList = false;
+    } else {
+      $scope.canTakeToMyList = true;
+    }
 	});
 
   //////////////////////////////////////////////////////////////////////////////
@@ -270,4 +275,13 @@ angular.module('phopl.ctrls')
       }
     });
   };
+
+  $scope.take = function() {
+    RemoteAPIService.takeIplace($scope.post.uplace_uuid)
+    .then(function(result) {
+      console.log('album.take()', result);
+    }, function(err) {
+      console.error(err);
+    });
+  }
 }]);

@@ -990,7 +990,7 @@ angular.module('phopl.services')
       }
       deferred.resolve({ iplaces: cacheMngr.iplaces.items, totalCount: cacheMngr.iplaces.totalCount });
     }, function(err) {
-      console.error(err);
+      // console.error(err);
       deferred.reject(err);
     });
 
@@ -1122,6 +1122,15 @@ angular.module('phopl.services')
     return deferred.promise;
   }
 
+  function isTakenPlace(uplace_uuid) {
+    for (var i = 0; i < totalList.length; i++) {
+      if (totalList[i].uplace_uuid === uplace_uuid) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   return {
     registerUser: registerUser,
     loginUser: loginUser,
@@ -1152,7 +1161,8 @@ angular.module('phopl.services')
     getUplaces: getUplaces,
     changeOrderingTypeOfUplaces: changeOrderingTypeOfUplaces,
     getNotices: getNotices,
-    sendInquiry: sendInquiry
+    sendInquiry: sendInquiry,
+    isTakenPlace: isTakenPlace
   }
 }])
 .factory('PostHelper', ['RESTServer', 'PKLocalStorage', 'MapService', function(RESTServer, PKLocalStorage, MapService) {
