@@ -16,7 +16,7 @@ angular.module('phopl.config', [])
     templateUrl: 'common/tab.html'
   })
 	.state('tab.list', {
-    url: '/list/:bypass',
+    url: '/list?bypass',
     views: {
       'list': {
         templateUrl: 'list/albums.html',

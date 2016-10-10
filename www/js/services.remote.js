@@ -61,13 +61,13 @@ angular.module('phopl.services')
     uploadData: uploadData
   };
 }])
-.factory('loginStatus', [function(
-) {
+.factory('loginStatus', ['PKSessionStorage', function(PKSessionStorage) {
   var _isLogin = false;
   function isLogin() {
     return _isLogin;
   }
   function setLoginStatus(status) {
+    PKSessionStorage.set('isLogin', status);
     _isLogin = status;
   }
   return {

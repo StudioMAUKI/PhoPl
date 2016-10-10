@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('phopl.ctrls')
-.controller('albumsCtrl', ['$scope', '$state', '$stateParams', '$q', '$ionicLoading', '$ionicPopover', '$ionicScrollDelegate', 'DOMHelper', 'RemoteAPIService', 'PKLocalStorage', 'PKSessionStorage', 'MapService', function($scope, $state, $stateParams, $q, $ionicLoading, $ionicPopover, $ionicScrollDelegate, DOMHelper, RemoteAPIService, PKLocalStorage, PKSessionStorage, MapService) {
+.controller('albumsCtrl', ['$scope', '$state', '$stateParams', '$ionicHistory', '$q', '$ionicLoading', '$ionicPopover', '$ionicScrollDelegate', 'DOMHelper', 'RemoteAPIService', 'PKLocalStorage', 'PKSessionStorage', 'MapService', function($scope, $state, $stateParams, $ionicHistory, $q, $ionicLoading, $ionicPopover, $ionicScrollDelegate, DOMHelper, RemoteAPIService, PKLocalStorage, PKSessionStorage, MapService) {
   var albums = this;
   albums.completedFirstLoading = false;
   albums.orderingType = '-modified';
@@ -46,16 +46,38 @@ angular.module('phopl.ctrls')
 		return deferred.promise;
 	};
 
+  function goToAlbum() {
+    if (albums.completedFirstLoading) {
+      PKSessionStorage.set('goToAlbumDirectly', false);
+      $state.go('tab.album');
+    } else {
+      setTimeout(goToAlbum, 1000);
+    }
+  }
+
   //////////////////////////////////////////////////////////////////////////////
   //  Event Handler
   //////////////////////////////////////////////////////////////////////////////
   $scope.$on('$ionicView.loaded', function() {
-    console.debug('$stateParams', $stateParams);
-    if ($stateParams.bypass) {
-      $state.go('tab.album');
-    } else {
+    // console.debug('$stateParams in loaded', $stateParams);
+    // console.debug('$ionicHistory.backView() in loaded', $ionicHistory.backView());
+    // if ($stateParams.bypass) {
+    //   $state.go('tab.album');
+    // } else {
       loadSavedPlace('top');
+    // }
+  });
+
+  $scope.$on('$ionicView.afterEnter', function() {
+    // console.debug('$stateParams in afterEnter', $stateParams);
+    // console.debug('$ionicHistory.backView() in afterEnter', $ionicHistory.backView());
+    if (PKSessionStorage.get('goToAlbumDirectly')) {
+      goToAlbum();
     }
+  });
+
+  $scope.$on('tab.list.goToAlbumDirectly', function() {
+    goToAlbum();
   });
 
   //////////////////////////////////////////////////////////////////////////////
@@ -72,7 +94,7 @@ angular.module('phopl.ctrls')
 
   albums.doRefresh = function(direction) {
 		console.log('doRefersh : ' + direction);
-		if (albums.completedFirstLoading){
+		// if (albums.completedFirstLoading){
 			if (direction === 'top') {
 				loadSavedPlace('top')
 				.finally(function(){
@@ -84,13 +106,13 @@ angular.module('phopl.ctrls')
 					$scope.$broadcast('scroll.infiniteScrollComplete');
 				});
 			}
-		} else {
-			if (direction === 'top') {
-				$scope.$broadcast('scroll.refreshComplete');
-			} else if (direction === 'bottom') {
-				$scope.$broadcast('scroll.infiniteScrollComplete');
-			}
-		}
+		// } else {
+		// 	if (direction === 'top') {
+		// 		$scope.$broadcast('scroll.refreshComplete');
+		// 	} else if (direction === 'bottom') {
+		// 		$scope.$broadcast('scroll.infiniteScrollComplete');
+		// 	}
+		// }
 	};
 
   albums.popOverOrdering = function(event) {

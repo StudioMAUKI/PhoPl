@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 angular.module('phopl', ['ionic', 'ngCordova', 'ngCordovaOauth', 'phopl.config', 'phopl.ctrls', 'phopl.directives', 'phopl.services'])
-.run(['$ionicPlatform', '$window', '$state', 'PKLocalStorage', 'loginStatus', 'PKFileStorage', 'RemoteAPIService', function($ionicPlatform, $window, $state, PKLocalStorage, loginStatus, PKFileStorage, RemoteAPIService) {
+.run(['$ionicPlatform', '$window', '$state', '$ionicHistory', '$rootScope', 'PKLocalStorage', 'loginStatus', 'PKFileStorage', 'PKSessionStorage', 'RemoteAPIService', function($ionicPlatform, $window, $state, $ionicHistory, $rootScope, PKLocalStorage, loginStatus, PKFileStorage, PKSessionStorage, RemoteAPIService) {
   $ionicPlatform.ready(function() {
     if(window.cordova && window.cordova.plugins.Keyboard) {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -66,20 +66,21 @@ angular.module('phopl', ['ionic', 'ngCordova', 'ngCordovaOauth', 'phopl.config',
         .then(function() {
           var localNickname = PKFileStorage.get('nickname');
           if (localNickname === nickname) {
-            alert('이미 내가 갖고 있는 앨범');
+            // alert('이미 내가 갖고 있는 앨범');
             RemoteAPIService.getPost(uplace_uuid)
             .then(function(result) {
               console.debug('uplace', result);
-              showAlbumModal();
+              goToAlbum(result);
             }, function(err) {
               console.error(err);
             });
           } else {
-            alert('타인으로부터 공유받아, 내가 저장하려는 앨범');
-            RemoteAPIService.getIplace(uplace_uuid)
+            // alert('타인으로부터 공유받아, 내가 저장하려는 앨범');
+            // RemoteAPIService.getIplace(uplace_uuid)
+            RemoteAPIService.getPost(uplace_uuid)
             .then(function(result) {
               console.debug('iplace', result);
-              showAlbumModal();
+              goToAlbum(result);
             }, function(err) {
               console.error(err);
             });
@@ -93,8 +94,17 @@ angular.module('phopl', ['ionic', 'ngCordova', 'ngCordovaOauth', 'phopl.config',
       }
     }
 
-    function showAlbumModal() {
-      $state.go('tab.list', {bypass: true});
+    function goToAlbum(data) {
+      PKSessionStorage.set('albumToShow', data);
+      PKSessionStorage.set('goToAlbumDirectly', true);
+      console.debug('goToAlbum: currentView', $ionicHistory.currentView());
+      //  이미 가려고 하는 뷰가 열린 경우에는 $state.go()를 호출해도 반응이 없다.
+      //  따라서 이런 경우에는 이벤트를 이용한다.
+      if ($ionicHistory.currentView().stateId === 'tab.list') {
+        $rootScope.$broadcast('tab.list.goToAlbumDirectly');
+      } else {
+        $state.go('tab.list');
+      }
     }
   });
 }]);
