@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 angular.module('phopl', ['ionic', 'ngCordova', 'ngCordovaOauth', 'phopl.config', 'phopl.ctrls', 'phopl.directives', 'phopl.services'])
-.run(['$ionicPlatform', '$window', 'PKLocalStorage', 'loginStatus', 'PKFileStorage', function($ionicPlatform, $window, PKLocalStorage, loginStatus, PKFileStorage) {
+.run(['$ionicPlatform', '$window', '$state', 'PKLocalStorage', 'loginStatus', 'PKFileStorage', 'RemoteAPIService', function($ionicPlatform, $window, $state, PKLocalStorage, loginStatus, PKFileStorage, RemoteAPIService) {
   $ionicPlatform.ready(function() {
     if(window.cordova && window.cordova.plugins.Keyboard) {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -67,16 +67,34 @@ angular.module('phopl', ['ionic', 'ngCordova', 'ngCordovaOauth', 'phopl.config',
           var localNickname = PKFileStorage.get('nickname');
           if (localNickname === nickname) {
             alert('이미 내가 갖고 있는 앨범');
+            RemoteAPIService.getPost(uplace_uuid)
+            .then(function(result) {
+              console.debug('uplace', result);
+              showAlbumModal();
+            }, function(err) {
+              console.error(err);
+            });
           } else {
             alert('타인으로부터 공유받아, 내가 저장하려는 앨범');
+            RemoteAPIService.getIplace(uplace_uuid)
+            .then(function(result) {
+              console.debug('iplace', result);
+              showAlbumModal();
+            }, function(err) {
+              console.error(err);
+            });
           }
-        })
+        });
       } else {
         console.info('로그인 상태가 아니므로, 로그인이 완료될때까지 링크 열기 대기');
         setTimeout(function() {
           openAlbum(uplace_uuid, nickname);
         }, 1000);
       }
+    }
+
+    function showAlbumModal() {
+      $state.go('tab.list', {bypass: true});
     }
   });
 }]);

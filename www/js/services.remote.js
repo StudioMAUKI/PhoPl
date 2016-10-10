@@ -999,11 +999,11 @@ angular.module('phopl.services')
 
   function dropIplace(iplace_uuid) {
     var deferred = $q.defer();
-    var ret_uplace_uuid = iplace_uuid.split('.')[0];
-    console.log('ret_uplace_uuid : ' + ret_uplace_uuid);
+    var ret_iplace_uuid = iplace_uuid.split('.')[0];
+    console.log('ret_iplace_uuid : ' + ret_iplace_uuid);
     $http({
       method: 'POST',
-      url: getServerURL() + '/iplaces/' + ret_uplace_uuid + '/drop/'
+      url: getServerURL() + '/iplaces/' + ret_iplace_uuid + '/drop/'
     })
     .then(function(response) {
       // console.dir(response);
@@ -1014,6 +1014,26 @@ angular.module('phopl.services')
         }
       }
       deferred.resolve({ iplaces: cacheMngr.iplaces.items, totalCount: cacheMngr.iplaces.totalCount });
+    }, function(err) {
+      console.error(err);
+      deferred.reject(err);
+    });
+
+    return deferred.promise;
+  }
+
+  function getIplace(iplace_uuid) {
+    var deferred = $q.defer();
+    var ret_iplace_uuid = iplace_uuid.split('.')[0];
+    console.log('ret_iplace_uuid : ' + ret_iplace_uuid);
+    $http({
+      method: 'GET',
+      url: getServerURL() + '/iplaces/' + ret_iplace_uuid + '/'
+    })
+    .then(function(response) {
+      // console.dir(response.data);
+      PostHelper.decoratePost(response.data);
+      deferred.resolve(response.data);
     }, function(err) {
       console.error(err);
       deferred.reject(err);
@@ -1127,6 +1147,7 @@ angular.module('phopl.services')
     getIplaces: getIplaces,
     takeIplace: takeIplace,
     dropIplace: dropIplace,
+    getIplace: getIplace,
     getShortenURL: getShortenURL,
     getUplaces: getUplaces,
     changeOrderingTypeOfUplaces: changeOrderingTypeOfUplaces,

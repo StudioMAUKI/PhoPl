@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('phopl.ctrls')
-.controller('albumsCtrl', ['$scope', '$state', '$q', '$ionicLoading', '$ionicPopover', '$ionicScrollDelegate', 'DOMHelper', 'RemoteAPIService', 'PKLocalStorage', 'PKSessionStorage', 'MapService', function($scope, $state, $q, $ionicLoading, $ionicPopover, $ionicScrollDelegate, DOMHelper, RemoteAPIService, PKLocalStorage, PKSessionStorage, MapService) {
+.controller('albumsCtrl', ['$scope', '$state', '$stateParams', '$q', '$ionicLoading', '$ionicPopover', '$ionicScrollDelegate', 'DOMHelper', 'RemoteAPIService', 'PKLocalStorage', 'PKSessionStorage', 'MapService', function($scope, $state, $stateParams, $q, $ionicLoading, $ionicPopover, $ionicScrollDelegate, DOMHelper, RemoteAPIService, PKLocalStorage, PKSessionStorage, MapService) {
   var albums = this;
   albums.completedFirstLoading = false;
   albums.orderingType = '-modified';
@@ -50,7 +50,12 @@ angular.module('phopl.ctrls')
   //  Event Handler
   //////////////////////////////////////////////////////////////////////////////
   $scope.$on('$ionicView.loaded', function() {
-    loadSavedPlace('top');
+    console.debug('$stateParams', $stateParams);
+    if ($stateParams.bypass) {
+      $state.go('tab.album');
+    } else {
+      loadSavedPlace('top');
+    }
   });
 
   //////////////////////////////////////////////////////////////////////////////
