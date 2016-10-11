@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('phopl.ctrls')
-.controller('albumCtrl', ['$scope', '$q', '$ionicPopup', '$ionicModal', '$cordovaClipboard', '$ionicSlideBoxDelegate', '$ionicScrollDelegate', '$ionicPopover', '$ionicHistory', 'DOMHelper', 'PKLocalStorage', 'PKSessionStorage', 'RemoteAPIService', 'daumSearchService', function($scope, $q, $ionicPopup, $ionicModal, $cordovaClipboard, $ionicSlideBoxDelegate, $ionicScrollDelegate, $ionicPopover, $ionicHistory, DOMHelper, PKLocalStorage, PKSessionStorage, RemoteAPIService, daumSearchService) {
+.controller('albumCtrl', ['$scope', '$q', '$ionicPopup', '$ionicModal', '$cordovaClipboard', '$ionicSlideBoxDelegate', '$ionicScrollDelegate', '$ionicPopover', '$ionicHistory', 'DOMHelper', 'PKLocalStorage', 'PKSessionStorage', 'RemoteAPIService', 'daumSearchService', 'PostHelper', function($scope, $q, $ionicPopup, $ionicModal, $cordovaClipboard, $ionicSlideBoxDelegate, $ionicScrollDelegate, $ionicPopover, $ionicHistory, DOMHelper, PKLocalStorage, PKSessionStorage, RemoteAPIService, daumSearchService, PostHelper) {
   var result = this;
   // $scope.uplace_uuid = $stateParams.uplace_uuid;
   // $scope.profileImg = PKLocalStorage.get('profileImg');
@@ -158,6 +158,9 @@ angular.module('phopl.ctrls')
   //////////////////////////////////////////////////////////////////////////////
   $scope.$on('$ionicView.afterEnter', function() {
 		$scope.post = PKSessionStorage.get('albumToShow');
+    for (var i = 0; i < $scope.post.userPost.notes.length; i++) {
+      $scope.post.userPost.notes[i].datetime = PostHelper.getTimeString($scope.post.userPost.notes[i].timestamp);
+    }
     console.debug('post', $scope.post);
     if ($scope.post.userPost.ru.data) {
       $scope.profileImg = $scope.post.userPost.ru.data.profileImg || 'img/blank-profile.png';

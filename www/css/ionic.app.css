@@ -9941,3 +9941,14 @@ a.button {
   .policy dl dt, .policy dl dd {
     padding-left: 5px;
     font-size: 90%; }
+
+.note {
+  border-bottom: 1px #dddddd solid;
+  overflow: hidden;
+  margin: 10px 10px; }
+  .note .content {
+    text-align: left; }
+  .note .time {
+    text-align: right;
+    position: absolute;
+    right: 20px; }

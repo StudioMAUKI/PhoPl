@@ -10,12 +10,12 @@
       </div>
     </div>
     <!-- 노트 영역 -->
-		<div class="row">
-			<div class="col">
-				<div>
-          {{post.desc}}
-        </div>
-			</div>
+		<div class="note padding" ng-repeat="note in post.userPost.notes">
+			<!-- <div class="col">
+				<div> -->
+          <span class="content">{{note.content}}</span><span class="time">{{note.datetime}}</span>
+        <!-- </div>
+			</div> -->
 		</div>
     <!-- 이미지 영역 -->
     <div ng-repeat="image in post.userPost.images track by $index" style="width:{{calculatedHeight+5}}px;height:{{calculatedHeight}}px;display:inline-block;overflow:hidden;padding-left:5px;" ng-show="post.userPost.images.length > 2 && (showAll || (!showAll && $index < 9))">

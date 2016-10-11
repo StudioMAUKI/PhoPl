@@ -191,3 +191,18 @@ $popover-width: 100px;
     }
   }
 }
+
+.note {
+  border-bottom: 1px #dddddd solid;
+  overflow: hidden;
+  margin: 10px 10px;
+
+  .content {
+    text-align: left;
+  }
+  .time {
+    text-align: right;
+    position: absolute;
+    right: 20px;
+  }
+}
