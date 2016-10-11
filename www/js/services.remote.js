@@ -972,6 +972,25 @@ angular.module('phopl.services')
     return deferred.promise;
   }
 
+  function takeUplace(uplace_uuid) {
+    var deferred = $q.defer();
+    var ret_uplace_uuid = uplace_uuid.split('.')[0];
+    console.log('ret_uplace_uuid : ' + ret_uplace_uuid);
+    $http({
+      method: 'POST',
+      url: getServerURL() + '/uplaces/' + ret_uplace_uuid + '/take/'
+    })
+    .then(function(response) {
+      // console.dir(response);
+      deferred.resolve(response);
+    }, function(err) {
+      // console.error(err);
+      deferred.reject(err);
+    });
+
+    return deferred.promise;
+  }
+
   function takeIplace(iplace_uuid) {
     var deferred = $q.defer();
     var ret_uplace_uuid = iplace_uuid.split('.')[0];
@@ -1162,7 +1181,8 @@ angular.module('phopl.services')
     changeOrderingTypeOfUplaces: changeOrderingTypeOfUplaces,
     getNotices: getNotices,
     sendInquiry: sendInquiry,
-    isTakenPlace: isTakenPlace
+    isTakenPlace: isTakenPlace,
+    takeUplace: takeUplace
   }
 }])
 .factory('PostHelper', ['RESTServer', 'PKLocalStorage', 'MapService', function(RESTServer, PKLocalStorage, MapService) {

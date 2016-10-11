@@ -35,12 +35,16 @@ angular.module('phopl.ctrls')
           fillProfileField(accountInfo);
         }
       } else if (accountInfo === null) {
-        $ionicPopup.alert({
+        $ionicPopup.confirm({
           title: '잠시만요!',
           template: '입력하신 이메일 주소로 확인 메일이 발송되었습니다. 메일에 포함된 링크를 클릭 하신 후 계속 진행해 주세요.'
         })
-        .then(function() {
-          checkProfileInfo(); //  !!!
+        .then(function(res) {
+          if (res) {
+            checkProfileInfo(); //  !!!
+          } else {
+            $state.go('register');
+          }
         });
       }
     }, function(err) {
@@ -90,7 +94,14 @@ angular.module('phopl.ctrls')
       })
     })
     .then(function() {
-      $state.go('tab.choose');
+      PKFileStorage.init()
+      .then(function() {
+        PKFileStorage.set('accountID', confirmProfile.email);
+        PKFileStorage.set('nickname', confirmProfile.nickname);
+        PKFileStorage.set('profileImg', confirmProfile.profileImg);
+        PKFileStorage.set('email', confirmProfile.realEmail);
+        $state.go('tab.choose');
+      });
     }, function(err) {
       if (err.status === 400) {
         // if (err.data.email !== null) {

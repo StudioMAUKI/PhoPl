@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('phopl.ctrls')
-.controller('profileCtrl', ['$scope', '$ionicActionSheet', '$ionicPopup', 'RemoteAPIService', 'PhotoService', 'PKFileStorage', function($scope, $ionicActionSheet, $ionicPopup, RemoteAPIService, PhotoService, PKFileStorage) {
+.controller('profileCtrl', ['$scope', '$ionicActionSheet', '$ionicPopup', '$state', 'RemoteAPIService', 'PhotoService', 'PKFileStorage', function($scope, $ionicActionSheet, $ionicPopup, $state, RemoteAPIService, PhotoService, PKFileStorage) {
   var profile = this;
   profile.needToSubmit = false;
 
@@ -22,12 +22,16 @@ angular.module('phopl.ctrls')
         profile.profileImg = profile.data.profileImg;
 
       } else if (accountInfo === null) {
-        $ionicPopup.alert({
+        $ionicPopup.confirm({
           title: '잠시만요!',
           template: '입력하신 이메일 주소로 확인 메일이 발송되었습니다. 메일에 포함된 링크를 클릭 하신 후 계속 진행해 주세요.'
         })
-        .then(function() {
-          checkProfileInfo(); //  !!!
+        .then(function(res) {
+          if (res) {
+            checkProfileInfo(); //  !!!
+          } else {
+            $state.go('register');
+          }
         });
       }
     }, function(err) {

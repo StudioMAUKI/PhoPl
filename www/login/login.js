@@ -62,12 +62,16 @@ angular.module('phopl.ctrls')
                     $state.go('tab.choose');
                   }
                 } else if (result === null) {
-                  $ionicPopup.alert({
-                    title: '잠시만요!',
+                  $ionicPopup.confirm({
+                    title: '죄송합니다',
                     template: '입력하신 이메일 주소로 확인 메일이 발송되었습니다. 메일에 포함된 링크를 클릭 하신 후 계속 진행해 주세요.'
                   })
-                  .then(function() {
-                    doLogin(); //  !!!
+                  .then(function(res) {
+                    if (res) {
+                      doLogin(); //  !!!
+                    } else {
+                      goToNextStep();
+                    }
                   });
                 }
               }, function(err) {
