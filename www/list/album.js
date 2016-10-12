@@ -158,9 +158,12 @@ angular.module('phopl.ctrls')
   //////////////////////////////////////////////////////////////////////////////
   $scope.$on('$ionicView.afterEnter', function() {
 		$scope.post = PKSessionStorage.get('albumToShow');
-    for (var i = 0; i < $scope.post.userPost.notes.length; i++) {
-      $scope.post.userPost.notes[i].datetime = PostHelper.getTimeString($scope.post.userPost.notes[i].timestamp);
+    if ($scope.post.userPost.notes) {
+      for (var i = 0; i < $scope.post.userPost.notes.length; i++) {
+        $scope.post.userPost.notes[i].datetime = PostHelper.getTimeString($scope.post.userPost.notes[i].timestamp);
+      }
     }
+
     console.debug('post', $scope.post);
     if ($scope.post.userPost.ru.data) {
       $scope.profileImg = $scope.post.userPost.ru.data.profileImg || 'img/blank-profile.png';

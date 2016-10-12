@@ -1000,14 +1000,14 @@ angular.module('phopl.services')
       url: getServerURL() + '/iplaces/' + ret_uplace_uuid + '/take/'
     })
     .then(function(response) {
-      // console.dir(response);
+      console.debug('takeIplace', response);
       for (var i = 0; i < cacheMngr.iplaces.items.length; i++) {
         if (cacheMngr.iplaces.items[i].iplace_uuid === iplace_uuid) {
           cacheMngr.iplaces.items.splice(i, 1);
           cacheMngr.iplaces.totalCount--;
         }
       }
-      deferred.resolve({ iplaces: cacheMngr.iplaces.items, totalCount: cacheMngr.iplaces.totalCount });
+      deferred.resolve(response.data);
     }, function(err) {
       // console.error(err);
       deferred.reject(err);
