@@ -9866,6 +9866,12 @@ a.button {
   background: 0 0;
   color: black; }
 
+.button.button-white.button-outline {
+  border-color: white;
+  border-width: 2px;
+  background: 0 0;
+  color: white; }
+
 .fullscreen-container {
   text-align: center; }
   .fullscreen-container .logo {

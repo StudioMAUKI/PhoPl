@@ -1,7 +1,10 @@
 <ion-view view-title="사진공유">
-  <ion-content class="bold-container">
+  <div id="slide-view" style="height: 1285px;">
+    <!-- <img src="img/background/1.jpg"> -->
+  </div>
+  <ion-content class="bold-container moving-bg">
     <div class="row" style="margin-top:70%">
-      <div class="col" style="text-align:center;">
+      <div class="col" style="text-align:center;font-size:larger;color:white;">
         공유할 사진을 고르세요.
       </div>
     </div>
@@ -9,10 +12,8 @@
       <div class="col-10">
       </div>
       <div class="col">
-        <!-- <a class="button button-block button-black button-outline" href="#/share?mode=album">앨범에서 선택하기</a>
-        <a class="button button-block button-black button-outline" href="#/share?mode=camera">지금 사진찍기</a> -->
-        <a class="button button-block button-black button-outline" ng-click="choose.getPhotosFromAlbum()">앨범에서 선택하기</a>
-        <a class="button button-block button-black button-outline" ng-click="choose.getPhotoFromCamera()">지금 사진찍기</a>
+        <a class="button button-block button-white button-outline" ng-click="choose.getPhotosFromAlbum()">앨범에서 선택하기</a>
+        <a class="button button-block button-white button-outline" ng-click="choose.getPhotoFromCamera()">지금 사진찍기</a>
       </div>
       <div class="col-10">
       </div>

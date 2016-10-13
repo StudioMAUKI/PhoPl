@@ -37,8 +37,28 @@ angular.module('phopl.ctrls')
   //////////////////////////////////////////////////////////////////////////////
   //  Event Handler
   //////////////////////////////////////////////////////////////////////////////
+  $scope.$on('$ionicView.loaded', function() {
+    $('#slide-view').vegas({
+      slides: [
+        { src: 'img/background/1-2.jpg' },
+        { src: 'img/background/2-2.jpg' },
+        { src: 'img/background/3-2.jpg' },
+        { src: 'img/background/4-2.jpg' }
+      ],
+      timer: false,
+      autoplay: false,
+      delay: 10000,
+      overlay: 'lib/vegas/dist/overlays/02.png',
+      transitionDuration: 5000
+      // loop: false
+    });
+	});
   $scope.$on('$ionicView.afterEnter', function() {
     init();
+    $('#slide-view').vegas("play");
+	});
+  $scope.$on('$ionicView.beforeLeave', function() {
+    $('#slide-view').vegas("pause");
 	});
 
   //////////////////////////////////////////////////////////////////////////////
@@ -50,5 +70,13 @@ angular.module('phopl.ctrls')
 
   choose.getPhotosFromAlbum = function() {
     getPhotosFromAlbum();
+  };
+
+  choose.startSlide = function() {
+    $('#slide-view').vegas("play");
+  };
+
+  choose.stopSlide = function() {
+
   };
 }]);

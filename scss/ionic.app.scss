@@ -92,9 +92,15 @@ $popover-width: 100px;
   font-weight: bold;
 }
 .button.button-black.button-outline {
-    border-color: black;
-    background: 0 0;
-    color: black;
+  border-color: black;
+  background: 0 0;
+  color: black;
+}
+.button.button-white.button-outline {
+  border-color: white;
+  border-width: 2px;
+  background: 0 0;
+  color: white;
 }
 
 .fullscreen-container {
