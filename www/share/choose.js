@@ -52,8 +52,6 @@ angular.module('phopl.ctrls')
       transitionDuration: 5000
       // loop: false
     });
-
-    console.debug('height of view : ' + $('ion-view').height());
 	});
   $scope.$on('$ionicView.afterEnter', function() {
     init();
@@ -75,6 +73,6 @@ angular.module('phopl.ctrls')
   };
 
   choose.getHeightOfView = function() {
-    return $('ion-view').height();
+    return $('#choose-view').height();
   }
 }]);
