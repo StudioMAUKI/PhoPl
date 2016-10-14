@@ -52,6 +52,8 @@ angular.module('phopl.ctrls')
       transitionDuration: 5000
       // loop: false
     });
+
+    console.debug('height of view : ' + $('ion-view').height());
 	});
   $scope.$on('$ionicView.afterEnter', function() {
     init();
@@ -72,11 +74,7 @@ angular.module('phopl.ctrls')
     getPhotosFromAlbum();
   };
 
-  choose.startSlide = function() {
-    $('#slide-view').vegas("play");
-  };
-
-  choose.stopSlide = function() {
-
-  };
+  choose.getHeightOfView = function() {
+    return $('ion-view').height();
+  }
 }]);
