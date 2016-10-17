@@ -1,0 +1,52 @@
+cd /Users/hoonja/Documents/workspace/release/PlaceKoob
+ionic plugin remove cordova-plugin-console
+
+rm ./css/ionic.app.css
+rm ./css/style.css
+
+rm -rf ./www/img/samples/
+rm ./www/img/background/1.jpg
+rm ./www/img/background/2.jpg
+rm ./www/img/background/3.jpg
+rm ./www/img/background/4.jpg
+rm ./www/img/background/1-1.jpg
+rm ./www/img/background/2-1.jpg
+rm ./www/img/background/3-1.jpg
+rm ./www/img/background/4-1.jpg
+
+rm -rf ./www/lib/angular/
+rm -rf ./www/lib/angular-animate/
+rm -rf ./www/lib/angular-sanitize/
+rm -rf ./www/lib/angular-ui-router/
+
+rm -rf ./www/lib/ionic/css/
+rm -rf ./www/lib/ionic/js/angular/
+rm -rf ./www/lib/ionic/js/angular-ui/
+rm ./www/lib/ionic/js/ionic-angular.js
+rm ./www/lib/ionic/js/ionic-angular.min.js
+rm ./www/lib/ionic/js/ionic.bundle.js
+rm ./www/lib/ionic/js/ionic.js
+rm ./www/lib/ionic/js/ionic.min.js
+rm -rf ./www/lib/ionic/scss/
+rm ./www/lib/ionic/*
+
+rm ./www/lib/jquery/dist/jquery.js
+rm ./www/lib/jquery/dist/jquery.min.map
+rm ./www/lib/jquery/dist/jquery.slim.js
+rm ./www/lib/jquery/dist/jquery.slim.min.js
+rm ./www/lib/jquery/dist/jquery.slim.min.map
+rm -rf ./www/lib/jquery/src/
+rm ./www/lib/jquery/*
+rm ./www/lib/jquery/.bower.json
+
+rm -rf ./www/lib/ng-cordova-oauth/src/
+rm ./www/lib/ng-cordova-oauth/dist/ng-cordova-oauth.js
+rm ./www/lib/ng-cordova-oauth/*
+rm ./www/lib/ng-cordova-oauth/.bower.json
+
+rm ./www/lib/ngCordova/dist/ng-cordova-mocks.js
+rm ./www/lib/ngCordova/dist/ng-cordova-mocks.min.js
+rm ./www/lib/ngCordova/dist/ng-cordova.js
+rm ./www/lib/ngCordova/*
+
+rm ./www/lib/*

@@ -1,0 +1,9 @@
+# sh /Users/hoonja/Documents/workspace/app/PhoPl/deploy
+# cd /Users/hoonja/Documents/workspace/release/PhoPl
+# sh /Users/hoonja/Documents/workspace/release/PhoPl/deploy_remove
+cordova build android --release
+cp /Users/hoonja/Documents/workspace/release/PhoPl/platforms/android/build/outputs/apk/android-release-unsigned.apk /Users/hoonja/Documents/workspace/release/output/
+cd /Users/hoonja/Documents/workspace/release/output
+jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore mauki_android_key.keystore android-release-unsigned.apk mauki_android
+rm phopl.apk
+~/Library/Android/sdk/build-tools/23.0.2/zipalign -v 4 android-release-unsigned.apk phopl.apk

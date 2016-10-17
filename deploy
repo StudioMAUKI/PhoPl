@@ -1,0 +1,12 @@
+rm -rf /Users/hoonja/Documents/workspace/release/PhoPl/
+mkdir /Users/hoonja/Documents/workspace/release/PhoPl/
+cp -Rv /Users/hoonja/Documents/workspace/app/PhoPl/hooks/ /Users/hoonja/Documents/workspace/release/PhoPl/hooks/
+cp -Rv /Users/hoonja/Documents/workspace/app/PhoPl/platforms/ /Users/hoonja/Documents/workspace/release/PhoPl/platforms/
+cp -Rv /Users/hoonja/Documents/workspace/app/PhoPl/plugins/ /Users/hoonja/Documents/workspace/release/PhoPl/plugins/
+cp -Rv /Users/hoonja/Documents/workspace/app/PhoPl/resources/ /Users/hoonja/Documents/workspace/release/PhoPl/resources/
+cp -Rv /Users/hoonja/Documents/workspace/app/PhoPl/www/ /Users/hoonja/Documents/workspace/release/PhoPl/www/
+cp /Users/hoonja/Documents/workspace/app/PhoPl/config.xml /Users/hoonja/Documents/workspace/release/PhoPl/config.xml
+cp /Users/hoonja/Documents/workspace/app/PhoPl/ionic.project /Users/hoonja/Documents/workspace/release/PhoPl/ionic.project
+cp /Users/hoonja/Documents/workspace/app/PhoPl/package.json /Users/hoonja/Documents/workspace/release/PhoPl/package.json
+cp /Users/hoonja/Documents/workspace/app/PhoPl/deploy_remove /Users/hoonja/Documents/workspace/release/PhoPl/deploy_remove
+cp /Users/hoonja/Documents/workspace/app/PhoPl/release_android /Users/hoonja/Documents/workspace/release/PhoPl/release_android
