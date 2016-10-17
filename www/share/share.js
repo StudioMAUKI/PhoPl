@@ -121,26 +121,6 @@ angular.module('phopl.ctrls')
   //  Public Methods
   //////////////////////////////////////////////////////////////////////////////
 
-  // share.promptNoteModal = function() {
-  //   $ionicModal.fromTemplateUrl('share/modal.note.html', {
-  //     scope: $scope,
-  //     focusFirstInput: true
-  //   }).then(function(modal) {
-  //     share.modal = modal;
-  //     share.modal.show();
-  //     var iframeDocument = document.getElementById('editor').contentDocument;
-  //     iframeDocument.designMode = 'on';
-  //     $(iframeDocument).find('body').append(share.note);
-  //   });
-  // }
-  //
-  // share.closeModal = function() {
-  //   share.note = $('#editor').contents().find('body').html();
-  //   $('#note-result').html(share.note);
-  //   share.modal.hide();
-  //   share.modal.remove();
-  // }
-
   share.upload = function() {
     if (share.attatchedImages.length === 0) {
       $ionicPopup.alert({
