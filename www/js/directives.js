@@ -47,7 +47,7 @@ angular.module('phopl.directives')
       }
     };
 }])
-.directive('locationSuggestion', ['$ionicModal', 'LocationService', 'MapService', function($ionicModal, LocationService, MapService){
+.directive('locationSuggestion', ['$ionicPlatform', '$ionicModal', 'LocationService', 'MapService', function($ionicPlatform, $ionicModal, LocationService, MapService){
   return {
     restrict: 'A',
     scope: {
@@ -94,11 +94,22 @@ angular.module('phopl.directives')
             }
             $scope.search.suggestions = result;
           }, function(status){
-            $scope.search.error = "There was an error :( " + status;
+            // $scope.search.error = "There was an error :( " + status;
+            console.error("location Suggestion : " + status);
           });
         };
         $scope.open = function() {
-          return $scope.modal.show();
+          return $scope.modal.show()
+          // .then(function(){
+          //   setTimeout(function() {
+          //     $('#input-location').focus();
+          //   }, 1000);
+          // });
+          // $('#input-location').focus();
+          // $ionicPlatform.ready(function() {
+          //   $('#input-location').focus();
+          //   console.info('#input-location focus', $('#input-location'));
+          // });
         };
         $scope.close = function() {
           return $scope.modal.hide();
