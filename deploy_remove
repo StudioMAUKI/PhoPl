@@ -1,4 +1,4 @@
-cd /Users/hoonja/Documents/workspace/release/PlaceKoob
+cd /Users/hoonja/Documents/workspace/release/PhoPl
 ionic plugin remove cordova-plugin-console
 
 rm ./css/ionic.app.css
