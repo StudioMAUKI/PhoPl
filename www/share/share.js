@@ -90,9 +90,8 @@ angular.module('phopl.ctrls')
           name: { content: (share.location !== {} && share.location.name !== null) ? share.location.name : null }
   			})
   			.then(function(result) {
-          console.debug(result);
-  				$ionicLoading.hide();
-          deferred.resolve(result.data);
+          $ionicLoading.hide();
+          deferred.resolve(result);
   			}, function(err) {
           console.error('장소 저장 실패', err);
   				$ionicLoading.hide();
@@ -134,6 +133,7 @@ angular.module('phopl.ctrls')
       postPlace()
       .then(function(result) {
         PKSessionStorage.set('lastSavedPost', result);
+        PKSessionStorage.set('justSharedPost', result);
         $state.go('tab.shareResult');
       }, function(err) {
         showAlert('앨범 저장 실패', err);
@@ -145,7 +145,6 @@ angular.module('phopl.ctrls')
 
   $scope.$watch('share.note', function(newValue) {
     $('#note-result').html(share.note);
-    console.debug('share.note', share.note);
   });
 
 }]);

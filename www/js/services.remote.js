@@ -279,12 +279,22 @@ angular.module('phopl.services')
     })
     .then(function(result) {
       setAllNeedToUpdate();
-      deferred.resolve(result);
+      console.debug('sendUserPost', result.data);
+      PostHelper.decoratePost(result.data);
+      insertUserPostToCachedList(result.data);
+      deferred.resolve(result.data);
     }, function(err) {
       console.error(err);
       deferred.reject(err);
     });
     return deferred.promise;
+  }
+
+  function insertUserPostToCachedList(post) {
+    totalList.splice(0, 0, post);
+    currentTail++;
+    totalSharedList.splice(0, 0, post);
+    currentSharedTail++;
   }
 
   function deleteUserPostInCachedList(uplace_uuid) {
@@ -1381,10 +1391,9 @@ angular.module('phopl.services')
 
   function getTimeString(timestamp) {
     var timegap = (Date.now() - timestamp) / 1000;
-    //console.info('timegap : ' + timegap);
     if (timegap < 3600) {
       var min = parseInt(timegap / 60);
-      if (min === 0) {
+      if (min < 5) {
         return '방금';
       } else {
         return parseInt(timegap / 60) + '분전';

@@ -56,7 +56,7 @@ angular.module('phopl.ctrls')
         $scope.post.shorten_url = url;
         return copyURLToClipboard($scope.shortenUrl);
       }, function(err) {
-        seveSecond.clipboardMsg = '단축 URL을 얻어오지 못했습니다.';
+        $scope.clipboardMsg = '단축 URL을 얻어오지 못했습니다.';
         $scope.shortenUrl = '';
       })
     } else {
@@ -70,9 +70,6 @@ angular.module('phopl.ctrls')
   //////////////////////////////////////////////////////////////////////////////
   $scope.$on('$ionicView.afterEnter', function() {
     $scope.post = PKSessionStorage.get('lastSavedPost');
-    PostHelper.decoratePost($scope.post);
-    console.debug('The last saved place', $scope.post);
-
     getShortenURLAndCopyToClipboard();
   });
 

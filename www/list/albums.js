@@ -59,13 +59,7 @@ angular.module('phopl.ctrls')
   //  Event Handler
   //////////////////////////////////////////////////////////////////////////////
   $scope.$on('$ionicView.loaded', function() {
-    // console.debug('$stateParams in loaded', $stateParams);
-    // console.debug('$ionicHistory.backView() in loaded', $ionicHistory.backView());
-    // if ($stateParams.bypass) {
-    //   $state.go('tab.album');
-    // } else {
-      loadSavedPlace('top');
-    // }
+    loadSavedPlace('top');
   });
 
   $scope.$on('$ionicView.afterEnter', function() {
@@ -73,6 +67,15 @@ angular.module('phopl.ctrls')
     // console.debug('$ionicHistory.backView() in afterEnter', $ionicHistory.backView());
     if (PKSessionStorage.get('goToAlbumDirectly')) {
       goToAlbum();
+    } else {
+      var post = PKSessionStorage.get('justSharedPost');
+      if (post) {
+        PKSessionStorage.remove('justSharedPost');
+        if (albums.totalPosts && albums.sharedPosts) {
+          albums.totalPosts.splice(0, 0, post);
+          albums.sharedPosts.splice(0, 0, post);
+        }        
+      }
     }
   });
 
