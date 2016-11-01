@@ -26,7 +26,8 @@ angular.module('phopl.services')
           return 'http://192.168.1.3:8000';
         } else {
           //return 'http://maukitest.cloudapp.net';
-          return 'http://neapk-test01.japaneast.cloudapp.azure.com';
+          // return 'http://neapk-test01.japaneast.cloudapp.azure.com';
+          return 'http://phopl.com';
         }
       } else {
         if (devmode) {

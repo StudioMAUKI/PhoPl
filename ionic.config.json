@@ -16,7 +16,8 @@
     },
     {
       "path": "/mauki",
-      "proxyUrl": "http://neapk-test01.japaneast.cloudapp.azure.com"
+      "proxyUrl": "http://phopl.com",
+      "__proxyUrl": "http://neapk-test01.japaneast.cloudapp.azure.com"
     },
     {
       "path": "/mauki_dev",
