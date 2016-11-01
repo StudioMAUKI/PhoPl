@@ -37,7 +37,7 @@ angular.module('phopl.ctrls')
         .then(function(result) {
           $ionicPopup.alert({
             title: '감사합니다!',
-            template: '문의 내용을 잘 전달하였습니다.'
+            template: '문의 내용 확인 후 빠르게 회신 드리겠습니다.'
           });
         }, function(err) {
           $ionicPopup.alert({
