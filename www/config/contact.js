@@ -9,6 +9,20 @@ angular.module('phopl.ctrls')
   //////////////////////////////////////////////////////////////////////////////
   //  public methods
   //////////////////////////////////////////////////////////////////////////////
+  
+  contact.getEmail = function() {
+    RemoteAPIService.checkVerified()
+    .then(function(accountInfo) {
+      if (accountInfo) {
+        if (!accountInfo.email) {
+          return;
+        } 
+        contact.email = accountInfo.data.email || ''; 
+        $scope.$apply();
+      }  
+    })
+  }
+
   contact.send = function() {
     var emailRegExp = /^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i;
 
