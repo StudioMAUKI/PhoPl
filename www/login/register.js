@@ -69,7 +69,7 @@ angular.module('phopl.ctrls')
       } else if (result === null) {
         $ionicPopup.confirm({
           title: '잠시만요!',
-          template: '입력하신 ' + result.email + '으로 확인 메일이 발송되었습니다. 확인 메일의 링크를 클릭하시면 이메일 인증이 완료됩니다. (인증 완료 후, OK버튼을 누르시면 가입 완료!)'
+          template: '입력하신 ' + register.email + '으로 확인 메일이 발송되었습니다. 확인 메일의 링크를 클릭하시면 이메일 인증이 완료됩니다. (인증 완료 후, OK버튼을 누르시면 가입 완료!)'
         })
         .then(function(res) {
           if (res) {
