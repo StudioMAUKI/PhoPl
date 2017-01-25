@@ -1,4 +1,15 @@
 angular.module('phopl.directives')
+
+.directive('policyBasic', function() {
+  return {
+    templateUrl:'../config/policies.basic.content.html'
+  };
+})
+.directive('policyPrivacy', function() {
+  return {
+    templateUrl:'../config/policies.privacy.content.html'
+  };
+})
 .directive('expandingTextarea', ['$ionicModal', function ($ionicModal) {
     return {
       restrict: 'A',

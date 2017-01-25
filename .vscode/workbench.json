@@ -1,0 +1,14 @@
+{
+	"currentWorkbench": {
+		"files": [
+			{
+				"path": "www/js/config.js",
+				"alias": " 1 config.js"
+			},
+			{
+				"path": "www/js/directives.js",
+				"alias": " 2 directives.js"
+			}
+		]
+	}
+}

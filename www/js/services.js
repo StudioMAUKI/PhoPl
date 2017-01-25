@@ -174,76 +174,80 @@ angular.module('phopl.services')
       console.log('PKFileStorage is already inited.');
       deferred.resolve();
     } else {
-      if (ionic.Platform.isIOS() || ionic.Platform.isAndroid()) {
-        //  저장을 위한 파일이 존재하는지 확인하고, 없다면 생성해 둔다
-        $cordovaFile.checkFile(cordova.file.dataDirectory, storageFileName)
-        .then(function (success) {
-          $cordovaFile.readAsText(cordova.file.dataDirectory, storageFileName)
-          .then(function (data) {
-            console.log('data in storage.txt', data);
+      try{
+        if (ionic.Platform.isIOS() || ionic.Platform.isAndroid()) {
+          //  저장을 위한 파일이 존재하는지 확인하고, 없다면 생성해 둔다
+          $cordovaFile.checkFile(cordova.file.dataDirectory, storageFileName)
+          .then(function (success) {
+            $cordovaFile.readAsText(cordova.file.dataDirectory, storageFileName)
+            .then(function (data) {
+              console.log('data in storage.txt', data);
 
-            try {
-              if (data === null || data === '') {
-                console.warn('The data in storage is empty.');
-                inited = true;
-                PKLocalStorage.set('data_in_storage', '');
-                deferred.resolve();
-              } else {
-                dicSaved = JSON.parse(data);
-                inited = true;
-                PKLocalStorage.set('data_in_storage', dicSaved);
-                deferred.resolve();
-              }
-            } catch (e) {
-              console.error('The data in storage is broken.');
-              //  이 경우 파일의 내용이 깨져서 JSON parsing이 안되는 경우이다.
-              //  현재로썬 깔끔하게 지우고 다시 시작하는 것이 최선..
-              $cordovaFile.removeFile(cordova.file.dataDirectory, storageFileName)
-              .then(function() {
-                $cordovaFile.createFile(cordova.file.dataDirectory, storageFileName, true)
-                .then(function (success) {
-                  console.log('New StorageFile have been created.');
+              try {
+                if (data === null || data === '') {
+                  console.warn('The data in storage is empty.');
                   inited = true;
-                  dicSaved = {};
                   PKLocalStorage.set('data_in_storage', '');
                   deferred.resolve();
-                }, function (err) {
-                  console.error('Cannot create the storage file.', err);
+                } else {
+                  dicSaved = JSON.parse(data);
+                  inited = true;
+                  PKLocalStorage.set('data_in_storage', dicSaved);
+                  deferred.resolve();
+                }
+              } catch (e) {
+                console.error('The data in storage is broken.');
+                //  이 경우 파일의 내용이 깨져서 JSON parsing이 안되는 경우이다.
+                //  현재로썬 깔끔하게 지우고 다시 시작하는 것이 최선..
+                $cordovaFile.removeFile(cordova.file.dataDirectory, storageFileName)
+                .then(function() {
+                  $cordovaFile.createFile(cordova.file.dataDirectory, storageFileName, true)
+                  .then(function (success) {
+                    console.log('New StorageFile have been created.');
+                    inited = true;
+                    dicSaved = {};
+                    PKLocalStorage.set('data_in_storage', '');
+                    deferred.resolve();
+                  }, function (err) {
+                    console.error('Cannot create the storage file.', err);
+                    inited = false;
+                    dicSaved = {};
+                    deferred.reject(err);
+                  });
+                }, function(err) {
                   inited = false;
-                  dicSaved = {};
                   deferred.reject(err);
                 });
-              }, function(err) {
-                inited = false;
-                deferred.reject(err);
-              });
-            }
+              }
 
+            }, function (err) {
+              console.error('Reading from the StorageFile was failed.', err);
+
+              inited = false;
+              deferred.reject(err);
+            });
           }, function (err) {
-            console.error('Reading from the StorageFile was failed.', err);
+            console.error('StorageFile is not exist.', err);
 
-            inited = false;
-            deferred.reject(err);
+            $cordovaFile.createFile(cordova.file.dataDirectory, storageFileName, true)
+            .then(function (success) {
+              console.log('New StorageFile have been created.');
+              inited = true;
+              dicSaved = {};
+              PKLocalStorage.set('data_in_storage', '');
+              deferred.resolve();
+            }, function (err) {
+              console.error('Cannot create the storage file.', err);
+              inited = false;
+              dicSaved = {};
+              deferred.reject(err);
+            });
           });
-        }, function (err) {
-          console.error('StorageFile is not exist.', err);
-
-          $cordovaFile.createFile(cordova.file.dataDirectory, storageFileName, true)
-          .then(function (success) {
-            console.log('New StorageFile have been created.');
-            inited = true;
-            dicSaved = {};
-            PKLocalStorage.set('data_in_storage', '');
-            deferred.resolve();
-          }, function (err) {
-            console.error('Cannot create the storage file.', err);
-            inited = false;
-            dicSaved = {};
-            deferred.reject(err);
-          });
-        });
-      } else {
-        deferred.resolve();
+        } else {
+          deferred.resolve();
+        }
+      }catch(e){
+        console.error(e);
       }
     }
 

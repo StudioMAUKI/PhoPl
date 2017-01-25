@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('phopl.ctrls')
-.controller('registerCtrl', ['$scope', '$state', '$ionicPlatform', '$ionicPopup', '$q', '$cordovaOauth', '$http', 'PKFileStorage', 'RemoteAPIService', 'oauthKakao', 'loginStatus', function($scope, $state, $ionicPlatform, $ionicPopup, $q, $cordovaOauth, $http, PKFileStorage, RemoteAPIService, oauthKakao, loginStatus) {
+.controller('registerCtrl', ['$scope', '$state', '$ionicPlatform', '$ionicModal', '$ionicPopup', '$q', '$cordovaOauth', '$http', 'PKFileStorage', 'RemoteAPIService', 'oauthKakao', 'loginStatus', function($scope, $state, $ionicPlatform, $ionicModal, $ionicPopup, $q, $cordovaOauth, $http, PKFileStorage, RemoteAPIService, oauthKakao, loginStatus) {
   var register = this;
   register.email = '';
 
@@ -208,4 +208,33 @@ angular.module('phopl.ctrls')
       console.error('register.loginWithKakao: loginKakao error', err);
     });
   }
+
+  register.openBasicPolicy = function() {
+     $ionicModal.fromTemplateUrl('login/modal.basic.html', {
+      scope: $scope,
+      animation: 'slide-in-up'
+    }).then(function(modal) { 
+      register.basicPolicyModal = modal;
+      modal.show();
+    });
+  } 
+
+  register.closeBasicPolicy = function() {
+    register.basicPolicyModal.hide();
+  }
+  
+  register.openPrivacyPolicy = function() {
+     $ionicModal.fromTemplateUrl('login/modal.privacy.html', {
+      scope: $scope,
+      animation: 'slide-in-up'
+    }).then(function(modal) { 
+      register.privacyPolicyModal = modal;
+      modal.show();
+    });
+  } 
+
+  register.closePrivacyPolicy = function() {
+    register.privacyPolicyModal.hide();
+  }
+
 }]);

@@ -22,14 +22,18 @@ angular.module('phopl', ['ionic', 'ngCordova', 'ngCordovaOauth', 'phopl.config',
 
     // 언어, 국가 정보 얻어오기. 이코드는 디바이스에서만 작동됨
     if (ionic.Platform.isIOS() || ionic.Platform.isAndroid()) {
-      navigator.globalization.getPreferredLanguage(function(result) {
-          var arr = result.value.split('-');
-          PKLocalStorage.set('lang', arr[0]);
-          PKLocalStorage.set('country', arr[1]);
-        },
-        function(error) {
-          console.error(error);
-      });
+      try{
+        navigator.globalization.getPreferredLanguage(function(result) {
+            var arr = result.value.split('-');
+            PKLocalStorage.set('lang', arr[0]);
+            PKLocalStorage.set('country', arr[1]);
+          },
+          function(error) {
+            console.error(error);
+        });
+      }catch(e){
+        console.error(e);
+      }
     } else {
       PKLocalStorage.set('lang', 'ko');
       PKLocalStorage.set('country', 'KR');
