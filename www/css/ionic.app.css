@@ -9819,14 +9819,21 @@ a.button {
   color: white; }
 
 .profile-avatar {
-  text-align: center; }
+  position: relative;
+  outline: red solid 1px;
+  text-align: center;
+  margin: 0 auto;
+  padding: 5px; }
   .profile-avatar .modify-img {
     position: absolute;
-    right: 50px;
     bottom: 10px;
-    width: 30px;
-    height: 30px;
+    font-size: 30px;
+    right: 0px;
+    padding: 5px;
+    width: 40px;
+    height: 40px;
     background-color: grey;
+    color: white;
     border-radius: 50%; }
   .profile-avatar > img:first-child {
     max-width: 150px;

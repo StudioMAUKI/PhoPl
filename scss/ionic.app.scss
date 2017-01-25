@@ -36,18 +36,21 @@ $popover-width: 100px;
   color: white;
 }
 
-.profile-avatar {
-
-  position:relative;
-  outline:1px solid red;
-  text-align: center;
+.profile-avatar { 
+    position: relative; 
+    text-align: center;
+    margin: 0 auto;
+    padding:5px;
   .modify-img {
-    position:absolute;
-    right: 50px;
+    position: absolute;
     bottom: 10px;
-    width: 30px;
-    height: 30px;
+    font-size: 30px;
+    right: 6px;
+    padding: 5px; 
+    width: 40px;
+    height: 40px;
     background-color: grey;
+    color:#eaeaea;
     border-radius: 50%;
   }
 
