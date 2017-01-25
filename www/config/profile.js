@@ -20,6 +20,7 @@ angular.module('phopl.ctrls')
         profile.nickname = accountInfo.nickname;
         profile.email = profile.data.email || accountInfo.email;
         profile.profileImg = profile.data.profileImg;
+        profile.realEmail = profile.data.email || ''; 
 
       } else if (accountInfo === null) {
         $ionicPopup.confirm({
@@ -53,6 +54,10 @@ angular.module('phopl.ctrls')
   //  event handler
   //////////////////////////////////////////////////////////////////////////////
   $scope.$on('$ionicView.afterEnter', checkProfileInfo);
+
+  profile.hasEmail = function() {
+    return profile.realEmail != '' ? true : false;
+  }
 
   profile.changeProfileImg = function() {
     if (!ionic.Platform.isIOS() && !ionic.Platform.isAndroid()) {

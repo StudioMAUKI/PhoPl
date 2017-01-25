@@ -3,9 +3,9 @@
 angular.module('phopl.config', [])
 .config(function($ionicConfigProvider, $stateProvider, $urlRouterProvider, $httpProvider) {
 	// CSRF token 설정을 위함 (꼭 들어가야 함!!)
-	$httpProvider.defaults.xsrfCookieName = 'csrftoken';
-	$httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
-	$httpProvider.defaults.timeout = 5000;
+	// $httpProvider.defaults.xsrfCookieName = 'csrftoken';
+	// $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
+	// $httpProvider.defaults.timeout = 5000;
 
 	$ionicConfigProvider.tabs.position('bottom');
 
@@ -172,5 +172,5 @@ angular.module('phopl.config', [])
 		controllerAs: 'confirmProfile'
   });
 
-	$urlRouterProvider.otherwise('/login');
+	$urlRouterProvider.otherwise('/login'); 
 });
