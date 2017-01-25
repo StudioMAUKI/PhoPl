@@ -2,12 +2,12 @@ angular.module('phopl.directives')
 
 .directive('policyBasic', function() {
   return {
-    templateUrl:'../config/policies.basic.content.html'
+    templateUrl:'config/policies.basic.content.html'
   };
 })
 .directive('policyPrivacy', function() {
   return {
-    templateUrl:'../config/policies.privacy.content.html'
+    templateUrl:'config/policies.privacy.content.html'
   };
 })
 .directive('expandingTextarea', ['$ionicModal', function ($ionicModal) {
