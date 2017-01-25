@@ -9820,7 +9820,6 @@ a.button {
 
 .profile-avatar {
   position: relative;
-  outline: red solid 1px;
   text-align: center;
   margin: 0 auto;
   padding: 5px; }
@@ -9828,12 +9827,12 @@ a.button {
     position: absolute;
     bottom: 10px;
     font-size: 30px;
-    right: 0px;
+    right: 6px;
     padding: 5px;
     width: 40px;
     height: 40px;
     background-color: grey;
-    color: white;
+    color: #eaeaea;
     border-radius: 50%; }
   .profile-avatar > img:first-child {
     max-width: 150px;
