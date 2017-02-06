@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('phopl.ctrls')
-.controller('resultCtrl', ['$scope', '$ionicHistory', '$q', '$ionicPopup', '$cordovaClipboard', 'DOMHelper', 'PKSessionStorage', 'PostHelper', 'RemoteAPIService', 'PKLocalStorage', function($scope, $ionicHistory, $q, $ionicPopup, $cordovaClipboard, DOMHelper, PKSessionStorage, PostHelper, RemoteAPIService, PKLocalStorage) {
+.controller('resultCtrl', ['$scope', '$ionicScrollDelegate','$ionicHistory', '$q', '$ionicPopup', '$cordovaClipboard', 'DOMHelper', 'PKSessionStorage', 'PostHelper', 'RemoteAPIService', 'PKLocalStorage', 
+function($scope, $ionicScrollDelegate, $ionicHistory, $q, $ionicPopup, $cordovaClipboard, DOMHelper, PKSessionStorage, PostHelper, RemoteAPIService, PKLocalStorage) {
   var result = this;
   $scope.showAll = false;
   $scope.post = null;
@@ -96,9 +97,10 @@ angular.module('phopl.ctrls')
 
   $scope.showAllImages = function() {
     $scope.showAll = true;
+    $ionicScrollDelegate.resize();
     // $scope.$apply();
   }
-  
+
   $scope.copyAgain = function() {
     if ($scope.shorten_url === '') {
       $ionicPopup.alert({

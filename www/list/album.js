@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('phopl.ctrls')
-.controller('albumCtrl', ['$scope', '$q', '$ionicPopup', '$ionicModal', '$cordovaClipboard', '$ionicSlideBoxDelegate', '$ionicScrollDelegate', '$ionicPopover', '$ionicHistory', 'DOMHelper', 'PKLocalStorage', 'PKSessionStorage', 'RemoteAPIService', 'daumSearchService', 'PostHelper', function($scope, $q, $ionicPopup, $ionicModal, $cordovaClipboard, $ionicSlideBoxDelegate, $ionicScrollDelegate, $ionicPopover, $ionicHistory, DOMHelper, PKLocalStorage, PKSessionStorage, RemoteAPIService, daumSearchService, PostHelper) {
+.controller('albumCtrl', ['$scope',  '$q', '$ionicPopup', '$ionicModal', '$cordovaClipboard', '$ionicSlideBoxDelegate', '$ionicScrollDelegate', '$ionicPopover', '$ionicHistory', 'DOMHelper', 'PKLocalStorage', 'PKSessionStorage', 'RemoteAPIService', 'daumSearchService', 'PostHelper', function($scope, $q, $ionicPopup, $ionicModal, $cordovaClipboard, $ionicSlideBoxDelegate, $ionicScrollDelegate, $ionicPopover, $ionicHistory, DOMHelper, PKLocalStorage, PKSessionStorage, RemoteAPIService, daumSearchService, PostHelper) {
   var result = this;
   // $scope.uplace_uuid = $stateParams.uplace_uuid;
   // $scope.profileImg = PKLocalStorage.get('profileImg');
@@ -225,6 +225,7 @@ angular.module('phopl.ctrls')
   
   $scope.showAllImages = function() {
     $scope.showAll = true;
+    $ionicScrollDelegate.resize();
     // $scope.$apply();
   }
 
