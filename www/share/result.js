@@ -3,6 +3,7 @@
 angular.module('phopl.ctrls')
 .controller('resultCtrl', ['$scope', '$ionicHistory', '$q', '$ionicPopup', '$cordovaClipboard', 'DOMHelper', 'PKSessionStorage', 'PostHelper', 'RemoteAPIService', 'PKLocalStorage', function($scope, $ionicHistory, $q, $ionicPopup, $cordovaClipboard, DOMHelper, PKSessionStorage, PostHelper, RemoteAPIService, PKLocalStorage) {
   var result = this;
+  $scope.showAll = false;
   $scope.post = null;
   $scope.clipboardMsg = '단축 URL 얻기 전';
   $scope.profileImg = PKLocalStorage.get('profileImg');
@@ -45,7 +46,7 @@ angular.module('phopl.ctrls')
     }
 
     return deferred.promise;
-  }
+  } 
 
   function getShortenURLAndCopyToClipboard() {
     if ($scope.post.shorten_url === null || $scope.post.shorten_url === '') {
@@ -69,10 +70,10 @@ angular.module('phopl.ctrls')
   //  Event Handler
   //////////////////////////////////////////////////////////////////////////////
   $scope.$on('$ionicView.afterEnter', function() {
-    $scope.post = PKSessionStorage.get('lastSavedPost');
+    $scope.post = PKSessionStorage.get('lastSavedPost'); 
     getShortenURLAndCopyToClipboard();
-  });
-
+  }); 
+  
   //////////////////////////////////////////////////////////////////////////////
   //  Public Methods
   //////////////////////////////////////////////////////////////////////////////
@@ -93,6 +94,11 @@ angular.module('phopl.ctrls')
     $ionicHistory.goBack(-2);
   }
 
+  $scope.showAllImages = function() {
+    $scope.showAll = true;
+    // $scope.$apply();
+  }
+  
   $scope.copyAgain = function() {
     if ($scope.shorten_url === '') {
       $ionicPopup.alert({
