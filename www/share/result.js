@@ -76,6 +76,19 @@ angular.module('phopl.ctrls')
   //////////////////////////////////////////////////////////////////////////////
   //  Public Methods
   //////////////////////////////////////////////////////////////////////////////
+  function shareURLToNativeSocialMedia(url){
+    var deferred = $q.defer();
+    try{
+      var options = { 
+        url:url
+      }
+      window.plugins.socialsharing.shareWithOptions(options, deferred.resolve(), deferred.reject());
+    }catch(e){ 
+      copyURLToClipboard();
+    }
+    return deferred.promise;
+  } 
+
   $scope.goHome = function() {
     $ionicHistory.goBack(-2);
   }
@@ -87,18 +100,19 @@ angular.module('phopl.ctrls')
         template: '단축 URL을 얻어오지 못했습니다.'
       });
     } else {
-      copyURLToClipboard($scope.shortenUrl)
-      .then(function() {
-        $ionicPopup.alert({
-          title: '성공',
-          template: '클립보드에 링크가 복사되었습니다.'
-        });
-      }, function(err) {
-        $ionicPopup.alert({
-          title: '오류',
-          template: '오류가 발생하여 클립보드 복사에 실패했습니다.'
-        });
-      })
+      shareURLToNativeSocialMedia($scope.shortenUrl); //native sharing 
+      //copyURLToClipboard($scope.shortenUrl)
+      // .then(function() {
+      //   $ionicPopup.alert({
+      //     title: '성공',
+      //     template: '클립보드에 링크가 복사되었습니다.'
+      //   });
+      // }, function(err) {
+      //   $ionicPopup.alert({
+      //     title: '오류',
+      //     template: '오류가 발생하여 클립보드 복사에 실패했습니다.'
+      //   });
+      // })
     }
   }
 }]);
