@@ -687,26 +687,25 @@ angular.module('phopl.services')
       });
     } else if (orderingOption.type === 'placename') {
       currentOrderingType = orderingOption.type;
-      totalList.sort(function(a, b) {
-        if (a.name === '') {
-          if (b.name === '') {
-            return 0;
+ 
+      //이름으로 정렬 
+      totalList.sort(function(a, b) { 
+
+        //이름없는 경우를, 아래쪽으로 이동 (맨 뒤로 정렬되면서 안쓰는 문자사용 : 힁)
+        //임시로 정렬을 위한 변수 
+        a.temp = a.name || '힇힇힇힇힇힇힇힇힇힇';
+        b.temp = b.name || '힇힇힇힇힇힇힇힇힇힇';
+          if (a.temp === b.temp) {
+            return 0; //b == a 
+          } else if (a.temp > b.temp){
+            return 1; // a > b
           } else {
-            return 1;
-          }
-        } else {
-          if (a.name === b.name) {
-            return 0;
-          } else if (a.name > b.name){
-            return 1;
-          } else {
-            return -1;
-          }
-        }
-      });
+            return -1;  // b > a
+          } 
+      }); 
     } else if (orderingOption.type === 'distance_from_origin') {
       currentOrderingType = orderingOption.type;
-      PostHelper.updateDistance(totalList, {longitude:orderingOption.lon, latitude:orderingOption.lat});
+      PostHelper.updateDistance(totalList, {longitude:orderingOption.lon, latitude:orderingOption.lat}); //위치정보없음 맨뒤로보내기 
       totalList.sort(function(a, b) {
         return a.distance_from_origin - b.distance_from_origin;
       });
