@@ -9,7 +9,7 @@
     <div class="row">
       <div class="col border bg-light-gray">
         <div class="row">
-          <div class="col">
+          <div class="col text-center">
             클립보드에 링크가 복사되었습니다. 이제 공유하세요~!
             <button class="button button-small button-stable button-block" ng-click="copyAgain()">
               {{shortenUrl}}
@@ -78,7 +78,7 @@
     <div ng-repeat="image in post.userPost.images track by $index"  ng-show="post.userPost.images.length < 3">
 			<img style="width:100%" ng-src="{{image.summary}}" ng-click="showImagesWithFullScreen($index)" on-hold="deleteAttatchedImage($index)">
 		</div>
-    
+
     <!-- 장소 정보 출력 영역 -->
 		<div class="row" ng-show="post.name">
 			<div class="col border">
