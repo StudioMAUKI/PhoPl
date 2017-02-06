@@ -1540,7 +1540,7 @@ angular.module('phopl.services')
       
       if(typeof posts[i].lonLat === 'undefined'){
         // console.log(posts[i])
-        posts[i].distance_from_origin = 999999999999999; // 맨뒤로 보냄 
+        posts[i].distance_from_origin = 999999999999999; // 좌표정보 없을시, 맨뒤로 보냄 
       }else{
         // console.log(posts[i].lonLat);
         posts[i].distance_from_origin = getDistance(posts[i], curPos);
