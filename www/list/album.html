@@ -28,8 +28,8 @@
 
     <!-- 장소 정보 출력 영역 -->
 		<div class="row" ng-show="post.name">
-			<div class="col border">
-				<strong><i class="ion-ios-location"></i>{{post.name}}</strong><br>
+			<div class="col border" ng-click="showMap()">
+				<strong ><i class="ion-ios-location"></i>{{post.name}}</strong><br>
 				<small>{{post.addrs[0]}}</small><br>
         <!-- <small>동네술집, 맥주한잔, 와인저렴, 콜키지무료, 이탈리안, 퓨전, 개성</small> -->
         <small ng-repeat="tag in post.userPost.tags">#{{tag.content}},&nbsp;</small>

@@ -222,7 +222,7 @@ angular.module('phopl.ctrls')
     console.info('url: ' + url);
     window.open(url, '_system');
   };
-
+  
   $scope.showAllImages = function() {
     $scope.showAll = true;
     // $scope.$apply();
