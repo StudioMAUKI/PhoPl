@@ -23,14 +23,16 @@ angular.module('phopl.ctrls')
 			$ionicLoading.show({
 				template: '<ion-spinner icon="lines">로딩 중..</ion-spinner>'
 			});
-		}
+		} 
 
     RemoteAPIService.getUplaces(position, albums.filteringType)
 		.then(function(result) {
 			albums.postsSet = result;
       albums.totalPosts = albums.postsSet['total'];
       albums.sharedPosts = albums.postsSet['shared'];
-      albums.savedPosts = albums.postsSet['saved'];
+      albums.savedPosts = albums.postsSet['saved']; 
+       
+
 			deferred.resolve();
 		}, function(err) {
 			console.error('loadSavedPlace', err);
@@ -102,6 +104,9 @@ angular.module('phopl.ctrls')
 				loadSavedPlace('top')
 				.finally(function(){
 					$scope.$broadcast('scroll.refreshComplete');
+          
+          albums.changeOrderingType(albums.orderingType); //목록 갱신되어도, 정렬조건 유지               
+
 				});
 			} else if (direction === 'bottom') {
 				loadSavedPlace('bottom')
@@ -144,13 +149,17 @@ angular.module('phopl.ctrls')
         albums.totalScrollPosition = {left:0, top:0, zoom:1};
         albums.sharedScrollPosition = {left:0, top:0, zoom:1};
         albums.savedScrollPosition = {left:0, top:0, zoom:1};
-
+         
         $ionicScrollDelegate.scrollTo(0, 0, true);
-      }, 300);
+      }, 150);
     }
 
-		albums.popOver.hide();
-		if (albums.orderingType !== type) {
+    try{
+		  albums.popOver.hide();
+    }catch(e){
+      console.log(e);
+    }
+		// if (albums.orderingType !== type) {
       if (type === 'distance_from_origin') {
         $ionicLoading.show({
   				template: '<ion-spinner icon="lines">로딩 중..</ion-spinner>'
@@ -171,10 +180,10 @@ angular.module('phopl.ctrls')
             template: '현재의 위치를 얻어오지 못했습니다. 잠시후 다시 시도해 주세요.'
           });
         });
-      } else {
-        sort({type: type});
+      } else {  
+          sort({type: type}); 
       }
-		}
+		// }
 	};
 
   albums.showTotalList = function() {
