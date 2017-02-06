@@ -218,3 +218,22 @@ $popover-width: 100px;
     right: 20px;
   }
 }
+
+.album-button-bar{
+  position: relative; 
+  width:100%;
+  a{
+    display:block;
+    padding-top:3px;
+    padding-bottom:3px;
+    float:left;
+    width:33.3%;
+    text-align:center;
+    color:gray;
+    
+  }
+  a.active{
+    font-weight:bold;
+    color:#ff0067;
+  }
+}

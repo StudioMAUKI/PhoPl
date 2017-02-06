@@ -9963,3 +9963,18 @@ a.button {
     text-align: right;
     position: absolute;
     right: 20px; }
+
+.album-button-bar {
+  position: relative;
+  width: 100%; }
+  .album-button-bar a {
+    display: block;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    float: left;
+    width: 33.3%;
+    text-align: center;
+    color: gray; }
+  .album-button-bar a.active {
+    font-weight: bold;
+    color: #ff0067; }
