@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget id="com.mauki.phopl" version="0.0.2" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.mauki.phopl" version="0.0.3" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
   <name>phopl</name>
   <description>
         An Ionic Framework and Cordova project.
@@ -36,7 +36,7 @@
   <plugin name="cordova-plugin-app-version" spec="~0.1.9"/>
   <plugin name="cordova-plugin-camera" spec="~2.3.1"/>
   <plugin name="cordova-plugin-file" spec="~4.3.1"/>
-  <plugin name="cordova-plugin-file-transfer" spec="~1.6.1"/>
+  <plugin name="cordova-plugin-file-transfer" spec="1.5.1"/>
   <plugin name="cordova-plugin-geolocation" spec="~2.4.1"/>
   <plugin name="cordova-plugin-globalization" spec="~1.0.5"/>
   <plugin name="cordova-plugin-image-picker" spec="~1.1.1"/>
