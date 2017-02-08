@@ -1,8 +1,10 @@
 'use strict';
 
 angular.module('phopl.ctrls')
-.controller('resultCtrl', ['$scope', '$ionicHistory', '$q', '$ionicPopup', '$cordovaClipboard', 'DOMHelper', 'PKSessionStorage', 'PostHelper', 'RemoteAPIService', 'PKLocalStorage', function($scope, $ionicHistory, $q, $ionicPopup, $cordovaClipboard, DOMHelper, PKSessionStorage, PostHelper, RemoteAPIService, PKLocalStorage) {
+.controller('resultCtrl', ['$scope', '$ionicScrollDelegate','$ionicHistory', '$q', '$ionicPopup', '$cordovaClipboard', 'DOMHelper', 'PKSessionStorage', 'PostHelper', 'RemoteAPIService', 'PKLocalStorage', 
+function($scope, $ionicScrollDelegate, $ionicHistory, $q, $ionicPopup, $cordovaClipboard, DOMHelper, PKSessionStorage, PostHelper, RemoteAPIService, PKLocalStorage) {
   var result = this;
+  $scope.showAll = false;
   $scope.post = null;
   $scope.clipboardMsg = '단축 URL 얻기 전';
   $scope.profileImg = PKLocalStorage.get('profileImg');
@@ -45,7 +47,7 @@ angular.module('phopl.ctrls')
     }
 
     return deferred.promise;
-  }
+  } 
 
   function getShortenURLAndCopyToClipboard() {
     if ($scope.post.shorten_url === null || $scope.post.shorten_url === '') {
@@ -69,15 +71,34 @@ angular.module('phopl.ctrls')
   //  Event Handler
   //////////////////////////////////////////////////////////////////////////////
   $scope.$on('$ionicView.afterEnter', function() {
-    $scope.post = PKSessionStorage.get('lastSavedPost');
+    $scope.post = PKSessionStorage.get('lastSavedPost'); 
     getShortenURLAndCopyToClipboard();
-  });
-
+  }); 
+  
   //////////////////////////////////////////////////////////////////////////////
   //  Public Methods
   //////////////////////////////////////////////////////////////////////////////
+  function shareURLToNativeSocialMedia(url){
+    var deferred = $q.defer();
+    try{
+      var options = { 
+        url:url
+      }
+      window.plugins.socialsharing.shareWithOptions(options, deferred.resolve(), deferred.reject());
+    }catch(e){ 
+      copyURLToClipboard();
+    }
+    return deferred.promise;
+  } 
+
   $scope.goHome = function() {
     $ionicHistory.goBack(-2);
+  }
+
+  $scope.showAllImages = function() {
+    $scope.showAll = true;
+    $ionicScrollDelegate.resize();
+    // $scope.$apply();
   }
 
   $scope.copyAgain = function() {
@@ -87,18 +108,19 @@ angular.module('phopl.ctrls')
         template: '단축 URL을 얻어오지 못했습니다.'
       });
     } else {
-      copyURLToClipboard($scope.shortenUrl)
-      .then(function() {
-        $ionicPopup.alert({
-          title: '성공',
-          template: '클립보드에 링크가 복사되었습니다.'
-        });
-      }, function(err) {
-        $ionicPopup.alert({
-          title: '오류',
-          template: '오류가 발생하여 클립보드 복사에 실패했습니다.'
-        });
-      })
+      shareURLToNativeSocialMedia($scope.shortenUrl); //native sharing 
+      //copyURLToClipboard($scope.shortenUrl)
+      // .then(function() {
+      //   $ionicPopup.alert({
+      //     title: '성공',
+      //     template: '클립보드에 링크가 복사되었습니다.'
+      //   });
+      // }, function(err) {
+      //   $ionicPopup.alert({
+      //     title: '오류',
+      //     template: '오류가 발생하여 클립보드 복사에 실패했습니다.'
+      //   });
+      // })
     }
   }
 }]);

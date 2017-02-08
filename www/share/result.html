@@ -1,4 +1,4 @@
-<ion-view view-title="업로드 완료" hide-back-button="true">
+<ion-view view-title="업로드 완료" hide-back-button="true" cache-view="false">
   <ion-nav-buttons side="secondary">
       <button class="button button-clear" ng-click="goHome()">
         홈으로
@@ -9,7 +9,7 @@
     <div class="row">
       <div class="col border bg-light-gray">
         <div class="row">
-          <div class="col">
+          <div class="col text-center">
             클립보드에 링크가 복사되었습니다. 이제 공유하세요~!
             <button class="button button-small button-stable button-block" ng-click="copyAgain()">
               {{shortenUrl}}
@@ -66,9 +66,19 @@
 			</div>
 		</div>
     <!-- 이미지 영역 -->
-    <div ng-repeat="image in post.userPost.images | limitTo: 9 track by $index" style="width:{{calculatedHeight+5}}px;height:{{calculatedHeight}}px;display:inline-block;overflow:hidden;padding-left:5px;">
+    <!--<div ng-repeat="image in post.userPost.images | limitTo: 9 track by $index" style="width:{{calculatedHeight+5}}px;height:{{calculatedHeight}}px;display:inline-block;overflow:hidden;padding-left:5px;">
 			<img style="height:{{calculatedHeight}}px;" ng-src="{{image.summary}}" on-hold="deleteAttatchedImage($index)">
+		</div>-->
+    <!-- 이미지 영역 -->
+    <div ng-repeat="image in post.userPost.images track by $index" style="width:{{calculatedHeight+5}}px;height:{{calculatedHeight}}px;display:inline-block;overflow:hidden;padding-left:5px;" ng-show="post.userPost.images.length > 2 && (showAll || (!showAll && $index < 9))">
+			<img style="height:{{calculatedHeight}}px;" ng-src="{{image.summary}}" ng-click="showImagesWithFullScreen($index)" on-hold="deleteAttatchedImage($index)">
+      <div style="width:{{calculatedHeight+5}}px;height:{{calculatedHeight}}px;position:relative;text-align:center;top:-{{calculatedHeight+5}}px;z-index:100;background-color:rgba(0,0,0,0.5);padding-top:30px;" ng-show="$index === 8 && post.userPost.images.length > 9 && showAll === false" ng-click="showAllImages()"><h1 style="color:white;">+{{post.userPost.images.length - 9}}</h1></div>
 		</div>
+
+    <div ng-repeat="image in post.userPost.images track by $index"  ng-show="post.userPost.images.length < 3">
+			<img style="width:100%" ng-src="{{image.summary}}" ng-click="showImagesWithFullScreen($index)" on-hold="deleteAttatchedImage($index)">
+		</div>
+
     <!-- 장소 정보 출력 영역 -->
 		<div class="row" ng-show="post.name">
 			<div class="col border">

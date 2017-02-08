@@ -5,7 +5,7 @@
     "sass",
     "watch"
   ],
-  "watchPatterns": [
+  "watchPatterns": [ 
     "www/**/*",
     "!www/lib/**/*"
   ],
@@ -47,9 +47,5 @@
       "path": "/daum",
       "proxyUrl": "https://apis.daum.net"
     }
-  ],
-  "gulpStartupTasks": [
-    "sass",
-    "watch"
   ]
 }

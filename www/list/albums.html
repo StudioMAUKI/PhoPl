@@ -4,11 +4,11 @@
       정렬
     </button>
   </ion-nav-buttons>
-  <div class="bar bar-subheader">
-    <div class="button-bar">
-      <a class="button" ng-disabled="albums.filteringType === 'total'" ng-click="albums.showTotalList()">전체</a>
-      <a class="button" ng-disabled="albums.filteringType === 'shared'" ng-click="albums.showSharedList()">공유</a>
-      <a class="button" ng-disabled="albums.filteringType === 'saved'" ng-click="albums.showSavedList()">저장</a>
+  <div class="bar bar-subheader ">
+    <div class="album-button-bar">
+      <a ng-class="{active:albums.filteringType === 'total'}" ng-click="albums.showTotalList()">전체</a>
+      <a ng-class="{active:albums.filteringType === 'shared'}" ng-click="albums.showSharedList()">공유</a>
+      <a ng-class="{active:albums.filteringType === 'saved'}" ng-click="albums.showSavedList()">저장</a>
     </div>
   </div>
   <ion-content class="has-subheader">
@@ -30,7 +30,7 @@
         <div class="padding-top">
           <div ng-repeat="image in post.userPost.images| limitTo: 4 track by $index" style="width:{{albums.calculatedHeight+5}}px;height:{{albums.calculatedHeight}}px;display:inline-block;overflow:hidden;padding-left:5px;">
       			<img style="height:{{albums.calculatedHeight}}px;" ng-src="{{image.summary}}">
-            <div style="width:{{albums.calculatedHeight+5}}px;height:{{albums.calculatedHeight}}px;position:relative;text-align:center;top:-{{albums.calculatedHeight+5}}px;z-index:100;background-color:rgba(0,0,0,0.5);padding-top:30px;" ng-show="$index === 3 && post.userPost.images.length > 4"><h2 style="color:white;">+{{post.userPost.images.length - 4}}</h2></div>
+            <div style="width:{{albums.calculatedHeight+5}}px;height:{{albums.calculatedHeight+1}}px;position:relative;text-align:center;top:-{{albums.calculatedHeight+6}}px;z-index:100;background-color:rgba(0,0,0,0.5);padding-top:26px;" ng-show="$index === 3 && post.userPost.images.length > 4"><h2 style="color:white;">+{{post.userPost.images.length - 4}}</h2></div>
       		</div>
         </div>
       </div>

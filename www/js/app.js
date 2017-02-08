@@ -17,7 +17,8 @@ angular.module('phopl', ['ionic', 'ngCordova', 'ngCordovaOauth', 'phopl.config',
       cordova.plugins.Keyboard.disableScroll(true);
     }
     if(window.StatusBar) {
-      StatusBar.styleDefault();
+      // StatusBar.styleDefault();
+      StatusBar.styleLightContent();
     }
 
     // 언어, 국가 정보 얻어오기. 이코드는 디바이스에서만 작동됨

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('phopl.ctrls')
-.controller('albumCtrl', ['$scope', '$q', '$ionicPopup', '$ionicModal', '$cordovaClipboard', '$ionicSlideBoxDelegate', '$ionicScrollDelegate', '$ionicPopover', '$ionicHistory', 'DOMHelper', 'PKLocalStorage', 'PKSessionStorage', 'RemoteAPIService', 'daumSearchService', 'PostHelper', function($scope, $q, $ionicPopup, $ionicModal, $cordovaClipboard, $ionicSlideBoxDelegate, $ionicScrollDelegate, $ionicPopover, $ionicHistory, DOMHelper, PKLocalStorage, PKSessionStorage, RemoteAPIService, daumSearchService, PostHelper) {
+.controller('albumCtrl', ['$scope',  '$q', '$ionicPopup', '$ionicModal', '$cordovaClipboard', '$ionicSlideBoxDelegate', '$ionicScrollDelegate', '$ionicPopover', '$ionicHistory', 'DOMHelper', 'PKLocalStorage', 'PKSessionStorage', 'RemoteAPIService', 'daumSearchService', 'PostHelper', function($scope, $q, $ionicPopup, $ionicModal, $cordovaClipboard, $ionicSlideBoxDelegate, $ionicScrollDelegate, $ionicPopover, $ionicHistory, DOMHelper, PKLocalStorage, PKSessionStorage, RemoteAPIService, daumSearchService, PostHelper) {
   var result = this;
   // $scope.uplace_uuid = $stateParams.uplace_uuid;
   // $scope.profileImg = PKLocalStorage.get('profileImg');
@@ -27,6 +27,18 @@ angular.module('phopl.ctrls')
   //////////////////////////////////////////////////////////////////////////////
   //  Private Methods
   //////////////////////////////////////////////////////////////////////////////
+  function shareURLToNativeSocialMedia(url){
+    var deferred = $q.defer();
+    try{
+      var options = { 
+        url:url
+      }
+      window.plugins.socialsharing.shareWithOptions(options, deferred.resolve(), deferred.reject());
+    }catch(e){ 
+      copyURLToClipboard();
+    }
+    return deferred.promise;
+  } 
   function copyURLToClipboard(url) {
     var deferred = $q.defer();
 
@@ -60,7 +72,7 @@ angular.module('phopl.ctrls')
       RemoteAPIService.getShortenURL($scope.post.uplace_uuid)
       .then(function(url) {
         $scope.post.shorten_url = url;
-        return copyURLToClipboard(url);
+        return shareURLToNativeSocialMedia(url);  
       }, function(err) {
         console.error('getShortenURL', err);
         $ionicPopup.alert({
@@ -69,7 +81,7 @@ angular.module('phopl.ctrls')
         });
       })
     } else {
-      return copyURLToClipboard($scope.post.shorten_url);
+      return shareURLToNativeSocialMedia($scope.post.shorten_url);
     }
   }
 
@@ -210,9 +222,10 @@ angular.module('phopl.ctrls')
     console.info('url: ' + url);
     window.open(url, '_system');
   };
-
+  
   $scope.showAllImages = function() {
     $scope.showAll = true;
+    $ionicScrollDelegate.resize();
     // $scope.$apply();
   }
 

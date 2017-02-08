@@ -71,21 +71,18 @@ angular.module('phopl.ctrls')
       cancelText: '취소',
       buttonClicked: function(index) {
         console.log('[Event(ActionSheet:click)]Button['+ index + '] is clicked.');
-        if (index == 0) {
-          PhotoService.getPhotoFromCamera({width:300, height:300})
+        if (index == 0) { 
+          PhotoService.getProfileFromCamera({width:300,height:300})
       		.then(function(imageURI) {
             profile.profileImg = imageURI;
             profile.needToSubmit = true;
       		});
-        } else {
-          PhotoService.getPhotosFromAlbum(1)
-      		.then(function(imageURIs) {
-            if (imageURIs.length == 0) {
-              return;
-            }
-            profile.profileImg = imageURIs[0];
+        } else { 
+          PhotoService.getProfileFromPicture({width:300,height:300})
+          .then(function(imageURI) {
+            profile.profileImg = imageURI;
             profile.needToSubmit = true;
-      		});
+      		}); 
         }
 
         return true;

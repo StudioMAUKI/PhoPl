@@ -392,7 +392,7 @@ angular.module('phopl.services')
 		if (ionic.Platform.isIOS() || ionic.Platform.isAndroid()) {
 			$cordovaImagePicker.getPictures({
 	      maximumImagesCount: reqCount,
-	      quality: 70,
+        allowEdit: true,
         width: size.width || 1280,
 				height: size.height || 1280
 	    }).
@@ -409,9 +409,77 @@ angular.module('phopl.services')
     return deferred.promise;
 	};
 
+  function getProfileFromCamera(size) {
+    var deferred = $q.defer();
+    size = size || {width:null, height:null};
+
+		if (ionic.Platform.isIOS() || ionic.Platform.isAndroid()) {
+			var options = {
+	      quality: 70,
+	      destinationType: Camera.DestinationType.FILE_URI,
+	      sourceType: Camera.PictureSourceType.CAMERA,
+	      allowEdit: true,
+	      encodingType: Camera.EncodingType.JPEG,
+	      targetWidth: size.width || 1280,
+	      targetHeight: size.height || 1280,
+	      popoverOptions: CameraPopoverOptions,
+	      correctOrientation: true,
+	      saveToPhotoAlbum: true
+	    };
+
+	    $cordovaCamera.getPicture(options)
+	    .then(function (imageURI) {
+	      console.log('imageURI: ' + imageURI);
+        deferred.resolve(imageURI);
+	    }, function (err) {
+	      console.error('Camera capture failed : ' + err);
+        deferred.reject(err);
+	    });
+		} else {	// test in web-browser
+      deferred.resolve('img/samples/sample_01.jpg');
+		}
+
+    return deferred.promise;
+	};
+
+  function getProfileFromPicture(size) {
+    var deferred = $q.defer();
+    size = size || {width:null, height:null};
+
+		if (ionic.Platform.isIOS() || ionic.Platform.isAndroid()) {
+			var options = {
+	      quality: 70,
+	      destinationType: Camera.DestinationType.FILE_URI,
+	      sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
+	      allowEdit: true,
+	      encodingType: Camera.EncodingType.JPEG,
+	      targetWidth: size.width || 1280,
+	      targetHeight: size.height || 1280,
+	      popoverOptions: CameraPopoverOptions,
+	      correctOrientation: true,
+	      saveToPhotoAlbum: true
+	    };
+
+	    $cordovaCamera.getPicture(options)
+	    .then(function (imageURI) {
+	      console.log('imageURI: ' + imageURI);
+        deferred.resolve(imageURI);
+	    }, function (err) {
+	      console.error('Camera capture failed : ' + err);
+        deferred.reject(err);
+	    });
+		} else {	// test in web-browser
+      deferred.resolve('img/samples/sample_01.jpg');
+		}
+
+    return deferred.promise;
+	};
+
   return {
     getPhotoFromCamera: getPhotoFromCamera,
-    getPhotosFromAlbum: getPhotosFromAlbum
+    getPhotosFromAlbum: getPhotosFromAlbum,
+    getProfileFromCamera: getProfileFromCamera,
+    getProfileFromPicture: getProfileFromPicture
   }
 }])
 .factory('gmapService', [function(){
