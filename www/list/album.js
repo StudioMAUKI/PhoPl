@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('phopl.ctrls')
-.controller('albumCtrl', ['$scope',  '$q', '$ionicPopup', '$ionicModal', '$cordovaClipboard', '$ionicSlideBoxDelegate', '$ionicScrollDelegate', '$ionicPopover', '$ionicHistory', 'DOMHelper', 'PKLocalStorage', 'PKSessionStorage', 'RemoteAPIService', 'daumSearchService', 'PostHelper', function($scope, $q, $ionicPopup, $ionicModal, $cordovaClipboard, $ionicSlideBoxDelegate, $ionicScrollDelegate, $ionicPopover, $ionicHistory, DOMHelper, PKLocalStorage, PKSessionStorage, RemoteAPIService, daumSearchService, PostHelper) {
+.controller('albumCtrl', ['$scope',  '$q', '$ionicPlatform', '$ionicPopup', '$ionicModal', '$cordovaClipboard', '$ionicSlideBoxDelegate', '$ionicScrollDelegate', '$ionicPopover', '$ionicHistory', 'DOMHelper', 'PKLocalStorage', 'PKSessionStorage', 'RemoteAPIService', 'daumSearchService', 'PostHelper', function($scope, $q, $ionicPlatform, $ionicPopup, $ionicModal, $cordovaClipboard, $ionicSlideBoxDelegate, $ionicScrollDelegate, $ionicPopover, $ionicHistory, DOMHelper, PKLocalStorage, PKSessionStorage, RemoteAPIService, daumSearchService, PostHelper) {
   var result = this;
   // $scope.uplace_uuid = $stateParams.uplace_uuid;
   // $scope.profileImg = PKLocalStorage.get('profileImg');
@@ -220,7 +220,12 @@ angular.module('phopl.ctrls')
 
   $scope.openLink = function(url) {
     console.info('url: ' + url);
-    window.open(url, '_system');
+    //window.open(url, '_system'); //외부 browser 
+    if( $ionicPlatform.is('ios') ){
+      window.open(url, '_blank', 'location=no,toolbarposition=top,closebuttoncaption=닫기'); // 앱내 browser for ios 
+    }else{
+      window.open(url, '_blank'); // 앱내 browser for android 
+    }
   };
   
   $scope.showAllImages = function() {
