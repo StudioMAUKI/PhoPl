@@ -9,6 +9,13 @@
     </author>
   <content src="index.html"/>
   <access origin="*"/>
+  <access origin="content://*" />
+  <access origin="cdvfile://*"/>
+
+  <allow-navigation href="file:///**/*"/>
+  <allow-navigation href="*://**.phdesign.com.br/*"/>
+  <allow-navigation href="filesystem://**/*"/>
+  <allow-navigation href="cdvfile://**/*"/>
   <allow-navigation href="*"/>
   <allow-navigation href="http://192.168.0.4:8100"/>
   <allow-navigation href="http://192.168.0.4:8101"/>
