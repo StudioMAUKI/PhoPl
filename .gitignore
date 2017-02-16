@@ -6,3 +6,4 @@ platforms/
 plugins/
 
 *.log
+.DS_Store
