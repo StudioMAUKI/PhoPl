@@ -62,13 +62,30 @@
         
         //post.datetime과 장소정보를 합쳐서 텍스트로 표시함 
         $scope.description = '님이 2017년 2월 12일에 공유한 사진과 장소입니다.'; //장소없을시 장소정보 빼야함 
-        //$scope.post = { datetime:'1일전' } //사용안함 
+        
 
         //노트 
         $scope.notes = [
           { content:'노트 내용은 여기에 노트 내용은 여기에 노트 내용은 여기에 길어도 날짜와 안겹치게 ', datetime:'3일전'},
           { content:'노트 내용2는 여기에 노트 내용은 여기에 노트 내용은 여기에 노트 내용은 여기에 길어도 날짜와 안겹치게노트 내용은 여기에 노트 내용은 여기에 노트 내용은 여기에 길어도 날짜와 안겹치게노트 내용은 여기에 노트 내용은 여기에 노트 내용은 여기에 길어도 날짜와 안겹치게', datetime:'7일전'},
         ]
+
+          
+        //포스트 정보 
+        $scope.post = {
+           //datetime:'1일전',  //사용안함 
+           name:'포스트이름',
+           lonLat:{lat:37.56987,lon:127.000233}, //좌표 
+           addrs:['주소값1', '주소값2', '주소값3'],
+           userPost:{
+             tags:[
+               { content:'태그내용' },
+               { content:'태그내용' },
+               { content:'태그내용' },
+               { content:'태그내용' }
+               ]
+           }
+        }
 
         //이미지 
         $scope.attachedImages = [
@@ -142,11 +159,212 @@
         }
       });
 
+
+
+      //////////////////////////////////////////////////////////////////////////////
+  //  Private Methods
+  //////////////////////////////////////////////////////////////////////////////
+   
+   function save(uplace_uuid, nickname) {
+        var openAt = new Date;
+        var uagentLow = navigator.userAgent.toLocaleLowerCase();
+        console.info('userAgent: ' + uagentLow);
+        var chrome25;
+        var kitkatWebview;
+
+        $('body').append('<iframe id="____phopllink____"></iframe>');
+        $('#____phopllink____').hide();
+
+        setTimeout(function() {
+          if (new Date - openAt < 4000) {
+            if (window.confirm('PHOPL 앱이 설치되어 있지 않습니다.\n설치 페이지로 이동하시겠습니까?')) {
+              if (uagentLow.search('android') > -1) {
+                console.info('in timer : android');
+                $('#____phopllink____').attr('src','market://details?id=com.mauki.phopl&hl=ko');
+              } else if (uagentLow.search('iphone') > -1) {
+                console.info('in timer : ios');
+                location.replace('https://itunes.apple.com/kr/app/solibada-myujig-mujehan-eum/id346528006?mt=8'); //마우키 앱 경로로 변경필요 
+              } else {
+                console.info('in timer : not ios, not android');
+              }
+            }
+          }
+        }, 2000);
+
+        if(uagentLow.search('android') > -1){
+          console.info('android');
+          chrome25 = uagentLow.search('chrome') > -1 && navigator.appVersion.match(/Chrome\/\d+.\d+/)[0].split("/")[1] > 25;
+          kitkatWebview = uagentLow.indexOf('naver') != -1 || uagentLow.indexOf('daum') != -1;
+
+          if (chrome25 && !kitkatWebview){
+            // userAgent: mozilla/5.0 (linux; android 6.0.1; nexus 5 build/mob31e) applewebkit/537.36 (khtml, like gecko) chrome/53.0.2785.124 mobile safari/537.36
+            console.info('chrome25 && !kitkatWebView');
+            // document.location.href = 'intent://album?uplace_uuid=' + uplace_uuid + '&nickname=' + nickname + '#Intent;scheme=soribada30;package=com.soribada.android;end';
+            location.href = 'phopl://album?uplace_uuid=' + uplace_uuid + '&nickname=' + nickname;
+          } else {
+            console.info('can use applink');
+            $('#____phopllink____').attr('src', 'phopl://album?uplace_uuid=' + uplace_uuid + '&nickname=' + nickname);
+          }
+        } else if (uagentLow.search('iphone') > -1){
+          console.info('ios');
+          var strVer = /version\/[0-9]+\.[0-9]+\s/.exec('userAgent: mozilla/5.0 (iphone; cpu iphone os 10_0 like mac os x) applewebkit/602.1.50 (khtml, like gecko) version/10.0 mobile/14a345 safari/602.1');
+          var numVer = Number(strVer[0].split('/')[1]);
+          if (numVer >= 9.0) {
+            location.href = 'phopl://album?uplace_uuid=' + uplace_uuid + '&nickname=' + nickname;
+          } else {
+            $('#____phopllink____').attr('src', 'phopl://album?uplace_uuid=' + uplace_uuid + '&nickname=' + nickname);
+          }
+        } else {
+          console.info('not ios, not android.');
+        }
+      }
+
+
+
+
+  function shareURLToNativeSocialMedia(url){
+    var deferred = $q.defer();
+    try{
+      var options = { 
+        url:url
+      }
+      window.plugins.socialsharing.shareWithOptions(options, deferred.resolve(), deferred.reject());
+    }catch(e){ 
+      copyURLToClipboard();
+    }
+    return deferred.promise;
+  } 
+  function copyURLToClipboard(url) {
+    var deferred = $q.defer();
+
+    if (ionic.Platform.isIOS() || ionic.Platform.isAndroid()) {
+      $cordovaClipboard.copy(url)
+      .then(function(result) {
+        $ionicPopup.alert({
+          title: '성공',
+          template: '클립보드에 링크가 복사되었습니다.'
+        });
+      }, function(err) {
+        console.error('Copying URL was failed.', err);
+        $ionicPopup.alert({
+          title: '오류',
+          template: '오류가 발생하여 클립보드 복사에 실패했습니다.'
+        });
+      });
+    } else {
+      $ionicPopup.alert({
+        title: '경고',
+        template: '웹브라우저에서는 지원하지 않는 기능입니다.'
+      });
+    }
+
+    return deferred.promise;
+  }
+
+  function getShortenURLAndCopyToClipboard() {
+    if ($scope.post.shorten_url === null || $scope.post.shorten_url === '') {
+      // shoten url을 얻어서 복사
+      RemoteAPIService.getShortenURL($scope.post.uplace_uuid)
+      .then(function(url) {
+        $scope.post.shorten_url = url;
+        return shareURLToNativeSocialMedia(url);  
+      }, function(err) {
+        console.error('getShortenURL', err);
+        $ionicPopup.alert({
+          title: '오류',
+          template: err
+        });
+      })
+    } else {
+      return shareURLToNativeSocialMedia($scope.post.shorten_url);
+    }
+  }
+
+  function fitMapToScreen() {
+    console.log('call fitMapToScreen');
+    var documentHeight = $(document).height();
+    // var contentHeight = document.getElementsByTagName('ion-content')[0].clientHeight;
+    console.info('documentHeight: ' + documentHeight);
+    var barHeight = document.getElementsByTagName('ion-header-bar')[0].clientHeight || 44;
+    $('#map-album').css({
+      height: documentHeight - barHeight
+    });
+    //  이거 꼭 해줘야 지도가 제대로 그려짐. (안그러면 걍 회색으로 나옴)
+    // google.maps.event.trigger($scope.map, 'resize');
+  }
+
+  function initMap(pos) {
+    pos = pos || {
+      lat: 37.5666103,
+      lng: 126.9783882
+    };
+
+    $scope.map = new google.maps.Map(document.getElementById('map-album'), {
+      center: pos,
+      zoom: 15,
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      zoomControl: false,
+      mapTypeControl: false,
+      streetViewControl: false
+    });
+    $scope.curMarker = new google.maps.Marker({
+      map: $scope.map,
+      position: pos,
+      draggable: false,
+      zIndex: 9999
+    });
+  }
+
+  function makeKeyword() {
+    var keyword = '';
+    if ($scope.post.placePost) {
+      var region = $scope.post.placePost.addr2 || $scope.post.placePost.addr1 || $scope.post.placePost.addr3 || null;
+      if (region) {
+        var region_items = region.content.split(' ');
+        var loopCount = region_items.length >= 4 ? 4 : region_items.length;
+        for (var i = 1; i < loopCount; i++) {
+          keyword += region_items[i] + '+';
+        }
+      }
+
+      keyword += ($scope.post.placePost.name.content || $scope.post.userPost.name.content);
+      console.log('Calculated keyword : ', keyword);
+      keyword = encodeURI(keyword);
+      console.log('URL encoded keyword : ', keyword);
+    }
+    return keyword;
+  }
+
+  function getDaumResult() {
+    var keyword = makeKeyword();
+    if (keyword !== '') {
+      daumSearchService.search(keyword)
+      .then(function(items) {
+        $scope.searchResults = items;
+        for (var i = 0; i < $scope.searchResults.length; i++) {
+          $scope.searchResults[i].title = $scope.searchResults[i].title.replace(/<b>/g, '').replace(/&lt;b&gt;/g, '').replace(/&lt;\/b&gt;/g, '').replace(/&quot;/g, '"');
+          $scope.searchResults[i].description = $scope.searchResults[i].description.replace(/<b>/g, '').replace(/&lt;b&gt;/g, '').replace(/&lt;\/b&gt;/g, '').replace(/&quot;/g, '"');
+        }
+        // console.dir($scope.searchResults);
+
+      }, function(err) {
+        $scope.searchResults = [];
+        $scope.searchResults.push({
+          author: 'MAUKI studio',
+          comment: '',
+          description: JSON.stringify(err),
+          link: '',
+          title: '검색 결과를 얻어 오는데 실패했습니다'
+        })
+      });
+    }
+  }
+
       //////////////////////////////////////////////////////////////////////////////
       //  Public Methods
       //////////////////////////////////////////////////////////////////////////////
       $scope.showMap = function() {
-        $ionicModal.fromTemplateUrl('list/modal.map.html', {
+        $ionicModal.fromTemplateUrl('modal.map.html', {
           scope: $scope
         })
         .then(function(modal) {
@@ -180,7 +398,10 @@
         // $scope.$apply();
       }
 
+     
       $scope.showImagesWithFullScreen = function(index) {
+   
+
         $scope.activeSlide = index;
         $ionicModal.fromTemplateUrl('modal.images.html', {
           scope: $scope
@@ -193,6 +414,7 @@
       $scope.closeImages = function() {
         $scope.modalImages.hide();
         $scope.modalImages.remove();
+ 
       };
 
       $scope.updateSlideStatus = function(slide) {
@@ -253,10 +475,15 @@
         }, function(err) {
           console.error(err);
         });
+      } 
+
+       $scope.appLaunch = function() {
+          save();
       }
 
+    }); 
 
-      }); 
+   
       
   </script>
   <!--단순로직 @-->
@@ -265,11 +492,15 @@
   <body ng-app="phopl" ng-controller="albumCtrl" class="view-container"> 
  
        
-      <!--앨범영역-->
+      
       <ion-view view-title="{{post.name || '앨범'}}">
         <ion-content>
+
+         
+
+          <!-- 닉네임 + 장소/시간 -->
           <div class="list">
-            <div class="item item-avatar item-button-right" href="#">
+            <div class="item item-avatar" href="#">
               <img ng-src="{{profileImg}}">
               <h2 style="white-space:normal"><strong>{{nickname}}</strong>{{description}}</h2>
               <!--<small>{{post.datetime}}</small>-->
@@ -303,6 +534,25 @@
               <small ng-repeat="tag in post.userPost.tags">#{{tag.content}},&nbsp;</small>
             </div>
           </div>
+
+
+           <!--앱 다운로드 링크 -->
+          <nav class="navbar navbar-default" >
+            <div class="container-fluid">
+              <div class="navbar-header app-download-button" ng-click="appLaunch()">
+                  <div class="navbar-brand">
+                  <img alt="Brand" src="/img/icon.png" height="45" width="45">
+                </div>
+                <p class="navbar-text">
+                  사진을 공유하는 새로운 방법! <span class="app-name">포플(PHOPL)</span><br>
+                  지금 공유받은 사진을 저장하려면 앱 다운로드 GO!<br>
+                </p>
+                <!--<button type="button" class="btn btn-default navbar-btn" onclick="hideAppBanner()"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>-->
+              </div>
+            </div>
+          </nav>
+          <div style="clear:both;"></div>
+
 
           <!-- 검색 결과 -->
           <div class="list">

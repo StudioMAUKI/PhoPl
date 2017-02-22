@@ -1,22 +1,87 @@
-.modal-close-button{
+.modal-button {
     position:absolute;
     top:60px;
     right:20px;
     font-size:22px;
-
-    color:white;
-    z-index:99999999;
+    color:white; 
+    z-index: 99;
 }
+.modal-download-button{ 
+    right:60px; 
+}
+
+.modal-close-button{ 
+    right:20px; 
+}
+/*모바일웹 위아래 툴바영역 감안 */
 .modal-slide-box{
-    margin-top:-44px; /*모바일웹 위아래 툴바영역 감안 */
+    margin-top:-44px; 
+}
+.modal-slide-box *{
+    z-index: 1;
 }
 .modal-description{
     position:absolute;
     bottom:50px;
     left:15px;
-    color:white;
-    z-index:99999999;
+    color:white; 
+    z-index: 99;
 }
 .modal-description .location{
     color:gray;
+}
+
+
+/*하단 버튼 */
+.button-bar *{
+    border:none;
+    background:none;
+}
+
+/*nav*/ 
+.app-name {
+  color:#ff0066;
+  font-weight:bold;
+}
+
+.navbar{
+    border:1px solid #ff0066;
+    margin:7px 5px 12px;
+    overflow: auto;
+    background-color:#FFE5ED;
+}
+@media screen and (max-width: 350px){
+  .navbar p {
+    font-size:84% !important;
+  }
+  .navbar-brand{
+    padding:8px 8px 3px !important; 
+  }
+} 
+.navbar p {
+  font-size: 100%;
+  display: inline-block;
+}
+.navbar-brand{
+  float:left;
+  padding:8px 10px 4px;
+}
+
+.navbar-text{
+    padding:9px 0px 0px 0px;
+    float:left;
+}
+
+.navbar button {
+  position:absolute;
+  top: 10px;
+  right: 15px;
+}
+.download-banner {
+  text-align: center;
+}
+.download-banner img {
+    width: 114px;
+    margin: 12px 8px 0 8px;
+    vertical-align: middle;
 }
