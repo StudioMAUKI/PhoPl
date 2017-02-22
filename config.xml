@@ -9,9 +9,8 @@
     </author>
   <content src="index.html"/>
   <access origin="*"/>
-  <access origin="content://*" />
+  <access origin="content://*"/>
   <access origin="cdvfile://*"/>
-
   <allow-navigation href="file:///**/*"/>
   <allow-navigation href="*://**.phdesign.com.br/*"/>
   <allow-navigation href="filesystem://**/*"/>
@@ -19,7 +18,7 @@
   <allow-navigation href="*"/>
   <allow-navigation href="http://192.168.0.4:8100"/>
   <allow-navigation href="http://192.168.0.4:8101"/>
-  <preference name="screenOrientation" value="Portrait" />
+  <preference name="screenOrientation" value="Portrait"/>
   <preference name="webviewbounce" value="false"/>
   <preference name="UIWebViewBounce" value="false"/>
   <preference name="DisallowOverscroll" value="true"/>

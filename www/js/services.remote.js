@@ -1358,20 +1358,80 @@ angular.module('phopl.services')
     return addrs;
   }
 
+  //원본 
+  // function getShortenAddress(addr) {
+  //   var a = addr.split(' ');
+  //   var city = '';
+  //   var startIndex = 0;
+  //   if (a[0].indexOf('경기') !== -1 || a[0].indexOf('강원') !== -1 || a[0].indexOf('충북') !== -1 || a[0].indexOf('충남') !== -1 || a[0].indexOf('전북') !== -1 || a[0].indexOf('전남') !== -1 || a[0].indexOf('경북') !== -1 || a[0].indexOf('경남') !== -1) {
+  //     city = a[1];
+  //     startIndex = 1;
+  //   } else {
+  //     city = a[0].replace('특별시', '').replace('광역시', '')
+  //     startIndex = 0;
+  //   }
+  //   // console.log(a[startIndex + 2], a[startIndex]);
+  //   return a[startIndex + 2] + '.' + city;
+  // }
+
   function getShortenAddress(addr) {
-    var a = addr.split(' ');
-    var city = '';
-    var startIndex = 0;
-    if (a[0].indexOf('경기') !== -1 || a[0].indexOf('강원') !== -1 || a[0].indexOf('충북') !== -1 || a[0].indexOf('충남') !== -1 || a[0].indexOf('전북') !== -1 || a[0].indexOf('전남') !== -1 || a[0].indexOf('경북') !== -1 || a[0].indexOf('경남') !== -1) {
-      city = a[1];
-      startIndex = 1;
-    } else {
-      city = a[0].replace('특별시', '').replace('광역시', '');
-      startIndex = 0;
+    try{
+      //(,)있으면 ,로 파싱, 없으면 ' '으로 파싱
+      var isComma = addr.indexOf(',');
+      var a = addr.split(' ');
+      if(isComma > -1 && a[0] != '대한민국'){
+        var a = addr.split(',');
+      }
+      var len = a.length;
+      var last = 0;
+      if( len > 0 ){
+        last = len -1; //마지막 (영어권)
+      }
+      // alert(JSON.stringify(a))
+
+      //시, 구만 추출 
+      var city = '';
+      var gu = '';
+
+      //한국 시도 
+      var sido  = ['경기도', '경기', '강원', '경남','경북','전남','전북','제주','강원','서울','서울특별시'];
+
+      //한국기준 
+      if(sido.indexOf( a[0] ) != -1 ){
+        if( len > 0 ) city = a[1];
+        if( len > 1 ) gu = a[2];
+      }else if( a[0] == '대한민국'){
+        if( len > 1 ) city = a[2];
+        if( len > 2 ) city = a[3];
+      }
+      //한국 이외의 기준 
+      else{
+        if( len > 0 ) city = a[last-1];
+        if( len > 1 ) gu = a[last-2];
+      }
+
+      //기본 (,)없애기
+      if( city != undefined ) city = city.replace(',','').replace('undefined','');
+      if( gu != undefined ) gu = gu.replace(',','').replace('undefined','');
+
+      //없애고 싶은 문구
+      if( city != undefined ) city = city.replace('특별시', '').replace('광역시', '');
+
+    }catch(e){
+      alert(e);
     }
-    // console.log(a[startIndex + 2], a[startIndex]);
-    return a[startIndex + 2] + '.' + city;
+     if(len > 1 ){
+       if( gu != ''){
+        return gu + ', ' + city;
+      }
+      else{
+        return city;
+      }
+     }else{
+      return addr; //기본값 그대로 
+     }
   }
+ 
 
   function getPhoneNo(post) {
     // 전화번호는 공식 포스트의 전화번호를 우선한다.
