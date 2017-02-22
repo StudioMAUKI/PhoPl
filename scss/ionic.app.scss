@@ -242,6 +242,11 @@ $popover-width: 100px;
   }
 }
 
+.button-bar *{
+  background:none;
+  border:none;
+}
+
 //앨범목록 filter 버튼 
 .album-button-bar{
   position: relative; 

@@ -9981,6 +9981,10 @@ a.button {
     color: gray;
     right: 20px; }
 
+.button-bar * {
+  background: none;
+  border: none; }
+
 .album-button-bar {
   position: relative;
   width: 100%; }
