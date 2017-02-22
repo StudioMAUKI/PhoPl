@@ -19,6 +19,7 @@
   <allow-navigation href="*"/>
   <allow-navigation href="http://192.168.0.4:8100"/>
   <allow-navigation href="http://192.168.0.4:8101"/>
+  <preference name="Orientation" value="Portrait" />
   <preference name="webviewbounce" value="false"/>
   <preference name="UIWebViewBounce" value="false"/>
   <preference name="DisallowOverscroll" value="true"/>
