@@ -1,16 +1,30 @@
 <ion-modal-view class="image-modal transparent" on-swipe-down="closeImages()">
-  <ion-header-bar class="bar-positive" align-title="center">
-    <h1 class="title">사진보기</h1>
-    <button class="button button-clear button-icon ion-ios-close-empty" ng-click="closeImages()"></button>
-	</ion-header-bar>
-  <ion-content>
-    <ion-slide-box active-slide="activeSlide">
+  <ion-content> 
+    
+    
+    <ion-slide-box active-slide="activeSlide" class="modal-slide-box" show-pager="false">
       <ion-slide ng-repeat="image in attachedImages">
+        <!-- 이미지정보 -->
+        <div class="modal-description">
+          촬영자 닉네임 
+          <br>
+          <span class="location">장소이름</span>
+        </div>
+        <!-- 이미지정보 @-->
+        <ion-scroll direction="xy" overflow-scroll="false" zooming="true" min-zoom="1"  style="width:100%;height:100%">
+          <div class="image" style="background-image: url({{image.content}})"></div> 
+            <!--<img src="{{image.content}}" style="width: 2000px; height: 2000px">-->
 
-        <ion-scroll direction="xy" scrollbar-x="false" scrollbar-y="false" zooming="true" min-zoom="{{zoomMin}}" style="width:100%;height:100%" delegate-handle="scrollHandle{{$index}}" on-scroll="updateSlideStatus(activeSlide)" on-release="updateSlideStatus(activeSlide)">
-          <div class="image" style="background-image: url({{image.content}})"></div>
         </ion-scroll>
+        
       </ion-slide>
     </ion-slide-box>
+
+    <!--닫기버튼 -->
+    <div class="modal-close-button ion-close-round" ng-click="closeImages()">
+    </div>
+    <!--닫기버튼 @-->
+    
   </ion-content>
 </ion-modal-view>
+ 

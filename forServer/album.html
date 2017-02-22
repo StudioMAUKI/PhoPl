@@ -9,6 +9,7 @@
 
     <!-- compiled css output -->
     <link href="css/ionic.app.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
     
     <!-- ionic/angularjs js -->
     <script src="lib/jquery/dist/jquery.min.js"></script>
@@ -57,17 +58,16 @@
         $scope.uplace_uuid = '121212'; //UUID 
         $scope.uplace_name = "장소이름";
         $scope.profileImg = 'http://image.chosun.com/sitedata/image/201312/13/2013121302159_0.jpg';
-        $scope.nickname = '홍길동';
-
-        //포스트
-        $scope.post = {
-          datetime:'12123'
-        }
+        $scope.nickname = '홍길동'; 
+        
+        //post.datetime과 장소정보를 합쳐서 텍스트로 표시함 
+        $scope.description = '님이 2017년 2월 12일에 공유한 사진과 장소입니다.'; //장소없을시 장소정보 빼야함 
+        //$scope.post = { datetime:'1일전' } //사용안함 
 
         //노트 
         $scope.notes = [
-          { content:'asfasdf', datetime:'asdfasdf'},
-          { content:'asfasdf', datetime:'asdfasdf'},
+          { content:'노트 내용은 여기에 노트 내용은 여기에 노트 내용은 여기에 길어도 날짜와 안겹치게 ', datetime:'3일전'},
+          { content:'노트 내용2는 여기에 노트 내용은 여기에 노트 내용은 여기에 노트 내용은 여기에 길어도 날짜와 안겹치게노트 내용은 여기에 노트 내용은 여기에 노트 내용은 여기에 길어도 날짜와 안겹치게노트 내용은 여기에 노트 내용은 여기에 노트 내용은 여기에 길어도 날짜와 안겹치게', datetime:'7일전'},
         ]
 
         //이미지 
@@ -271,17 +271,17 @@
           <div class="list">
             <div class="item item-avatar item-button-right" href="#">
               <img ng-src="{{profileImg}}">
-              <h2><strong>{{nickname}}</strong></h2>
-              <small>{{post.datetime}}</small>
+              <h2 style="white-space:normal"><strong>{{nickname}}</strong>{{description}}</h2>
+              <!--<small>{{post.datetime}}</small>-->
               <!--<a class="button button-outline button-stable icon ion-ios-more" style="top:15px;" ng-click="popOverMore($event)">-->
               </a>
             </div>
           </div>
           <!-- 노트 영역 -->
-          <div class="note " ng-repeat="note in post.userPost.notes">
+          <div class="note " ng-repeat="note in notes">
                 <div class="padding">
                 <span class="content">{{note.content}}</span>
-                <!--<span class="time">{{note.datetime}}</span>-->
+                <span class="time">{{note.datetime}}</span>
                 </div> 
           </div>
           <!-- 이미지 영역 -->

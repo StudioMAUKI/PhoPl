@@ -1,0 +1,22 @@
+.modal-close-button{
+    position:absolute;
+    top:60px;
+    right:20px;
+    font-size:22px;
+
+    color:white;
+    z-index:99999999;
+}
+.modal-slide-box{
+    margin-top:-44px; /*모바일웹 위아래 툴바영역 감안 */
+}
+.modal-description{
+    position:absolute;
+    bottom:50px;
+    left:15px;
+    color:white;
+    z-index:99999999;
+}
+.modal-description .location{
+    color:gray;
+}
