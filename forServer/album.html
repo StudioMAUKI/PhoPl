@@ -10,6 +10,7 @@
     <!-- compiled css output -->
     <link href="css/ionic.app.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
+    <link href="css/nifty.modal.css" rel="stylesheet">
     
     <!-- ionic/angularjs js -->
     <script src="lib/jquery/dist/jquery.min.js"></script>
@@ -477,16 +478,37 @@
         });
       } 
 
+      //앱런칭, 이미지저장 
        $scope.saveImage = function(uplace_uuid, nickname) {
           save(uplace_uuid, nickname);
       }
 
+     
+
+    //공유하기
+    $scope.openShareModal = function(animation) {
+      $ionicModal.fromTemplateUrl('modal.share.html', {
+        scope: $scope,
+        animation: animation
+      }).then(function(modal) {
+        $scope.modal = modal;
+        $scope.modal.show();
+      });
+    };
+    $scope.closeShareModal = function() {
+      $scope.modal.hide();
+    };
+    //Cleanup the modal when we're done with it!
+    $scope.$on('$destroy', function() {
+      $scope.modal.remove();
     }); 
 
-   
+   });
       
   </script>
   <!--단순로직 @-->
+
+ 
 
 
   <body ng-app="phopl" ng-controller="albumCtrl" class="view-container"> 
@@ -580,7 +602,7 @@
           <div class="button-bar" style="margin-top:5px;">
             <a class="button button-stable" ng-click="showMap()" ng-show="post.lonLat">지도</a>
             <a class="button button-stable" ng-click="take()" ng-show="canTakeToMyList">저장</a>
-            <a class="button button-stable" ng-click="share()">공유</a>
+            <a class="button button-stable" ng-click="openShareModal()">공유</a>
           </div>
         </ion-footer-bar>
       </ion-view>

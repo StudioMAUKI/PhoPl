@@ -87,3 +87,45 @@
     margin: 12px 8px 0 8px;
     vertical-align: middle;
 }
+
+/*공유하기 모달 */
+.modal-share h4{
+    float:left;
+    padding-left:15px;
+}
+.share-close-button { 
+    float:right;
+    right:0;
+    padding:10px;
+    font-size:21px;
+}
+.sns-list{
+    position:relative;
+    clear:both;
+    padding:15px 0px 5px 15px;
+}
+.sns-list img{
+    float:left;
+    border-radius:2px;
+    margin-right:5%;
+    margin-bottom:5%;
+    width:15%;
+}
+.copy-link{
+    clear:both;
+    padding:5px 15px;
+}
+.copy-text{
+    width:100%;
+    font-size:0.8em;
+    padding:3px 10px !important;
+    border:1px solid #eaeaea !important;
+    border-radius:3px;
+    border-style:solid !important; 
+}
+.copy-description{
+    color:gray;
+    margin-left:5px;
+    margin-top:3px;
+    font-size:.8em;
+}
