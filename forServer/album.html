@@ -165,7 +165,7 @@
   //  Private Methods
   //////////////////////////////////////////////////////////////////////////////
    
-   function save(uplace_uuid, nickname) {
+   function save() { 
         var openAt = new Date;
         var uagentLow = navigator.userAgent.toLocaleLowerCase();
         console.info('userAgent: ' + uagentLow);
@@ -477,8 +477,8 @@
         });
       } 
 
-       $scope.appLaunch = function() {
-          save();
+       $scope.saveImage = function(uplace_uuid, nickname) {
+          save(uplace_uuid, nickname);
       }
 
     }); 
@@ -539,7 +539,7 @@
            <!--앱 다운로드 링크 -->
           <nav class="navbar navbar-default" >
             <div class="container-fluid">
-              <div class="navbar-header app-download-button" ng-click="appLaunch()">
+              <div class="navbar-header app-download-button" ng-click="saveImage()">
                   <div class="navbar-brand">
                   <img alt="Brand" src="/img/icon.png" height="45" width="45">
                 </div>

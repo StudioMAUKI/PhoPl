@@ -1,17 +1,19 @@
 .modal-button {
     position:absolute;
-    top:60px;
+    top:45px;
     right:20px;
     font-size:22px;
     color:white; 
     z-index: 99;
+
+    padding:15px;
 }
 .modal-download-button{ 
-    right:60px; 
+    right:45px; 
 }
 
 .modal-close-button{ 
-    right:20px; 
+    right:5px; 
 }
 /*모바일웹 위아래 툴바영역 감안 */
 .modal-slide-box{
