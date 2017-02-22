@@ -165,7 +165,7 @@
   //  Private Methods
   //////////////////////////////////////////////////////////////////////////////
    
-   function save() { 
+   function save(uplace_uuid, nickname) { 
         var openAt = new Date;
         var uagentLow = navigator.userAgent.toLocaleLowerCase();
         console.info('userAgent: ' + uagentLow);
@@ -537,9 +537,9 @@
 
 
            <!--앱 다운로드 링크 -->
-          <nav class="navbar navbar-default" >
+          <nav class="navbar navbar-default" ng-click="saveImage()">
             <div class="container-fluid">
-              <div class="navbar-header app-download-button" ng-click="saveImage()">
+              <div class="navbar-header app-download-button" >
                   <div class="navbar-brand">
                   <img alt="Brand" src="/img/icon.png" height="45" width="45">
                 </div>
