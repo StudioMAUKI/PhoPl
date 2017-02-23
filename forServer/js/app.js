@@ -156,9 +156,19 @@ angular.module('phopl', ['ionic'])
     setTimeout(function() {
       if (new Date - openAt < 4000) {
         if (window.confirm('PHOPL 앱이 설치되어 있지 않습니다.\n설치 페이지로 이동하시겠습니까?')) {
+           
           if (uagentLow.search('android') > -1) {
             console.info('in timer : android');
-            $('#____phopllink____').attr('src','market://details?id=com.mauki.phopl&hl=ko');
+            
+            if (uagentLow.match(/Chrome/)) {
+               //크롬일때만 별도 처리 필요함 (알아서 스토어도 감)
+                location.href = "intent://gallery#Intent;scheme=phopl;package=com.mauki.phopl;end;";
+            }else {
+                // 안드로이드
+                location.replace('https://play.google.com/store/apps/details?id=com.mauki.phopl&hl=ko');
+            }
+
+            
           } else if (uagentLow.search('iphone') > -1) {
             console.info('in timer : ios');
             location.replace('https://itunes.apple.com/kr/app/solibada-myujig-mujehan-eum/id346528006?mt=8'); //마우키 앱 경로로 변경필요
