@@ -37,6 +37,13 @@ angular.module('phopl.ctrls')
         PKFileStorage.remove('accountID');
         PKFileStorage.remove('auth_vd_token');
         PKFileStorage.remove('auth_user_token');
+
+        //뒤로못가게
+       $ionicHistory.nextViewOptions({
+         disableAnimate: true,
+         disableBack: true
+        });
+        //캐시삭제 
         $ionicHistory.clearCache()
         .then(function() {
           $state.go('register');
