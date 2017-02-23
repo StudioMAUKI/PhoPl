@@ -157,15 +157,16 @@ angular.module('phopl', ['ionic'])
       if (new Date - openAt < 4000) {
         if (window.confirm('PHOPL 앱이 설치되어 있지 않습니다.\n설치 페이지로 이동하시겠습니까?')) {
            
+           alert(uagentLow);
           if (uagentLow.search('android') > -1) {
             console.info('in timer : android');
             
-            if (uagentLow.match(/Chrome/)) {
+            if (uagentLow.search('chrome') > -1) {
                //크롬일때만 별도 처리 필요함 (알아서 스토어도 감)
-                location.href = "intent://gallery#Intent;scheme=phopl;package=com.mauki.phopl;end;";
+               location.replace('https://play.google.com/store/apps/details?id=com.mauki.phopl');
             }else {
                 // 안드로이드
-                location.replace('https://play.google.com/store/apps/details?id=com.mauki.phopl&hl=ko');
+                location.replace('market://details?id=com.mauki.phopl');
             }
 
             
