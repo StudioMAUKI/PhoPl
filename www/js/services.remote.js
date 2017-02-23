@@ -1387,6 +1387,7 @@ angular.module('phopl.services')
       if( len > 0 ){
         last = len -1; //마지막 (영어권)
       }
+
       // alert(JSON.stringify(a))
 
       //시, 구만 추출 
@@ -1400,22 +1401,28 @@ angular.module('phopl.services')
       if(sido.indexOf( a[0] ) != -1 ){
         if( len > 0 ) city = a[1];
         if( len > 1 ) gu = a[2];
-      }else if( a[0] == '대한민국'){
+      }else if( a[0] == '대한민국'){ //맨앞에 대한민국이 들어가면 하나씩 shift 
         if( len > 1 ) city = a[2];
-        if( len > 2 ) city = a[3];
+        if( len > 2 ) gu = a[3];
       }
       //한국 이외의 기준 
       else{
-        if( len > 0 ) city = a[last-1];
-        if( len > 1 ) gu = a[last-2];
+        if( len > 0 ) city = a[last]; //국가명 
+        if( len > 1 ) gu = a[last-1]; //주, 도시명 
       }
+      //국가명 숫자 없애기
+      city = city.replace(/[0-9]/g, "");
+      
+      //국가,도시명에 공백없애기 
+      city = city.replace(' ', '');
+      gu = gu.replace(' ', '');
 
       //기본 (,)없애기
       if( city != undefined ) city = city.replace(',','').replace('undefined','');
       if( gu != undefined ) gu = gu.replace(',','').replace('undefined','');
 
       //없애고 싶은 문구
-      if( city != undefined ) city = city.replace('특별시', '').replace('광역시', '');
+      if( city != undefined ) city = city.replace('특별시', '시').replace('광역시', '시');
 
     }catch(e){
       alert(e);

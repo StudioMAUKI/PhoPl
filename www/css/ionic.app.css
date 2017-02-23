@@ -9971,15 +9971,13 @@ a.button {
 
 .note {
   overflow: hidden;
-  margin: 10px 10px; }
-  .note .content {
-    text-align: left; }
+  margin: 0px 10px 8px; }
+  .note .note-wrapper {
+    padding: 0px 10px; }
   .note .time {
-    text-align: right;
-    position: absolute;
+    line-height: 1.5em;
     font-size: 0.8em;
-    color: gray;
-    right: 20px; }
+    color: gray; }
 
 .button-bar * {
   background: none;

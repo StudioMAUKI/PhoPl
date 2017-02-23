@@ -11,11 +11,11 @@
     </div>
     <!-- 노트 영역 -->
 		<div class="note " ng-repeat="note in post.userPost.notes">
-          <div class="padding">
-          <span class="content">{{note.content}}</span>
-          <span class="time">{{note.datetime}}</span>
+          <div class="note-wrapper">
+            <div class="time">{{note.datetime}}</div>
+            <div class="content">{{note.content}}</div>
           </div> 
-		</div>
+		</div> 
     <!-- 이미지 영역 -->
     <div ng-repeat="image in post.userPost.images track by $index" style="width:{{calculatedHeight+5}}px;height:{{calculatedHeight}}px;display:inline-block;overflow:hidden;padding-left:5px;" ng-show="post.userPost.images.length > 2 && (showAll || (!showAll && $index < 9))">
 			<img style="height:{{calculatedHeight}}px;" ng-src="{{image.summary}}" ng-click="showImagesWithFullScreen($index)" on-hold="deleteAttatchedImage($index)">

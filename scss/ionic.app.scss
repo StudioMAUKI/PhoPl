@@ -226,19 +226,21 @@ $popover-width: 100px;
 }
 
 .note {
+
+  .note-wrapper{
+    padding:0px 10px;
+  }
   // border-bottom: 1px #dddddd solid;
   overflow: hidden;
-  margin: 10px 10px;
+  margin: 0px 10px 8px;
 
   .content {
-    text-align: left;
+    
   }
   .time {
-    text-align: right;
-    position: absolute;
+    line-height:1.5em;
     font-size:0.8em;
     color:gray;
-    right: 20px;
   }
 }
 
