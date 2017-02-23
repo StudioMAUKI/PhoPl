@@ -687,25 +687,25 @@ angular.module('phopl.services')
       });
     } else if (orderingOption.type === 'placename') {
       currentOrderingType = orderingOption.type;
- 
-      //이름으로 정렬 
-      totalList.sort(function(a, b) { 
+
+      //이름으로 정렬
+      totalList.sort(function(a, b) {
 
         //이름없는 경우를, 아래쪽으로 이동 (맨 뒤로 정렬되면서 안쓰는 문자사용 : 힁)
-        //임시로 정렬을 위한 변수 
+        //임시로 정렬을 위한 변수
         a.temp = a.name || '힇힇힇힇힇힇힇힇힇힇';
         b.temp = b.name || '힇힇힇힇힇힇힇힇힇힇';
           if (a.temp === b.temp) {
-            return 0; //b == a 
+            return 0; //b == a
           } else if (a.temp > b.temp){
             return 1; // a > b
           } else {
             return -1;  // b > a
-          } 
-      }); 
+          }
+      });
     } else if (orderingOption.type === 'distance_from_origin') {
       currentOrderingType = orderingOption.type;
-      PostHelper.updateDistance(totalList, {longitude:orderingOption.lon, latitude:orderingOption.lat}); //위치정보없음 맨뒤로보내기 
+      PostHelper.updateDistance(totalList, {longitude:orderingOption.lon, latitude:orderingOption.lat}); //위치정보없음 맨뒤로보내기
       totalList.sort(function(a, b) {
         return a.distance_from_origin - b.distance_from_origin;
       });
@@ -1358,7 +1358,7 @@ angular.module('phopl.services')
     return addrs;
   }
 
-  //원본 
+  //원본
   // function getShortenAddress(addr) {
   //   var a = addr.split(' ');
   //   var city = '';
@@ -1390,30 +1390,35 @@ angular.module('phopl.services')
 
       // alert(JSON.stringify(a))
 
-      //시, 구만 추출 
+      //시, 구만 추출
       var city = '';
       var gu = '';
 
-      //한국 시도 
+      //한국 시도
       var sido  = ['경기도', '경기', '강원', '경남','경북','전남','전북','제주','강원','서울','서울특별시'];
 
-      //한국기준 
+      //한국기준
       if(sido.indexOf( a[0] ) != -1 ){
         if( len > 0 ) city = a[1];
         if( len > 1 ) gu = a[2];
-      }else if( a[0] == '대한민국'){ //맨앞에 대한민국이 들어가면 하나씩 shift 
-        if( len > 1 ) city = a[2];
-        if( len > 2 ) gu = a[3];
+      }else if( a[0] == '대한민국'){ //맨앞에 대한민국이 들어가면 하나씩 shift
+        if(sido.indexOf( a[1]) != -1 ){
+          if( len > 2 ) city = a[2];
+          if( len > 3 ) gu = a[3];
+        }else{
+          if( len > 1 ) city = a[1];
+          if( len > 2 ) gu = a[2];
+        }
       }
-      //한국 이외의 기준 
+      //한국 이외의 기준
       else{
-        if( len > 0 ) city = a[last]; //국가명 
-        if( len > 1 ) gu = a[last-1]; //주, 도시명 
+        if( len > 0 ) city = a[last]; //국가명
+        if( len > 1 ) gu = a[last-1]; //주, 도시명
       }
       //국가명 숫자 없애기
       city = city.replace(/[0-9]/g, "");
-      
-      //국가,도시명에 공백없애기 
+
+      //국가,도시명에 공백없애기
       city = city.replace(' ', '');
       gu = gu.replace(' ', '');
 
@@ -1435,10 +1440,10 @@ angular.module('phopl.services')
         return city;
       }
      }else{
-      return addr; //기본값 그대로 
+      return addr; //기본값 그대로
      }
   }
- 
+
 
   function getPhoneNo(post) {
     // 전화번호는 공식 포스트의 전화번호를 우선한다.
@@ -1603,17 +1608,17 @@ angular.module('phopl.services')
 
   function updateDistance(posts, curPos) {
     for (var i = 0; i < posts.length; i++) {
-      
+
       if(typeof posts[i].lonLat === 'undefined'){
         // console.log(posts[i])
-        posts[i].distance_from_origin = 999999999999999; // 좌표정보 없을시, 맨뒤로 보냄 
+        posts[i].distance_from_origin = 999999999999999; // 좌표정보 없을시, 맨뒤로 보냄
       }else{
         // console.log(posts[i].lonLat);
         posts[i].distance_from_origin = getDistance(posts[i], curPos);
       }
-      
 
-      
+
+
     }
   }
 
