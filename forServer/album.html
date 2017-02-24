@@ -35,13 +35,13 @@
               <!--<small>{{post.datetime}}</small>-->
               <!--<a class="button button-outline button-stable icon ion-ios-more" style="top:15px;" ng-click="popOverMore($event)">-->
               </a>
-            </div>
+            </div> 
           </div>
           <!-- 노트 영역 -->
           <div class="note " ng-repeat="note in notes">
                 <div class="padding">
-                <span class="content">{{note.content}}</span>
-                <span class="time">{{note.datetime}}</span>
+                <div class="time">{{note.datetime}}</div>
+                <div class="content">{{note.content}}</div>
                 </div> 
           </div>
           <!-- 이미지 영역 -->
