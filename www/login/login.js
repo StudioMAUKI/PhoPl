@@ -122,14 +122,14 @@ angular.module('phopl.ctrls')
         PKFileStorage.init()
         .then(function() {
           if (PKFileStorage.get('initial_popup_viewed') !== true) {
-            $ionicPopup.alert({
-              title: 'PHOPL<sup>Beta</sup><br><small>사진을 공유하는 새로운 방법!</small>',
-              template: '<small>포플은 현재 베타서비스 중입니다.</small><br><small>여러분의 진심 어린 피드백을 기다립니다.^^</small>'
-            })
-            .then(function() {
+            // $ionicPopup.alert({
+            //   title: 'PHOPL<sup>Beta</sup><br><small>사진을 공유하는 새로운 방법!</small>',
+            //   template: '<small>포플은 현재 베타서비스 중입니다.</small><br><small>여러분의 진심 어린 피드백을 기다립니다.^^</small>'
+            // })
+            // .then(function() {
               PKFileStorage.set('initial_popup_viewed', true);
               doLogin();
-            })
+            // });
           } else {
             doLogin();
           }
