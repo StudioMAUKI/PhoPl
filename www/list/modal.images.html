@@ -1,8 +1,8 @@
 <ion-modal-view class="image-modal transparent" on-swipe-down="closeImages()">
-  <ion-header-bar class="bar-positive" align-title="center">
+  <!-- <ion-header-bar class="bar-positive" align-title="center">
     <h1 class="title">사진보기</h1>
     <button class="button button-clear button-icon ion-ios-close-empty" ng-click="closeImages()"></button>
-	</ion-header-bar>
+	</ion-header-bar> -->
   <ion-content >
     <ion-slide-box active-slide="activeSlide">
       <ion-slide ng-repeat="image in post.userPost.images" class="image-wrapper">
@@ -12,5 +12,6 @@
         </ion-scroll>
       </ion-slide>
     </ion-slide-box>
+    <div class="modal-button modal-close-button ion-close-round" ng-click="closeImages()"></div>
   </ion-content>
 </ion-modal-view>
