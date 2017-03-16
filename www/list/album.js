@@ -30,15 +30,15 @@ angular.module('phopl.ctrls')
   function shareURLToNativeSocialMedia(url){
     var deferred = $q.defer();
     try{
-      var options = { 
+      var options = {
         url:url
       }
       window.plugins.socialsharing.shareWithOptions(options, deferred.resolve(), deferred.reject());
-    }catch(e){ 
+    }catch(e){
       copyURLToClipboard();
     }
     return deferred.promise;
-  } 
+  }
   function copyURLToClipboard(url) {
     var deferred = $q.defer();
 
@@ -72,7 +72,7 @@ angular.module('phopl.ctrls')
       RemoteAPIService.getShortenURL($scope.post.uplace_uuid)
       .then(function(url) {
         $scope.post.shorten_url = url;
-        return shareURLToNativeSocialMedia(url);  
+        return shareURLToNativeSocialMedia(url);
       }, function(err) {
         console.error('getShortenURL', err);
         $ionicPopup.alert({
@@ -147,8 +147,8 @@ angular.module('phopl.ctrls')
       .then(function(items) {
         $scope.searchResults = items;
         for (var i = 0; i < $scope.searchResults.length; i++) {
-          $scope.searchResults[i].title = $scope.searchResults[i].title.replace(/<b>/g, '').replace(/&lt;b&gt;/g, '').replace(/&lt;\/b&gt;/g, '').replace(/&quot;/g, '"');
-          $scope.searchResults[i].description = $scope.searchResults[i].description.replace(/<b>/g, '').replace(/&lt;b&gt;/g, '').replace(/&lt;\/b&gt;/g, '').replace(/&quot;/g, '"');
+          $scope.searchResults[i].title = $scope.searchResults[i].title.replace(/<b>/g, '').replace(/<\/b>/g, '').replace(/&lt;b&gt;/g, '').replace(/&lt;\/b&gt;/g, '').replace(/&quot;/g, '"');
+          $scope.searchResults[i].description = $scope.searchResults[i].description.replace(/<b>/g, '').replace(/<\/b>/g, '').replace(/&lt;b&gt;/g, '').replace(/&lt;\/b&gt;/g, '').replace(/&quot;/g, '"');
         }
         // console.dir($scope.searchResults);
 
@@ -220,14 +220,14 @@ angular.module('phopl.ctrls')
 
   $scope.openLink = function(url) {
     console.info('url: ' + url);
-    //window.open(url, '_system'); //외부 browser 
+    //window.open(url, '_system'); //외부 browser
     if( $ionicPlatform.is('ios') ){
-      window.open(url, '_blank', 'location=no,toolbarposition=top,closebuttoncaption=닫기'); // 앱내 browser for ios 
+      window.open(url, '_blank', 'location=no,toolbarposition=top,closebuttoncaption=닫기'); // 앱내 browser for ios
     }else{
-      window.open(url, '_blank'); // 앱내 browser for android 
+      window.open(url, '_blank'); // 앱내 browser for android
     }
   };
-  
+
   $scope.showAllImages = function() {
     $scope.showAll = true;
     $ionicScrollDelegate.resize();
