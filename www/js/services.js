@@ -665,7 +665,7 @@ angular.module('phopl.services')
               places.keywordSearch(input, callback, { location: latlng, sort: 2, radius:10000 }); //m단위, 10키로반경
             }, function(err) {
               places.keywordSearch(input, callback );
-            },{ maximumAge: 90000, timeout: 5000, enableHighAccuracy: false });
+            },{ maximumAge: 90000, timeout: 2000, enableHighAccuracy: false });
           }
           catch(e){
             places.keywordSearch(input, callback );
@@ -735,7 +735,7 @@ angular.module('phopl.services')
 
             }, function(err) {
               autocompleteService.getPlacePredictions({ input: input }, callback);
-            },{ maximumAge: 90000, timeout: 5000, enableHighAccuracy: false });
+            },{ maximumAge: 90000, timeout: 2000, enableHighAccuracy: false });
           }
           catch(e){
             autocompleteService.getPlacePredictions({ input: input }, callback);

@@ -3,15 +3,24 @@
     <h1 class="title">위치 지정</h1>
     <button class="button button-clear" ng-click="close()">취소</button>
 	</ion-header-bar>
-  <ion-content scroll="false">
 
-    <div class="list">
-      <div class="item item-input-inset">
+<div class="bar bar-subheader" style="height:51px;border-bottom:1px solid #eaeaea;">
+  <div class="" style="width:100%;">
         <label class="item-input-wrapper">
           <i class="icon ion-ios7-search placeholder-icon"></i>
-          <input type="search" ng-model="search.query" placeholder="장소 이름을 입력하세요." id="input-location">
+          <input type="search" ng-model="search.query"  style="width:100%;background:none;" placeholder="장소 이름을 입력하세요." id="input-location">
         </label>
       </div>
+</div>
+
+
+
+
+
+  <ion-content scroll="true">
+
+    <div class="list" style="margin-top:48px;padding-bottom:50vh;">
+
       <ion-item ng-show="search.error">
         {{search.error}}
       </ion-item>
