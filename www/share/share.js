@@ -1,8 +1,9 @@
 'use strict';
 
 angular.module('phopl.ctrls')
-.controller('shareCtrl', ['$scope','PhotoService','$ionicActionSheet', '$ionicModal', '$state', '$ionicPopup', '$q', '$ionicLoading', 'DOMHelper', 'PKLocalStorage', 'PKSessionStorage', 'RemoteAPIService', function($scope,PhotoService, $ionicActionSheet, $ionicModal, $state, $ionicPopup, $q, $ionicLoading, DOMHelper, PKLocalStorage, PKSessionStorage, RemoteAPIService) {
+.controller('shareCtrl', ['$scope', '$stateParams', 'PhotoService','$ionicActionSheet', '$ionicModal', '$state', '$ionicPopup', '$q', '$ionicLoading', 'DOMHelper', 'PKLocalStorage', 'PKSessionStorage', 'RemoteAPIService', function($scope, $stateParams, PhotoService, $ionicActionSheet, $ionicModal, $state, $ionicPopup, $q, $ionicLoading, DOMHelper, PKLocalStorage, PKSessionStorage, RemoteAPIService) {
   var share = this;
+
   share.attatchedImages = [
     // 'http://image.chosun.com/sitedata/image/201312/13/2013121302159_0.jpg',
     // 'http://cfile227.uf.daum.net/image/192ABF3350BC88EB224FF9',
@@ -16,14 +17,10 @@ angular.module('phopl.ctrls')
     // 'http://pds27.egloos.com/pds/201305/21/76/b0119476_519b41b6ae395.jpg',
     // 'http://thumbnail.egloos.net/850x0/http://pds25.egloos.com/pds/201412/09/76/b0119476_5485cf925668e.jpg'
   ];
-  share.note = '메모를 남기세요.';
-  share.placeNameForSave = '';
-  share.placeholderTitle = '어디인가요?';
-  share.placeholderSubTitle = '장소 이름을 입력하세요';
-  share.location = {};
 
   share.calculatedHeight = DOMHelper.getImageHeight('view-container', 3, 5);
   console.info('share.calculatedHeight = ' + share.calculatedHeight);
+
 
   //////////////////////////////////////////////////////////////////////////////
   //  Private Methods
@@ -83,7 +80,7 @@ angular.module('phopl.ctrls')
 
 
         let sendData  = {
-          //uplace_uuid:place.uplace_uuid, //update
+          uplace_uuid: share.uplace_uuid, //update
           lonLat: pos,
   				notes: [{
   					content: (share.note === '메모를 남기세요.') ? null : share.note
@@ -152,7 +149,46 @@ angular.module('phopl.ctrls')
   //  Event Handler
   //////////////////////////////////////////////////////////////////////////////
   $scope.$on('$ionicView.afterEnter', function() {
+
+
+
+  if( $stateParams.mode == 'update'){
+    //DB값 세팅
+    let updatePost = PKLocalStorage.get('updatePost');
+    console.log(JSON.stringify(updatePost));
+
+    share.uplace_uuid = updatePost.uplace_uuid;
+    share.type = 'mauki';
+
+    if(updatePost.userPost.notes)
+      share.note = updatePost.userPost.notes.content;
+    if(updatePost.userPost.lonLat)
+      share.location = { geometry: {location : { lat: updatePost.userPost.lonLat.lat, lng:  updatePost.userPost.lonLat.lon}}};
+    if(updatePost.userPost.name)
+      share.location['name'] = updatePost.userPost.name.content;
+    if(updatePost.userPost.addr1)
+      share.location['address'] = updatePost.userPost.addr1.content;
+    if(updatePost.userPost.lps)
+      share.location['lps'] = updatePost.userPost.lps.content;
+
+    let dbImages = [];
+    for(let img of updatePost.userPost.images ){
+      dbImages.push(img.content);
+    }
+    share.attatchedImages = dbImages;
+
+  }else{
+    //기본값 세팅
+    share.uplace_uuid = null;
+    share.note = '메모를 남기세요.';
+    share.placeNameForSave = '';
+    share.placeholderTitle = '어디인가요?';
+    share.placeholderSubTitle = '장소 이름을 입력하세요';
+    share.location = {};
     share.attatchedImages = PKLocalStorage.get('savedImgs');
+
+  }
+
   });
 
   //////////////////////////////////////////////////////////////////////////////
