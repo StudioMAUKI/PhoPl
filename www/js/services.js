@@ -161,7 +161,7 @@ angular.module('phopl.services')
     remove: remove
   };
 }])
-.factory('PKFileStorage', ['$cordovaFile', '$q', 'PKLocalStorage', function($cordovaFile, $q, PKLocalStorage) {
+.factory('PKFileStorage', ['$cordovaFile', '$q', 'PKLocalStorage',  function($cordovaFile, $q, PKLocalStorage) {
   var dicSaved = {};
   var inited = false;
   var storageFileName = 'storage.txt';
@@ -593,7 +593,7 @@ angular.module('phopl.services')
     getImageHeight: getImageHeight
   }
 }])
-.service('LocationService', ['$q', function($q){
+.service('LocationService', ['$q', function( $q){
   var autocompleteService = new google.maps.places.AutocompleteService();
   var detailsService = new google.maps.places.PlacesService(document.createElement("input"));
   return {
@@ -654,7 +654,26 @@ angular.module('phopl.services')
               deferred.reject(status)
             }
         };
-        places.keywordSearch(input, callback);
+
+
+        if (navigator.geolocation) {
+          try{
+              navigator.geolocation.getCurrentPosition(function(position) {
+              var latlng = new daum.maps.LatLng(position.coords.latitude, position.coords.longitude);
+
+              places.keywordSearch(input, callback, { location: latlng, radius:10000 }); //m단위, 10키로반경
+            }, function(err) {
+              places.keywordSearch(input, callback );
+            });
+          }
+          catch(e){
+            places.keywordSearch(input, callback );
+          }
+        }else{
+          places.keywordSearch(input, callback );
+        }
+
+
       }catch(e){
         console.error(e);
       }

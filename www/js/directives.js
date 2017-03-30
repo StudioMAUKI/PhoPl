@@ -165,7 +165,7 @@ angular.module('phopl.directives')
               $scope.location.type = 'google';
               $scope.location.name = place.name;
               $scope.location.address = place.address;
-              $scope.location.geometry = { location: { lat:location.geometry.location.lat(), lng: location.geometry.location.lng() }};
+              $scope.location.geometry = { location: { lat: location.geometry.location.lat(), lng: location.geometry.location.lng() }};
               $scope.location.lps = place.place_id + '.google';
               console.log($scope.location);
               $scope.close();
