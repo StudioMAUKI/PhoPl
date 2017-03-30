@@ -5,6 +5,21 @@ angular.module('phopl.ctrls')
   var register = this;
   register.email = '';
 
+
+  //  //테스트
+  //  setTimeout(function(){
+  //    try{
+  //       let result ={"data":{"id":359379020,"properties":{"profile_image":"http://mud-kage.kakao.co.kr/14/dn/btqfrSNf4rW/W7ByatkPJNtGSx6qIU3TbK/o.jpg","nickname":"Simon 권세만","thumbnail_image":"http://mud-kage.kakao.co.kr/14/dn/btqfrUxw42G/XpuA4JkOGVFYuhAUbwzIC1/o.jpg"}},"status":200,"config":{"method":"GET","transformRequest":[null],"transformResponse":[null],"headers":{"Authorization":"bearer LG8A1guqpQYZ6ByHKKEfvBcBwUOcqBwp3EHClgoqAucAAAFbHL2Rcg","Accept":"application/json, text/plain, */*"},"url":"https://kapi.kakao.com/v1/user/me"},"statusText":"OK"}
+  //       PKFileStorage.set('kakao_profile', result.data);
+  //       var accountID = result.data.id + '@kakaotalk.auth';
+  //       login(accountID)
+  //       $state.go('tab.choose');
+  //    }catch(e){
+  //      alert(e);
+  //    }
+  //  },1000);
+
+
   //////////////////////////////////////////////////////////////////////////////
   //  private methods
   //////////////////////////////////////////////////////////////////////////////
@@ -74,7 +89,7 @@ angular.module('phopl.ctrls')
         .then(function(res) {
           if (res) {
             goToNextStep(); //  !!!
-          }          
+          }
         });
       }
     }, function(err) {
@@ -192,6 +207,7 @@ angular.module('phopl.ctrls')
         }
       })
       .then(function(result) {
+        console.log(result);
         console.log('Kakao me result', result);
         PKFileStorage.set('kakao_profile', result.data);
         var accountID = result.data.id + '@kakaotalk.auth';
@@ -213,25 +229,25 @@ angular.module('phopl.ctrls')
      $ionicModal.fromTemplateUrl('login/modal.basic.html', {
       scope: $scope,
       animation: 'slide-in-up'
-    }).then(function(modal) { 
+    }).then(function(modal) {
       register.basicPolicyModal = modal;
       modal.show();
     });
-  } 
+  }
 
   register.closeBasicPolicy = function() {
     register.basicPolicyModal.hide();
   }
-  
+
   register.openPrivacyPolicy = function() {
      $ionicModal.fromTemplateUrl('login/modal.privacy.html', {
       scope: $scope,
       animation: 'slide-in-up'
-    }).then(function(modal) { 
+    }).then(function(modal) {
       register.privacyPolicyModal = modal;
       modal.show();
     });
-  } 
+  }
 
   register.closePrivacyPolicy = function() {
     register.privacyPolicyModal.hide();

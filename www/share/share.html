@@ -17,9 +17,19 @@
 			</div>
 		</div>
     <!-- 이미지 영역 -->
-    <div ng-repeat="image in share.attatchedImages track by $index" style="width:{{share.calculatedHeight+5}}px;height:{{share.calculatedHeight}}px;display:inline-block;overflow:hidden;padding-left:5px;text-align:center;">
-			<img style="height:{{share.calculatedHeight}}px;" ng-src="{{image}}" on-hold="share.deleteAttatchedImage($index)">
+		<div>
+			<div ng-repeat="image in share.attatchedImages track by $index" style="position:relative;float:left;width:{{share.calculatedHeight+5}}px;height:{{share.calculatedHeight}}px;display:inline-block;overflow:hidden;padding-left:5px;text-align:center;">
+				<div ng-click="share.removeImage($index)" class="!ion-close ion-trash-b" style="position:absolute;right:5px;top:3px;font-size:20px;color:gray;"></div>
+				<img style="height:{{share.calculatedHeight}}px;" ng-src="{{image}}" on-hold="share.deleteAttatchedImage($index)">
+			</div>
+			<!--add image -->
+			<div ng-click="share.addImage()"  style="position:relative;float:left;border:1px solid #eaeaea;color:gray;float:left;width:{{share.calculatedHeight+5}}px;height:{{share.calculatedHeight}}px;display:inline-block;overflow:hidden;padding-left:5px;text-align:center;">
+
+				<div style="margin:0 auto;font-size:50px;font-weight:200;padding-top:40%">+</div>
+			</div>
 		</div>
+		<!--add image @-->
+
     <!-- 장소명 입력 폼 -->
 		<!-- <div class="row">
 			<div class="col fake-input">

@@ -10005,3 +10005,18 @@ a.button {
   .album-button-bar a.active {
     font-weight: bold;
     color: #ff0067; }
+
+.modal-button {
+  position: absolute;
+  top: 45px;
+  right: 20px;
+  font-size: 22px;
+  color: white;
+  z-index: 99;
+  padding: 15px; }
+
+.modal-download-button {
+  right: 45px; }
+
+.modal-close-button {
+  right: 5px; }

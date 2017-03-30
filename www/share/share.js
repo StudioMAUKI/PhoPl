@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('phopl.ctrls')
-.controller('shareCtrl', ['$scope', '$ionicModal', '$state', '$ionicPopup', '$q', '$ionicLoading', 'DOMHelper', 'PKLocalStorage', 'PKSessionStorage', 'RemoteAPIService', function($scope, $ionicModal, $state, $ionicPopup, $q, $ionicLoading, DOMHelper, PKLocalStorage, PKSessionStorage, RemoteAPIService) {
+.controller('shareCtrl', ['$scope','PhotoService','$ionicActionSheet', '$ionicModal', '$state', '$ionicPopup', '$q', '$ionicLoading', 'DOMHelper', 'PKLocalStorage', 'PKSessionStorage', 'RemoteAPIService', function($scope,PhotoService, $ionicActionSheet, $ionicModal, $state, $ionicPopup, $q, $ionicLoading, DOMHelper, PKLocalStorage, PKSessionStorage, RemoteAPIService) {
   var share = this;
   share.attatchedImages = [
     // 'http://image.chosun.com/sitedata/image/201312/13/2013121302159_0.jpg',
@@ -109,6 +109,32 @@ angular.module('phopl.ctrls')
     return deferred.promise;
 	}
 
+   function getPhotoFromCamera() {
+		PhotoService.getPhotoFromCamera()
+		.then(function(imageURI) {
+      // PKLocalStorage.set('savedImgs', [imageURI]);
+      // $state.go('tab.share');
+      share.attatchedImages.push( imageURI );
+		}, function(err) {
+      console.error(err);
+		});
+  }
+
+  function getPhotosFromAlbum() {
+    PhotoService.getPhotosFromAlbum(100)
+    .then(function(imageURIs) {
+      if (imageURIs.length > 0) {
+        // PKLocalStorage.set('savedImgs', imageURIs);
+        // $state.go('tab.share');
+        for(var i=0; i<imageURIs.length;i++){
+          share.attatchedImages.push( imageURIs[i] );
+        }
+      }
+    }, function(err) {
+      console.error(err);
+    });
+  }
+
   //////////////////////////////////////////////////////////////////////////////
   //  Event Handler
   //////////////////////////////////////////////////////////////////////////////
@@ -142,6 +168,36 @@ angular.module('phopl.ctrls')
     // console.info('upload images..');
     // $state.go('tab.shareResult');
   };
+
+  share.removeImage = function(idx){
+
+    share.attatchedImages.splice(idx,1);
+  }
+  share.addImage = function(){
+    //이미지, 라이브러리 선택
+    // Show the action sheet
+   var hideSheet = $ionicActionSheet.show({
+     buttons: [
+       { text: '앨범에서 선택하기' },
+       { text: '지금 사진찍기' }
+     ],
+    //  titleText: 'Modify your album',
+     cancelText: '취소',
+     cancel: function() {
+          // add cancel code..
+        },
+     buttonClicked: function(index) {
+      if(index==0){
+        getPhotosFromAlbum();
+       }else if(index==1){
+         getPhotoFromCamera();
+       }
+       return true;
+     }
+   });
+
+  }
+
 
   $scope.$watch('share.note', function(newValue) {
     $('#note-result').html(share.note);
