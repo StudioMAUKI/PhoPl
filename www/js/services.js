@@ -656,15 +656,16 @@ angular.module('phopl.services')
         };
 
 
+        //현위치 가져오기
         if (navigator.geolocation) {
           try{
               navigator.geolocation.getCurrentPosition(function(position) {
               var latlng = new daum.maps.LatLng(position.coords.latitude, position.coords.longitude);
 
-              places.keywordSearch(input, callback, { location: latlng, radius:10000 }); //m단위, 10키로반경
+              places.keywordSearch(input, callback, { location: latlng, sort: 2, radius:10000 }); //m단위, 10키로반경
             }, function(err) {
               places.keywordSearch(input, callback );
-            });
+            },{ maximumAge: 90000, timeout: 5000, enableHighAccuracy: false });
           }
           catch(e){
             places.keywordSearch(input, callback );
@@ -672,6 +673,7 @@ angular.module('phopl.services')
         }else{
           places.keywordSearch(input, callback );
         }
+        //현위치 가져오기 @
 
 
       }catch(e){
@@ -684,11 +686,8 @@ angular.module('phopl.services')
     getGoogle: function(input) {
       var deferred = $q.defer();
 
-      autocompleteService.getPlacePredictions({
-        input: input,
-         types: ['geocode'],
-        // componentRestrictions:{ country: 'kr' }
-      }, function(result, status) {
+
+      var callback = function(result, status) {
         if(status == google.maps.places.PlacesServiceStatus.OK){
           console.log(result);
 
@@ -714,7 +713,37 @@ angular.module('phopl.services')
         }else{
           deferred.reject(status)
         }
-      });
+      }
+
+
+
+
+      //현위치 가져오기
+        if (navigator.geolocation) {
+          try{
+              navigator.geolocation.getCurrentPosition(function(position) {
+              var latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+
+              autocompleteService.getPlacePredictions({
+                      input: input,
+                      location: latlng,
+                      radius:10000,
+                      // types: ['geocode'],
+                      // componentRestrictions:{ country: 'kr' }
+                    }, callback);
+
+
+            }, function(err) {
+              autocompleteService.getPlacePredictions({ input: input }, callback);
+            },{ maximumAge: 90000, timeout: 5000, enableHighAccuracy: false });
+          }
+          catch(e){
+            autocompleteService.getPlacePredictions({ input: input }, callback);
+          }
+        }else{
+          autocompleteService.getPlacePredictions({ input: input }, callback);
+        }
+        //현위치 가져오기 @
 
       return deferred.promise;
     },

@@ -19,7 +19,7 @@
         <b>{{search.query}}</b><span>(으)로 저장</span>
       </ion-item>
 
-      <ion-item  ng-repeat="suggestion in search.suggestions">
+      <ion-item ng-show="search.query"  ng-repeat="suggestion in search.suggestions">
 
         <!--지도아이콘 -->
         <div class="ion-location" ng-click="viewMap(suggestion)" style="color:#FD0066;font-size:30px;position:absolute;"></div>

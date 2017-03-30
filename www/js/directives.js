@@ -108,23 +108,25 @@ angular.module('phopl.directives')
 
       $scope.$watch('search.query', function(newValue) {
         if (newValue) {
-          LocationService.searchAddress(newValue)
-          .then(function(result) {
-            console.log('suggestions', result);
-            $scope.search.error = null;
-            for (var i = 0; i < result.length ; i++) {
-              // result[i].name = result[i].terms[0].value;
-              // result[i].region = '';
-              // for (var j = result[i].terms.length - 1; j > 0; j--) {
-              //   result[i].region += result[i].terms[j].value + ' ';
-              //   result[i].region = (result[i].region).replace('대한민국 ','');
-              // }
-            }
-            $scope.search.suggestions = result;
-          }, function(status){
-            // $scope.search.error = "There was an error :( " + status;
-            console.error("location Suggestion : " + status);
-          });
+
+             LocationService.searchAddress(newValue)
+            .then(function(result) {
+              console.log('suggestions', result);
+              $scope.search.error = null;
+              for (var i = 0; i < result.length ; i++) {
+                // result[i].name = result[i].terms[0].value;
+                // result[i].region = '';
+                // for (var j = result[i].terms.length - 1; j > 0; j--) {
+                //   result[i].region += result[i].terms[j].value + ' ';
+                //   result[i].region = (result[i].region).replace('대한민국 ','');
+                // }
+              }
+              $scope.search.suggestions = result;
+            }, function(status){
+              // $scope.search.error = "There was an error :( " + status;
+              console.error("location Suggestion : " + status);
+            });
+
         };
         $scope.open = function() {
           return $scope.modal.show()
