@@ -597,15 +597,101 @@ angular.module('phopl.services')
   var autocompleteService = new google.maps.places.AutocompleteService();
   var detailsService = new google.maps.places.PlacesService(document.createElement("input"));
   return {
-    searchAddress: function(input) {
+    searchAddress:function(input){
+      var deferred = $q.defer();
+
+      this.getDaum(input).then(
+        daumResult=>{
+          //Google
+          this.getGoogle(input).then(
+            googleResult=>{
+                let finalResult = daumResult.concat(googleResult);
+                deferred.resolve( finalResult);
+                //deferred.resolve( googleResult);
+            },
+            error=>{
+              deferred.reject(status)
+            }
+          )
+          //Google@
+        },
+        error=>{
+            deferred.reject(status)
+        }
+      )
+
+
+      return deferred.promise;
+    },
+
+    getDaum:function(input){
+      var deferred = $q.defer();
+
+      try{
+        var places = new daum.maps.services.Places();
+        var callback = function(status, result) {
+            if (status === daum.maps.services.Status.OK) {
+                console.log(result.places);
+                let finalResult = [];
+                try{
+                  for(let item of result.places){
+                    let _item = {
+                      place_id: item.id,
+                      type: 'daum',
+                      name: item.title,
+                      address: item.newAddress || item.address,
+                      lat: item.latitude,
+                      lng: item.longitude
+                    };
+
+                    finalResult.push(_item);
+                  }
+                }catch(e){
+                  console.error(e);
+                }
+                deferred.resolve(finalResult);
+            }else{
+              deferred.reject(status)
+            }
+        };
+        places.keywordSearch(input, callback);
+      }catch(e){
+        console.error(e);
+      }
+
+      return deferred.promise;
+
+    },
+    getGoogle: function(input) {
       var deferred = $q.defer();
 
       autocompleteService.getPlacePredictions({
-        input: input
+        input: input,
+         types: ['geocode'],
+        // componentRestrictions:{ country: 'kr' }
       }, function(result, status) {
         if(status == google.maps.places.PlacesServiceStatus.OK){
-          // console.log(status);
-          deferred.resolve(result);
+          console.log(result);
+
+          let finalResult = [];
+          for(let item of result){
+            try{
+              item.description = (item.description).replace('대한민국 ','');
+
+              let _item = {
+                place_id: item.place_id,
+                type: 'google',
+                name: item.terms[0].value,
+                address: item.description,
+                lat: item.latitude,
+                lng: item.longitude
+              };
+              finalResult.push(_item);
+            }catch(e){
+              console.error(e);
+            }
+          }
+          deferred.resolve(finalResult);
         }else{
           deferred.reject(status)
         }
@@ -613,9 +699,12 @@ angular.module('phopl.services')
 
       return deferred.promise;
     },
+
     getDetails: function(placeId) {
       var deferred = $q.defer();
       detailsService.getDetails({placeId: placeId}, function(result) {
+        console.log(result);
+        result.formatted_address = (result.formatted_address).replace('대한민국 ','');
         deferred.resolve(result);
       });
       return deferred.promise;

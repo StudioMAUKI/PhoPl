@@ -9,18 +9,30 @@
       <div class="item item-input-inset">
         <label class="item-input-wrapper">
           <i class="icon ion-ios7-search placeholder-icon"></i>
-          <input type="search" ng-model="search.query" placeholder="Search" id="input-location">
+          <input type="search" ng-model="search.query" placeholder="장소 이름을 입력하세요." id="input-location">
         </label>
       </div>
       <ion-item ng-show="search.error">
         {{search.error}}
       </ion-item>
-      <ion-item ng-show="search.query" ng-click="choosePlace({place_id:-1,name:search.query})">
-        {{search.query}}<span>(직접 입력)</span>
+      <ion-item ng-show="search.query" ng-click="choosePlace({place_id:-1,type:'mauki',name:search.query})">
+        <b>{{search.query}}</b><span>(으)로 저장</span>
       </ion-item>
-      <ion-item ng-repeat="suggestion in search.suggestions" ng-click="choosePlace(suggestion)">
-        <!-- {{suggestion.description}} -->
-        <strong>{{suggestion.name}}</strong>&nbsp;<small>{{suggestion.region}}</small>
+
+      <ion-item  ng-repeat="suggestion in search.suggestions">
+
+        <!--지도아이콘 -->
+        <div class="ion-location" ng-click="viewMap(suggestion)" style="color:#FD0066;font-size:30px;position:absolute;"></div>
+        <!--지도아이콘 @-->
+
+        <div style="margin-left:25px;" ng-click="choosePlace(suggestion)">
+          <strong>{{suggestion.name}}</strong>
+          <br>
+          <small>{{suggestion.address}}</small>
+          <br>
+          <img src="img/daum.png" ng-if="suggestion.type =='daum'" style="vertical-align:middle;height:10px;">
+          <img src="img/google.png" ng-if="suggestion.type =='google'" style="vertical-align:middle;height:12px;">
+        </div>
       </ion-item>
     </div>
 	</ion-content>

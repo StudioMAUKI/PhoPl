@@ -90,6 +90,22 @@ angular.module('phopl.directives')
         $scope.open();
       });
 
+      $scope.viewMap= function(place){
+        if(place.type == 'daum'){
+          $scope.showMap({ latitude: Number(place.lat), longitude: Number(place.lng)});
+        }
+        else if(place.type == 'google'){
+           LocationService.getDetails(place.place_id)
+            .then(function(location) {
+              // console.log("lat :" + location.geometry.location.lat());
+              // console.log("lng :" + location.geometry.location.lng());
+
+              $scope.showMap({ latitude: Number(location.geometry.location.lat() ), longitude: Number(location.geometry.location.lng() )});
+            });
+        }
+
+      };
+
       $scope.$watch('search.query', function(newValue) {
         if (newValue) {
           LocationService.searchAddress(newValue)
@@ -97,11 +113,12 @@ angular.module('phopl.directives')
             console.log('suggestions', result);
             $scope.search.error = null;
             for (var i = 0; i < result.length ; i++) {
-              result[i].name = result[i].terms[0].value;
-              result[i].region = '';
-              for (var j = result[i].terms.length - 1; j > 0; j--) {
-                result[i].region += result[i].terms[j].value + ' ';
-              }
+              // result[i].name = result[i].terms[0].value;
+              // result[i].region = '';
+              // for (var j = result[i].terms.length - 1; j > 0; j--) {
+              //   result[i].region += result[i].terms[j].value + ' ';
+              //   result[i].region = (result[i].region).replace('대한민국 ','');
+              // }
             }
             $scope.search.suggestions = result;
           }, function(status){
@@ -126,17 +143,35 @@ angular.module('phopl.directives')
           return $scope.modal.hide();
         };
         $scope.choosePlace = function(place) {
-          if (place.place_id !== -1) {
+          console.log(JSON.stringify(place))
+          if( place.type == 'daum'){
+            // $scope.location = location;
+            // console.info('selected location', location);
+            $scope.location.type = 'daum';
+            $scope.location.name = place.name;
+            $scope.location.address = place.address;
+            $scope.location.lps = place.place_id + '.daum';
+            $scope.location.geometry = { location: { lat:place.lat, lng:place.lng }};
+            console.log($scope.location);
+            $scope.close();
+          }
+          else if (place.type =='google') {
             LocationService.getDetails(place.place_id)
             .then(function(location) {
-              $scope.location = location;
-              console.info('selected location', location);
+              // alert(JSON.stringify(location));
+
+              // $scope.location = location;
+              // console.info('selected location', location);
               $scope.location.type = 'google';
-              $scope.location.lps = $scope.location.place_id + '.google';
+              $scope.location.name = place.name;
+              $scope.location.address = place.address;
+              $scope.location.geometry = { location: { lat:location.geometry.location.lat(), lng: location.geometry.location.lng() }};
+              $scope.location.lps = place.place_id + '.google';
+              console.log($scope.location);
               $scope.close();
             });
           } else {
-            $scope.location.type = 'mauki';
+            $scope.location.type = place.type;
             $scope.location.name = place.name;
             $scope.location.lps = null;
             $scope.close()
@@ -197,6 +232,19 @@ angular.module('phopl.directives')
             $scope.map.setCenter(event.latLng);
           });
         }
+        $scope.showMap = function(pos) {
+          $ionicModal.fromTemplateUrl('js/modal.map.html', {
+            scope: $scope,
+            focusFirstInput: true
+          }).then(function(modal) {
+            $scope.modalMap = modal;
+            $scope.modalMap.show()
+            .then(function() {
+                fitMapToScreen();
+                initMap(pos);
+            });
+          });
+        };
         $scope.openMap = function() {
           $ionicModal.fromTemplateUrl('js/modal.map.html', {
             scope: $scope,

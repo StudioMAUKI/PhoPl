@@ -170,9 +170,9 @@ angular.module('phopl.ctrls')
   };
 
   share.removeImage = function(idx){
-
     share.attatchedImages.splice(idx,1);
   }
+
   share.addImage = function(){
     //이미지, 라이브러리 선택
     // Show the action sheet
