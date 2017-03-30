@@ -272,6 +272,9 @@ angular.module('phopl.ctrls')
 
   $scope.edit = function() {
     console.info('edit() called');
+
+
+
   };
 
   $scope.delete = function() {

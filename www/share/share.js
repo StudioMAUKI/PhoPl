@@ -37,14 +37,16 @@ angular.module('phopl.ctrls')
     var pos = null;
     var addrs = [null, null, null];
 
+
     if (!share.location.geometry) {
       pos = null;
     } else {
       console.debug('location', share.location);
       pos = {
-        lon : share.location.geometry.location.lng(),
-        lat : share.location.geometry.location.lat()
+        lon : Number(share.location.geometry.location.lng),
+        lat : Number(share.location.geometry.location.lat)
       };
+
 
       if (share.location.type === 'mauki') {
         console.warn('커스텀 장소 정보로 넘어 왔기 때문에 채워 넣어야 함.');
@@ -52,7 +54,9 @@ angular.module('phopl.ctrls')
         addrs[1] = PKLocalStorage.get('addr2');
         addrs[2] = PKLocalStorage.get('addr3');
       } else if (share.location.type === 'google'){
-        addrs[0] = share.location.formatted_address;
+        addrs[0] = share.location.address;
+      } else if (share.location.type === 'daum'){
+        addrs[0] = share.location.address;
       } else {
         console.warn('Not supported.');
         deferred.reject('Not supported.');
@@ -77,7 +81,9 @@ angular.module('phopl.ctrls')
           uploadedImages.push({content: results[i].url});
         }
 
-        RemoteAPIService.sendUserPost({
+
+        let sendData  = {
+          //uplace_uuid:place.uplace_uuid, //update
           lonLat: pos,
   				notes: [{
   					content: (share.note === '메모를 남기세요.') ? null : share.note
@@ -86,9 +92,16 @@ angular.module('phopl.ctrls')
   				addr1: { content: addrs[0] || null },
   				addr2: { content: addrs[1] || null },
   				addr3: { content: addrs[2] || null },
+          //lps: { content: "ChIJMaghPm-7fDURSzzOy8ijYk8.google" },
           lps: (share.location !== {} && share.location.lps !== null) ? [{ content: share.location.lps }] : null,
           name: { content: (share.location !== {} && share.location.name !== null) ? share.location.name : null }
-  			})
+  			};
+
+        console.log("=======");
+        console.log(JSON.stringify(sendData));
+        console.log("=======");
+
+        RemoteAPIService.sendUserPost( sendData )
   			.then(function(result) {
           $ionicLoading.hide();
           deferred.resolve(result);

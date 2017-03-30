@@ -155,8 +155,8 @@ angular.module('phopl.directives')
             $scope.location.type = 'daum';
             $scope.location.name = place.name;
             $scope.location.address = place.address;
+            $scope.location.geometry = { location: { lat: place.lat, lng: place.lng }};
             $scope.location.lps = place.place_id + '.daum';
-            $scope.location.geometry = { location: { lat:place.lat, lng:place.lng }};
             console.log($scope.location);
             $scope.close();
           }
