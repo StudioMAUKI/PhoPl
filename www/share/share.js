@@ -4,19 +4,7 @@ angular.module('phopl.ctrls')
 .controller('shareCtrl', ['$scope', '$stateParams', 'PhotoService','$ionicActionSheet', '$ionicModal', '$state', '$ionicPopup', '$q', '$ionicLoading', 'DOMHelper', 'PKLocalStorage', 'PKSessionStorage', 'RemoteAPIService', function($scope, $stateParams, PhotoService, $ionicActionSheet, $ionicModal, $state, $ionicPopup, $q, $ionicLoading, DOMHelper, PKLocalStorage, PKSessionStorage, RemoteAPIService) {
   var share = this;
 
-  share.attatchedImages = [
-    // 'http://image.chosun.com/sitedata/image/201312/13/2013121302159_0.jpg',
-    // 'http://cfile227.uf.daum.net/image/192ABF3350BC88EB224FF9',
-    // 'http://pds25.egloos.com/pds/201207/23/96/e0063996_500c1d8f0a41d.jpg',
-    // 'http://cfile28.uf.tistory.com/image/240FD148543CB20803D582',
-    // 'http://cfile2.uf.tistory.com/image/2551564D54CC3B5128C971',
-    // 'http://cfile22.uf.tistory.com/image/2643CC4451C8657E237976',
-    // 'http://xguru.net/wp-content/uploads/2013/08/b0012399_10054380.jpg',
-    // 'http://pds18.egloos.com/pds/201010/19/66/b0008466_4cbd1a5e1db64.jpg',
-    // 'http://cfile8.uf.tistory.com/image/112CC25A4D9DA7E81EB86E',
-    // 'http://pds27.egloos.com/pds/201305/21/76/b0119476_519b41b6ae395.jpg',
-    // 'http://thumbnail.egloos.net/850x0/http://pds25.egloos.com/pds/201412/09/76/b0119476_5485cf925668e.jpg'
-  ];
+  share.attatchedImages = [];
 
   share.calculatedHeight = DOMHelper.getImageHeight('view-container', 3, 5);
   console.info('share.calculatedHeight = ' + share.calculatedHeight);
@@ -149,46 +137,51 @@ angular.module('phopl.ctrls')
   //  Event Handler
   //////////////////////////////////////////////////////////////////////////////
   $scope.$on('$ionicView.afterEnter', function() {
-
-
-
-  if( $stateParams.mode == 'update'){
-    //DB값 세팅
-    let updatePost = PKLocalStorage.get('updatePost');
-    console.log(JSON.stringify(updatePost));
-
-    share.uplace_uuid = updatePost.uplace_uuid;
-    share.type = 'mauki';
-
-    if(updatePost.userPost.notes)
-      share.note = updatePost.userPost.notes.content;
-    if(updatePost.userPost.lonLat)
-      share.location = { geometry: {location : { lat: updatePost.userPost.lonLat.lat, lng:  updatePost.userPost.lonLat.lon}}};
-    if(updatePost.userPost.name)
-      share.location['name'] = updatePost.userPost.name.content;
-    if(updatePost.userPost.addr1)
-      share.location['address'] = updatePost.userPost.addr1.content;
-    if(updatePost.userPost.lps)
-      share.location['lps'] = updatePost.userPost.lps.content;
-
-    let dbImages = [];
-    for(let img of updatePost.userPost.images ){
-      dbImages.push(img.content);
+    if ($stateParams.mode == 'update') {
+      // share.mode = 'update';
+      share.isUpdateMode = true;
+    } else {
+      // share.mode = 'create';
+      share.isUpdateMode = false;
     }
-    share.attatchedImages = dbImages;
+    console.log('share.isUpdateMode : ' + share.isUpdateMode);
 
-  }else{
-    //기본값 세팅
-    share.uplace_uuid = null;
-    share.note = '메모를 남기세요.';
-    share.placeNameForSave = '';
-    share.placeholderTitle = '어디인가요?';
-    share.placeholderSubTitle = '장소 이름을 입력하세요';
-    share.location = {};
-    share.attatchedImages = PKLocalStorage.get('savedImgs');
+    if (share.isUpdateMode) {
+      //DB값 세팅
+      let updatePost = PKLocalStorage.get('updatePost');
+      console.log(JSON.stringify(updatePost));
 
-  }
+      share.uplace_uuid = updatePost.uplace_uuid;
+      share.type = 'mauki';
 
+      if(updatePost.userPost.notes)
+        share.note = updatePost.userPost.notes.content;
+      if(updatePost.userPost.lonLat)
+        share.location = { geometry: {location : { lat: updatePost.userPost.lonLat.lat, lng:  updatePost.userPost.lonLat.lon}}};
+      if(updatePost.userPost.name)
+        share.location['name'] = updatePost.userPost.name.content;
+      if(updatePost.userPost.addr1)
+        share.location['address'] = updatePost.userPost.addr1.content;
+      if(updatePost.userPost.lps)
+        share.location['lps'] = updatePost.userPost.lps.content;
+
+      let dbImages = [];
+      for(let img of updatePost.userPost.images ){
+        dbImages.push(img.content);
+      }
+      share.attatchedImages = dbImages;
+      share.updatePost = PKLocalStorage.get('updatePost').userPost;
+      console.log('notes: ', share.updatePost.notes);
+    }else{
+      //기본값 세팅
+      share.uplace_uuid = null;
+      share.note = '메모를 남기세요.';
+      share.placeNameForSave = '';
+      share.placeholderTitle = '어디인가요?';
+      share.placeholderSubTitle = '장소 이름을 입력하세요';
+      share.location = {};
+      share.attatchedImages = PKLocalStorage.get('savedImgs');
+    }
   });
 
   //////////////////////////////////////////////////////////////////////////////

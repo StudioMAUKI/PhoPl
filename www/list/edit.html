@@ -1,0 +1,30 @@
+<ion-view view-title="앨범 수정" cache-view="false">
+  <ion-nav-buttons side="secondary">
+    <button class="button button-clear button-icon ion-ios-checkmark-empty" ng-click="edit.upload()">
+    </button>
+  </ion-nav-buttons>
+  <ion-content class="bold-container">
+    <div class="row"></div>
+    <div class="note " ng-repeat="note in edit.updatePost.notes | filter:{removed:false}">
+      <div class="note-wrapper" expanding-textarea content="note.content">
+        <div class="time">{{note.datetime}}</div>
+        <div class="content">{{note.content}}</div>
+        <div ng-click="edit.removeNote($index)" class="ion-close" style="position:absolute;right:0;top:10px;font-size:15px;color:white;background-color:gray;opacity:0.8;border-radius:50%;height:22px;width:22px;padding-top:1px;text-align:center;"></div>
+      </div>
+		</div>
+    <!-- 이미지 영역 -->
+		<div>
+			<div ng-repeat="image in edit.attatchedImages | filter:{removed:false} track by $index " style="position:relative;float:left;width:{{edit.calculatedHeight+5}}px;height:{{edit.calculatedHeight}}px;display:inline-block;overflow:hidden;padding-left:5px;text-align:center;">
+				<div ng-click="edit.removeImage($index)" class="ion-close" style="position:absolute;right:5px;top:5px;font-size:15px;color:white;background-color:gray;opacity:0.8;border-radius:50%;height:22px;width:22px;padding-top:1px;text-align:center;"></div>
+
+				<img style="height:{{edit.calculatedHeight}}px;" ng-src="{{image.content}}">
+			</div>
+			<!--add image -->
+			<div ng-click="edit.addImage()"  style="position:relative;float:left;border:1px solid #eaeaea;color:gray;float:left;width:{{edit.calculatedHeight+5}}px;height:{{edit.calculatedHeight}}px;display:inline-block;overflow:hidden;padding-left:5px;text-align:center;">
+
+				<div style="margin:0 auto;font-size:50px;font-weight:200;padding-top:40%">+</div>
+			</div>
+		</div>
+		<!--add image @-->
+  </ion-content>
+</ion-view>

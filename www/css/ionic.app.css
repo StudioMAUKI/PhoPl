@@ -9978,6 +9978,7 @@ a.button {
       line-height: 120%; }
 
 .note {
+  position: relative;
   overflow: hidden;
   margin: 0px 10px 8px; }
   .note .note-wrapper {

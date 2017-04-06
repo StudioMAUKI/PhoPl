@@ -25,6 +25,16 @@ angular.module('phopl.config', [])
       }
     }
   })
+	.state('tab.edit', {
+    url: '/album/edit',
+    views: {
+      'list': {
+        templateUrl: 'list/edit.html',
+        controller: 'editCtrl',
+				controllerAs: 'edit'
+      }
+    }
+  })
 	.state('tab.album', {
     url: '/album/:uplace_uuid',
     views: {
@@ -172,5 +182,5 @@ angular.module('phopl.config', [])
 		controllerAs: 'confirmProfile'
   });
 
-	$urlRouterProvider.otherwise('/login'); 
+	$urlRouterProvider.otherwise('/login');
 });

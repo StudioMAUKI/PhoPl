@@ -277,8 +277,8 @@ angular.module('phopl.ctrls')
 
     PKLocalStorage.set('updatePost', $scope.post);
     setTimeout(function(){
-      $state.go('tab.share', {mode:'update'});
-    },1000)
+      $state.go('tab.edit');
+    },100)
   };
 
   $scope.delete = function() {
