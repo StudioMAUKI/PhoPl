@@ -279,8 +279,6 @@ angular.module('phopl.ctrls')
     setTimeout(function(){
       $state.go('tab.share', {mode:'update'});
     },1000)
-
-
   };
 
   $scope.delete = function() {
