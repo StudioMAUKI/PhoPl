@@ -273,13 +273,13 @@ angular.module('phopl.directives')
         $scope.closeMap = function() {
           $scope.location.geometry = {
             location : {
-              lat : function() { return $scope.mapCenterCoord.lat;},
-              lng : function() { return $scope.mapCenterCoord.lng;}
+              lat : $scope.mapCenterCoord.lat,
+              lng : $scope.mapCenterCoord.lng
             }
           };
           MapService.getCurrentAddress($scope.mapCenterCoord.lat, $scope.mapCenterCoord.lng)
           .then(function(res) {
-            $scope.location.formatted_address = res.roadAddress.name || res.jibunAddress.name || res.region;
+            $scope.location.address = res.roadAddress.name || res.jibunAddress.name || res.region;
             google.maps.event.removeListener($scope.mapEventListener);
             $scope.map = null;
             $scope.modalMap.hide();
